@@ -18,23 +18,34 @@ class Customizer {
 	 */
 	public function initialize(): void {
 		// Late action so we can remove menus.
-		add_action( 'customize_register', array( $this, 'customizer_sections' ), 999 );
-		add_action( 'customize_register', array( $this, 'customizer_options' ) );
+		add_action( 'customize_register', array( $this, 'remove_defaults' ), 999 );
+
+		add_action( 'customize_register', array( $this, 'global_options' ) );
+
+		add_action( 'customize_register', array( $this, 'theme_specific_options' ) );
 	}
 
 	/**
 	 * Customizer sections.
 	 *
-	 * @param [type] $wp_customize
+	 * @param WP_Customize_Manager $wp_customize
 	 * @return void
 	 */
-	public function customizer_sections( $wp_customize ) {
+	public function remove_defaults( $wp_customize ): void {
 		// Remove the Menus section
 		$wp_customize->remove_panel( 'nav_menus' );
 
 		// Remove the Homepage Settings section
 		$wp_customize->remove_section( 'static_front_page' );
+	}
 
+	/**
+	 * Undocumented function
+	 *
+	 * @param WP_Customize_Manager $wp_customize
+	 * @return void
+	 */
+	public function global_options( $wp_customize ): void {
 		// Add Theme HTML section.
 		$wp_customize->add_section(
 			'tumblr3_html',
@@ -43,15 +54,52 @@ class Customizer {
 				'priority' => 30,
 			)
 		);
-	}
 
-	/**
-	 * Undocumented function
-	 *
-	 * @param [type] $wp_customize
-	 * @return void
-	 */
-	public function customizer_options( $wp_customize ) {
+		// Add select options section.
+		$wp_customize->add_section(
+			'tumblr3_select',
+			array(
+				'title'    => __( 'Theme Select Options', 'tumblr3' ),
+				'priority' => 30,
+			)
+		);
+
+		// Add text options section.
+		$wp_customize->add_section(
+			'tumblr3_text',
+			array(
+				'title'    => __( 'Theme Text Options', 'tumblr3' ),
+				'priority' => 30,
+			)
+		);
+
+		// Add font options section.
+		$wp_customize->add_section(
+			'tumblr3_font',
+			array(
+				'title'    => __( 'Theme Font Options', 'tumblr3' ),
+				'priority' => 30,
+			)
+		);
+
+		// Add boolean options section.
+		$wp_customize->add_section(
+			'tumblr3_boolean',
+			array(
+				'title'    => __( 'Theme Boolean Options', 'tumblr3' ),
+				'priority' => 30,
+			)
+		);
+
+		// Add image options section.
+		$wp_customize->add_section(
+			'tumblr3_image',
+			array(
+				'title'    => __( 'Theme Image Options', 'tumblr3' ),
+				'priority' => 30,
+			)
+		);
+
 		/**
 		 * @todo lack of sanitization is a security risk.
 		 */
@@ -74,5 +122,221 @@ class Customizer {
 				'priority' => 10,
 			)
 		);
+	}
+
+	/**
+	 * Add theme options parsed from the current tumblr theme.
+	 *
+	 * @see https://www.tumblr.com/docs/en/custom_themes#theme-options
+	 *
+	 * @param WP_Customize_Manager $wp_customize
+	 * @return void
+	 */
+	public function theme_specific_options( $wp_customize ): void {
+		// Parse the theme HTML.
+		$processor      = new \WP_HTML_Tag_Processor( get_option( 'tumblr3_theme_html', '' ) );
+		$select_options = array();
+
+		// Stop on META tags.
+		while ( $processor->next_tag( 'META' ) ) {
+			$name = $processor->get_attribute( 'name' );
+
+			/**
+			 * Color options.
+			 */
+			if ( str_starts_with( $name, 'color:' ) ) {
+				$color = $processor->get_attribute( 'content' );
+				$label = ltrim( $name, 'color:' );
+
+				// Option names need to be lowercase and without spaces.
+				$name = str_replace( ' ', '', strtolower( $label ) );
+
+				$wp_customize->add_setting(
+					$name,
+					array(
+						'capability'        => 'edit_theme_options',
+						'default'           => $color,
+						'sanitize_callback' => 'sanitize_hex_color',
+					)
+				);
+
+				$wp_customize->add_control(
+					new \WP_Customize_Color_Control(
+						$wp_customize,
+						$name,
+						array(
+							'label'    => $label,
+							'section'  => 'colors',
+							'settings' => $name,
+						)
+					)
+				);
+
+				// If it doesn't exist, load the default value into the theme mod.
+				if ( ! get_theme_mod( $name ) ) {
+					set_theme_mod( $name, $color );
+				}
+
+				continue;
+			}
+
+			/**
+			 * Font options.
+			 */
+			if ( str_starts_with( $name, 'font:' ) ) {
+				$font = $processor->get_attribute( 'content' );
+				$name = ltrim( $name, 'font:' );
+
+				$wp_customize->add_setting(
+					$name,
+					array(
+						'capability'        => 'edit_theme_options',
+						'default'           => $font,
+						'sanitize_callback' => 'sanitize_text_field',
+					)
+				);
+
+				$wp_customize->add_control(
+					$name,
+					array(
+						'label'    => $name,
+						'section'  => 'tumblr3_font',
+						'type'     => 'text',
+						'priority' => 10,
+					)
+				);
+			}
+
+			/**
+			 * Boolean options.
+			 */
+			if ( str_starts_with( $name, 'if:' ) ) {
+				$condition = $processor->get_attribute( 'content' );
+				$name      = ltrim( $name, 'if:' );
+
+				$wp_customize->add_setting(
+					$name,
+					array(
+						'capability'        => 'edit_theme_options',
+						'default'           => $condition,
+						'sanitize_callback' => 'sanitize_text_field',
+					)
+				);
+
+				$wp_customize->add_control(
+					$name,
+					array(
+						'label'    => $name,
+						'section'  => 'tumblr3_boolean',
+						'type'     => 'checkbox',
+						'priority' => 10,
+					)
+				);
+			}
+
+			/**
+			 * Select options. These need to be processed after all other options.
+			 */
+			if ( str_starts_with( $name, 'select:' ) ) {
+				$name = ltrim( $name, 'select:' );
+
+				$select_options[ $name ][] = array(
+					'content' => $processor->get_attribute( 'content' ),
+					'title'   => $processor->get_attribute( 'title' ),
+				);
+			}
+
+			/**
+			 * Text options.
+			 */
+			if ( str_starts_with( $name, 'text:' ) ) {
+				$text  = $processor->get_attribute( 'content' );
+				$label = ltrim( $name, 'text:' );
+
+				// Option names need to be lowercase and without spaces.
+				$name = str_replace( ' ', '', strtolower( $label ) );
+
+				$wp_customize->add_setting(
+					$name,
+					array(
+						'capability'        => 'edit_theme_options',
+						'default'           => $text,
+						'sanitize_callback' => 'sanitize_text_field',
+					)
+				);
+
+				$wp_customize->add_control(
+					$name,
+					array(
+						'label'    => $label,
+						'section'  => 'tumblr3_text',
+						'type'     => 'text',
+						'priority' => 10,
+					)
+				);
+
+				// If it doesn't exist, load the default value into the theme mod.
+				if ( ! get_theme_mod( $name ) ) {
+					set_theme_mod( $name, $text );
+				}
+
+				continue;
+			}
+
+			/**
+			 * Image options.
+			 */
+			if ( str_starts_with( $name, 'image:' ) ) {
+				$image = $processor->get_attribute( 'content' );
+				$name  = ltrim( $name, 'image:' );
+
+				$wp_customize->add_setting(
+					$name,
+					array(
+						'capability'        => 'edit_theme_options',
+						'default'           => $image,
+						'sanitize_callback' => 'esc_url_raw',
+					)
+				);
+
+				$wp_customize->add_control(
+					new \WP_Customize_Image_Control(
+						$wp_customize,
+						$name,
+						array(
+							'label'    => $name,
+							'section'  => 'tumblr3_image',
+							'settings' => $name,
+							'priority' => 10,
+						)
+					)
+				);
+			}
+		}
+
+		// Parse out select options now that we have aggregated them.
+		foreach ( $select_options as $name => $options ) {
+			$default = ( isset( $options[0], $options[0]['content'] ) ) ? $options[0]['content'] : '';
+
+			$wp_customize->add_setting(
+				$name,
+				array(
+					'capability'        => 'edit_theme_options',
+					'default'           => $default,
+					'sanitize_callback' => 'sanitize_text_field',
+				)
+			);
+
+			$wp_customize->add_control(
+				$name,
+				array(
+					'label'    => $name,
+					'section'  => 'tumblr3_select',
+					'type'     => 'select',
+					'choices'  => array_column( $options, 'title', 'content' ),
+					'priority' => 10,
+				)
+			);
+		}
 	}
 }

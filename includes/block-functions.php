@@ -5,6 +5,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * This should not load on front-end views.
  * Effectively, this shortcode strips unwanted HTML.
+ * This is the desired outcome, so not marking as a missing block.
  *
  * @param array $attributes The attributes of the shortcode.
  * @param string $content The content of the shortcode.
@@ -15,6 +16,58 @@ function tumblr3_block_options( $atts, $content = '' ): string {
 }
 add_shortcode( 'block_options', 'tumblr3_block_options' );
 add_shortcode( 'block_hidden', 'tumblr3_block_options' );
+
+/**
+ * Boolean check for theme options.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_if_theme_option( $atts, $content = '' ): string {
+	// Parse shortcode attributes.
+	$atts = shortcode_atts(
+		array(
+			'name' => '',
+		),
+		$atts,
+		'block_if_theme_option'
+	);
+
+	// Don't render if the name attribute is empty.
+	if ( '' === $atts['name'] ) {
+		return '';
+	}
+
+	return ( get_theme_mod( $atts['name'] ) ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_if_theme_option', 'tumblr3_block_if_theme_option' );
+
+/**
+ * Boolean check for theme options.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_ifnot_theme_option( $atts, $content = '' ): string {
+	// Parse shortcode attributes.
+	$atts = shortcode_atts(
+		array(
+			'name' => '',
+		),
+		$atts,
+		'block_ifnot_theme_option'
+	);
+
+	// Don't render if the name attribute is empty.
+	if ( '' === $atts['name'] ) {
+		return '';
+	}
+
+	return ( ! get_theme_mod( $atts['name'] ) ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_ifnot_theme_option', 'tumblr3_block_ifnot_theme_option' );
 
 /**
  * Undocumented function
@@ -203,6 +256,18 @@ function tumblr3_block_posts( $atts, $content = '' ): string {
 	return $output;
 }
 add_shortcode( 'block_posts', 'tumblr3_block_posts' );
+
+/**
+ * Conditional if there are no posts.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_noposts( $atts, $content = '' ): string {
+	return have_posts() ? '' : tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_noposts', 'tumblr3_block_noposts' );
 
 /**
  * Post tags loop.
@@ -514,20 +579,6 @@ function tumblr3_block_notecount( $atts, $content = '' ): string {
 	return ( get_comments_number() > 0 ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_notecount', 'tumblr3_block_notecount' );
-
-/**
- * Render this post's content source details.
- *
- * @todo WordPress does not currently support content source as a field.
- *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
- */
-function tumblr3_block_contentsource( $atts, $content = '' ): string {
-	return '';
-}
-add_shortcode( 'block_contentsource', 'tumblr3_block_contentsource' );
 
 /**
  * Rendered for legacy Text posts and NPF posts.

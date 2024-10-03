@@ -37,6 +37,7 @@ return array(
 		'inlineMediaWidth'       => 500,
 		'inlineNestedMediaWidth' => 250,
 	),
+	'block:NoPosts'               => array(),
 	'block:Text'                  => array(),
 	'block:Answer'                => array(),
 	'block:Photo'                 => array(),

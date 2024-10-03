@@ -63,30 +63,65 @@ function tumblr3_do_shortcode( $content, $ignore_html = false ) {
  * @return void
  */
 function tumblr3_theme_parse( $content ) {
-	$tags   = array_keys( TUMBLR3_TAGS );
-	$blocks = array_keys( TUMBLR3_BLOCKS );
-	$lang   = array_keys( TUMBLR3_LANG );
+	$tags    = array_keys( TUMBLR3_TAGS );
+	$blocks  = array_keys( TUMBLR3_BLOCKS );
+	$lang    = array_keys( TUMBLR3_LANG );
+	$options = array_keys( TUMBLR3_OPTIONS );
 
 	// Capture each Tumblr Tag in the page and verify it against our arrays.
 	$content = preg_replace_callback(
 		'/\{(.*?)\}/',
-		function ( $matches ) use ( $tags, $blocks, $lang ) {
+		function ( $matches ) use ( $tags, $blocks, $lang, $options ) {
 			$captured_tag = $matches[0];
 			$raw_tag      = $matches[1];
 			$trim_tag     = explode( ' ', $matches[1] )[0];
 			$attr         = '';
 
 			/**
-			 * Handle theme options blocks.
-			 *
-			 * @todo This should be a conditonal return, not just an empty string.
+			 * Convert "IfNot" theme option boolean blocks into a custom shortcode.
 			 */
-			if ( str_starts_with( ltrim( $raw_tag, '/' ), 'block:If' ) ) {
-				return '';
+			if ( str_starts_with( ltrim( strtolower( $raw_tag ), '/' ), 'block:ifnot' ) ) {
+				$normalized_attr = str_replace(
+					array(
+						' ',
+						'block:ifnot',
+						'block:IfNot',
+					),
+					'',
+					strtolower( $raw_tag )
+				);
+
+				return ( str_starts_with( $raw_tag, '/' ) ) ? '[/block_ifnot_theme_option]' : '[block_ifnot_theme_option name="' . $normalized_attr . '"]';
+			}
+
+			/**
+			 * Convert "If" theme option boolean blocks into a custom shortcode.
+			 */
+			if ( str_starts_with( ltrim( strtolower( $raw_tag ), '/' ), 'block:if' ) ) {
+				$normalized_attr = str_replace(
+					array(
+						' ',
+						'block:if',
+						'block:If',
+					),
+					'',
+					strtolower( $raw_tag )
+				);
+
+				return ( str_starts_with( $raw_tag, '/' ) ) ? '[/block_if_theme_option]' : '[block_if_theme_option name="' . $normalized_attr . '"]';
+			}
+
+			/**
+			 * Handle theme options (dynamic tags).
+			 */
+			foreach ( $options as $option ) {
+				if ( str_starts_with( $raw_tag, $option ) ) {
+					return get_theme_mod( str_replace( ' ', '', ltrim( $raw_tag, $option ) ) );
+				}
 			}
 
 			// Verify the block against our array.
-			if ( str_starts_with( $raw_tag, 'block:' ) || str_starts_with( $raw_tag, '/block:' ) ) {
+			if ( str_starts_with( ltrim( $raw_tag, '/' ), 'block:' ) ) {
 				if ( in_array( ltrim( $raw_tag, '/' ), $blocks, true ) ) {
 					return '[' . str_replace( 'block:', 'block_', strtolower( $raw_tag ) ) . ']';
 				}

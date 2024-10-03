@@ -564,21 +564,6 @@ add_shortcode( 'tag_replies', 'tumblr3_tag_answer' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_mobileappheaders( $atts, $content = '' ): string {
-	return '';
-}
-add_shortcode( 'tag_mobileappheaders', 'tumblr3_tag_mobileappheaders' );
-
-/**
- *
- *
- * @todo Understand what Tumblr outputs in this tag.
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
- *
- * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
- */
 function tumblr3_tag_posttypographystyles( $atts, $content = '' ): string {
 	return '<style></style>';
 }

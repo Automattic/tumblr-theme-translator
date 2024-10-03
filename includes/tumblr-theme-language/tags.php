@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) || exit;
+
 return array(
 	'Title'                   => array(
 		'context' => '',
@@ -341,4 +343,5 @@ return array(
 	'PostTypographyStyles'    => array(),
 	'CurrentState'            => array(),
 	'ExternalState'           => array(),
+	'ReblogURL'               => array(),
 );

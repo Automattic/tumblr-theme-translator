@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 function tumblr3_tag_functionality_missing( $atts, $content = '' ): string {
 	return '';
 }
+add_shortcode( 'tag_reblogurl', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_reblogparentname', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_reblogparenttitle', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_reblogparenturl', 'tumblr3_tag_functionality_missing' );
@@ -43,6 +44,7 @@ add_shortcode( 'tag_postauthortitle', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_postauthorurl', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_postauthorportraiturl', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_npf', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'tag_mobileappheaders', 'tumblr3_tag_functionality_missing' );
 
 /**
  * All non-supported blocks are assigned here.
@@ -76,3 +78,4 @@ add_shortcode( 'block_isoriginalentry', 'tumblr3_block_functionality_missing' );
 add_shortcode( 'block_groupmembers', 'tumblr3_block_functionality_missing' );
 add_shortcode( 'block_groupmember', 'tumblr3_block_functionality_missing' );
 add_shortcode( 'block_relatedposts', 'tumblr3_block_functionality_missing' );
+add_shortcode( 'block_contentsource', 'tumblr3_block_functionality_missing' );
