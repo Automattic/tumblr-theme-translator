@@ -24,6 +24,7 @@ add_shortcode( 'tag_reblogroottitle', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_reblogrooturl', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_reblogrootportraiturl', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_reblogbutton', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'tag_username', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_likebutton', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_likes', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_groupmembername', 'tumblr3_tag_functionality_missing' );

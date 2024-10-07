@@ -469,6 +469,73 @@ function tumblr3_block_pagination( $atts, $content = '' ): string {
 add_shortcode( 'block_pagination', 'tumblr3_block_pagination' );
 
 /**
+ * The Jump pagination block.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_jumppagination( $atts, $content = '' ): string {
+	// Parse shortcode attributes.
+	$atts = shortcode_atts(
+		array(
+			'length' => '5',
+		),
+		$atts,
+		'block_jumppagination'
+	);
+
+	global $tumblr3_parse_context;
+	$output = '';
+
+	if ( $atts['length'] > 0 ) {
+		for ( $i = 1; $i <= $atts['length']; $i++ ) {
+			$tumblr3_parse_context = $i;
+			$output               .= tumblr3_do_shortcode( $content );
+		}
+	}
+
+	$tumblr3_parse_context = 'theme';
+
+	return $output;
+}
+add_shortcode( 'block_jumppagination', 'tumblr3_block_jumppagination' );
+
+/**
+ * The currentpage block inside jumppagination.
+ * Renders only if the current page is equal to the context.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_currentpage( $atts, $content = '' ): string {
+	global $tumblr3_parse_context;
+	$var   = get_query_var( 'paged' );
+	$paged = $var ? $var : 1;
+
+	return ( $paged === $tumblr3_parse_context ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_currentpage', 'tumblr3_block_currentpage' );
+
+/**
+ * The jumppage block inside jumppagination.
+ * Render if the current page is not equal to the context.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_jumppage( $atts, $content = '' ): string {
+	global $tumblr3_parse_context;
+	$var   = get_query_var( 'paged' );
+	$paged = $var ? $var : 1;
+
+	return ( $paged !== $tumblr3_parse_context ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_jumppage', 'tumblr3_block_jumppage' );
+
+/**
  * Undocumented function
  *
  * @param array $attributes The attributes of the shortcode.

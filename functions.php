@@ -59,19 +59,22 @@ function tumblr3_do_shortcode( $content, $ignore_html = false ) {
 /**
  * Undocumented function
  *
+ * @todo ltrim is unreliable, should use substr instead.
+ *
  * @param [type] $content
  * @return void
  */
 function tumblr3_theme_parse( $content ) {
-	$tags    = array_map( 'strtolower', array_keys( TUMBLR3_TAGS ) );
-	$blocks  = array_map( 'strtolower', array_keys( TUMBLR3_BLOCKS ) );
-	$lang    = array_map( 'strtolower', array_keys( TUMBLR3_LANG ) );
-	$options = array_map( 'strtolower', array_keys( TUMBLR3_OPTIONS ) );
+	$tags      = array_map( 'strtolower', array_keys( TUMBLR3_TAGS ) );
+	$blocks    = array_map( 'strtolower', array_keys( TUMBLR3_BLOCKS ) );
+	$lang      = array_map( 'strtolower', array_keys( TUMBLR3_LANG ) );
+	$options   = array_map( 'strtolower', array_keys( TUMBLR3_OPTIONS ) );
+	$modifiers = array_map( 'strtolower', array_keys( TUMBLR3_MODIFIERS ) );
 
 	// Capture each Tumblr Tag in the page and verify it against our arrays.
 	$content = preg_replace_callback(
 		'/\{(.*?)\}/',
-		function ( $matches ) use ( $tags, $blocks, $lang, $options ) {
+		function ( $matches ) use ( $tags, $blocks, $lang, $options, $modifiers ) {
 			$captured_tag = $matches[0];
 			$raw_tag      = strtolower( $matches[1] );
 			$trim_tag     = strtolower( explode( ' ', $matches[1] )[0] );
@@ -110,7 +113,20 @@ function tumblr3_theme_parse( $content ) {
 			}
 
 			/**
+			 * Test for modifiers.
+			 *
+			 * @todo This.
+			 */
+			foreach ( $modifiers as $modifier ) {
+				if ( str_starts_with( $raw_tag, $modifier ) ) {
+
+				}
+			}
+
+			/**
 			 * Handle theme options (dynamic tags).
+			 *
+			 * @todo This system doesn't account for modifiers at the front of tags.
 			 */
 			foreach ( $options as $option ) {
 				if ( str_starts_with( $raw_tag, $option ) ) {

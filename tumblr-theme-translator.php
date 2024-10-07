@@ -42,6 +42,7 @@ define( 'TUMBLR3_TAGS', require_once TUMBLR3_PATH . 'includes/tumblr-theme-langu
 define( 'TUMBLR3_BLOCKS', require_once TUMBLR3_PATH . 'includes/tumblr-theme-language/blocks.php' );
 define( 'TUMBLR3_LANG', require_once TUMBLR3_PATH . 'includes/tumblr-theme-language/lang.php' );
 define( 'TUMBLR3_OPTIONS', require_once TUMBLR3_PATH . 'includes/tumblr-theme-language/options.php' );
+define( 'TUMBLR3_MODIFIERS', require_once TUMBLR3_PATH . 'includes/tumblr-theme-language/modifiers.php' );
 
 // Load plugin translations so they are available even for the error admin notices.
 add_action(

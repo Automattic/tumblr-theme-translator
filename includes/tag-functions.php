@@ -114,7 +114,7 @@ add_shortcode( 'tag_posttitle', 'tumblr3_tag_title' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_body( $atts, $content = '' ): string {
-	return get_the_content();
+	return apply_filters( 'the_content', get_the_content() );
 }
 add_shortcode( 'tag_body', 'tumblr3_tag_body' );
 
@@ -267,6 +267,13 @@ add_shortcode( 'tag_postsummary', 'tumblr3_tag_postsummary' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_url( $atts, $content = '' ): string {
+	global $tumblr3_parse_context;
+
+	// Handle the jump pagination context for this tag.
+	if ( is_int( $tumblr3_parse_context ) ) {
+		return '/page/' . $tumblr3_parse_context;
+	}
+
 	return get_permalink();
 }
 add_shortcode( 'tag_url', 'tumblr3_tag_url' );
@@ -287,6 +294,31 @@ function tumblr3_tag_label( $atts, $content = '' ): string {
 	return get_the_title();
 }
 add_shortcode( 'tag_label', 'tumblr3_tag_label' );
+
+/**
+ * tagsasclasses outputs the tags of a post as HTML-safe classes.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tagsasclasses( $atts, $content = '' ): string {
+	$tags = get_the_tags();
+
+	if ( ! $tags || is_wp_error( $tags ) ) {
+		return '';
+	}
+
+	$classes = array();
+	foreach ( $tags as $tag ) {
+		$classes[] = esc_attr( $tag->name );
+	}
+
+	return implode( ' ', $classes );
+}
+add_shortcode( 'tag_tagsasclasses', 'tumblr3_tagsasclasses' );
 
 /**
  * Undocumented function
@@ -371,6 +403,19 @@ function tumblr3_tag_currentpage( $atts, $content = '' ): string {
 	return get_query_var( 'paged' );
 }
 add_shortcode( 'tag_currentpage', 'tumblr3_tag_currentpage' );
+
+/**
+ * The pagenumber tag inside jump pagination.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_tag_pagenumber( $atts, $content = '' ): string {
+	global $tumblr3_parse_context;
+	return (string) $tumblr3_parse_context;
+}
+add_shortcode( 'tag_pagenumber', 'tumblr3_tag_pagenumber' );
 
 /**
  * Gets the query total pages (pagination)
@@ -720,7 +765,7 @@ add_shortcode( 'tag_posttypographystyles', 'tumblr3_tag_posttypographystyles' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_dayofmonth( $atts, $content = '' ): string {
-	return date( 'j' );
+	return get_the_date( 'j' );
 }
 add_shortcode( 'tag_dayofmonth', 'tumblr3_tag_dayofmonth' );
 
@@ -734,7 +779,7 @@ add_shortcode( 'tag_dayofmonth', 'tumblr3_tag_dayofmonth' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_dayofmonthwithzero( $atts, $content = '' ): string {
-	return date( 'd' );
+	return get_the_date( 'd' );
 }
 add_shortcode( 'tag_dayofmonthwithzero', 'tumblr3_tag_dayofmonthwithzero' );
 
@@ -748,7 +793,7 @@ add_shortcode( 'tag_dayofmonthwithzero', 'tumblr3_tag_dayofmonthwithzero' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_dayofweek( $atts, $content = '' ): string {
-	return date( 'l' );
+	return get_the_date( 'l' );
 }
 add_shortcode( 'tag_dayofweek', 'tumblr3_tag_dayofweek' );
 
@@ -762,7 +807,7 @@ add_shortcode( 'tag_dayofweek', 'tumblr3_tag_dayofweek' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_shortdayofweek( $atts, $content = '' ): string {
-	return date( 'D' );
+	return get_the_date( 'D' );
 }
 add_shortcode( 'tag_shortdayofweek', 'tumblr3_tag_shortdayofweek' );
 
@@ -776,7 +821,7 @@ add_shortcode( 'tag_shortdayofweek', 'tumblr3_tag_shortdayofweek' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_dayofweeknumber( $atts, $content = '' ): string {
-	return date( 'N' );
+	return get_the_date( 'N' );
 }
 add_shortcode( 'tag_dayofweeknumber', 'tumblr3_tag_dayofweeknumber' );
 
@@ -790,7 +835,7 @@ add_shortcode( 'tag_dayofweeknumber', 'tumblr3_tag_dayofweeknumber' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_dayofmonthsuffix( $atts, $content = '' ): string {
-	return date( 'S' );
+	return get_the_date( 'S' );
 }
 add_shortcode( 'tag_dayofmonthsuffix', 'tumblr3_tag_dayofmonthsuffix' );
 
@@ -804,7 +849,7 @@ add_shortcode( 'tag_dayofmonthsuffix', 'tumblr3_tag_dayofmonthsuffix' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_dayofyear( $atts, $content = '' ): string {
-	return date( 'z' ) + 1; // Adding 1 because PHP date 'z' is zero-indexed
+	return get_the_date( 'z' ) + 1; // Adding 1 because PHP date 'z' is zero-indexed
 }
 add_shortcode( 'tag_dayofyear', 'tumblr3_tag_dayofyear' );
 
@@ -818,7 +863,7 @@ add_shortcode( 'tag_dayofyear', 'tumblr3_tag_dayofyear' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_weekofyear( $atts, $content = '' ): string {
-	return date( 'W' );
+	return get_the_date( 'W' );
 }
 add_shortcode( 'tag_weekofyear', 'tumblr3_tag_weekofyear' );
 
@@ -832,7 +877,7 @@ add_shortcode( 'tag_weekofyear', 'tumblr3_tag_weekofyear' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_month( $atts, $content = '' ): string {
-	return date( 'F' );
+	return get_the_date( 'F' );
 }
 add_shortcode( 'tag_month', 'tumblr3_tag_month' );
 
@@ -846,7 +891,7 @@ add_shortcode( 'tag_month', 'tumblr3_tag_month' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_shortmonth( $atts, $content = '' ): string {
-	return date( 'M' );
+	return get_the_date( 'M' );
 }
 add_shortcode( 'tag_shortmonth', 'tumblr3_tag_shortmonth' );
 
@@ -860,7 +905,7 @@ add_shortcode( 'tag_shortmonth', 'tumblr3_tag_shortmonth' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_monthnumber( $atts, $content = '' ): string {
-	return date( 'n' );
+	return get_the_date( 'n' );
 }
 add_shortcode( 'tag_monthnumber', 'tumblr3_tag_monthnumber' );
 
@@ -874,7 +919,7 @@ add_shortcode( 'tag_monthnumber', 'tumblr3_tag_monthnumber' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_monthnumberwithzero( $atts, $content = '' ): string {
-	return date( 'm' );
+	return get_the_date( 'm' );
 }
 add_shortcode( 'tag_monthnumberwithzero', 'tumblr3_tag_monthnumberwithzero' );
 
@@ -888,7 +933,7 @@ add_shortcode( 'tag_monthnumberwithzero', 'tumblr3_tag_monthnumberwithzero' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_year( $atts, $content = '' ): string {
-	return date( 'Y' );
+	return get_the_date( 'Y' );
 }
 add_shortcode( 'tag_year', 'tumblr3_tag_year' );
 
@@ -902,7 +947,7 @@ add_shortcode( 'tag_year', 'tumblr3_tag_year' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_shortyear( $atts, $content = '' ): string {
-	return date( 'y' );
+	return get_the_date( 'y' );
 }
 add_shortcode( 'tag_shortyear', 'tumblr3_tag_shortyear' );
 
@@ -916,7 +961,7 @@ add_shortcode( 'tag_shortyear', 'tumblr3_tag_shortyear' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_ampm( $atts, $content = '' ): string {
-	return date( 'a' );
+	return get_the_date( 'a' );
 }
 add_shortcode( 'tag_ampm', 'tumblr3_tag_ampm' );
 
@@ -930,7 +975,7 @@ add_shortcode( 'tag_ampm', 'tumblr3_tag_ampm' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_capitalampm( $atts, $content = '' ): string {
-	return date( 'A' );
+	return get_the_date( 'A' );
 }
 add_shortcode( 'tag_capitalampm', 'tumblr3_tag_capitalampm' );
 
@@ -944,7 +989,7 @@ add_shortcode( 'tag_capitalampm', 'tumblr3_tag_capitalampm' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_12hour( $atts, $content = '' ): string {
-	return date( 'g' );
+	return get_the_date( 'g' );
 }
 add_shortcode( 'tag_12hour', 'tumblr3_tag_12hour' );
 
@@ -958,7 +1003,7 @@ add_shortcode( 'tag_12hour', 'tumblr3_tag_12hour' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_24hour( $atts, $content = '' ): string {
-	return date( 'G' );
+	return get_the_date( 'G' );
 }
 add_shortcode( 'tag_24hour', 'tumblr3_tag_24hour' );
 
@@ -972,7 +1017,7 @@ add_shortcode( 'tag_24hour', 'tumblr3_tag_24hour' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_12hourwithzero( $atts, $content = '' ): string {
-	return date( 'h' );
+	return get_the_date( 'h' );
 }
 add_shortcode( 'tag_12hourwithzero', 'tumblr3_tag_12hourwithzero' );
 
@@ -986,7 +1031,7 @@ add_shortcode( 'tag_12hourwithzero', 'tumblr3_tag_12hourwithzero' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_24hourwithzero( $atts, $content = '' ): string {
-	return date( 'H' );
+	return get_the_date( 'H' );
 }
 add_shortcode( 'tag_24hourwithzero', 'tumblr3_tag_24hourwithzero' );
 
@@ -1000,7 +1045,7 @@ add_shortcode( 'tag_24hourwithzero', 'tumblr3_tag_24hourwithzero' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_minutes( $atts, $content = '' ): string {
-	return date( 'i' );
+	return get_the_date( 'i' );
 }
 add_shortcode( 'tag_minutes', 'tumblr3_tag_minutes' );
 
@@ -1014,7 +1059,7 @@ add_shortcode( 'tag_minutes', 'tumblr3_tag_minutes' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_seconds( $atts, $content = '' ): string {
-	return date( 's' );
+	return get_the_date( 's' );
 }
 add_shortcode( 'tag_seconds', 'tumblr3_tag_seconds' );
 
@@ -1043,7 +1088,7 @@ add_shortcode( 'tag_beats', 'tumblr3_tag_beats' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_timestamp( $atts, $content = '' ): string {
-	return date( 'U' );
+	return get_the_date( 'U' );
 }
 add_shortcode( 'tag_timestamp', 'tumblr3_tag_timestamp' );
 

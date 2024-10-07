@@ -345,4 +345,6 @@ return array(
 	'ExternalState'           => array(),
 	'ReblogURL'               => array(),
 	'Positions'               => array(),
+	'TweetSummary'            => array(),
+	'MailSummary'             => array(),
 );
