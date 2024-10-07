@@ -344,4 +344,5 @@ return array(
 	'CurrentState'            => array(),
 	'ExternalState'           => array(),
 	'ReblogURL'               => array(),
+	'Positions'               => array(),
 );

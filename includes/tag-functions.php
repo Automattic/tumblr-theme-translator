@@ -26,7 +26,7 @@ add_shortcode( 'tag_backgroundcolor', 'tumblr3_tag_backgroundcolor' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_accentcolor( $atts, $content = '' ): string {
-	return '#' . ltrim( get_theme_mod( 'accent_color', '#555' ), '#' );
+	return '#' . ltrim( get_theme_mod( 'accent_color', '#0073aa' ), '#' );
 }
 add_shortcode( 'tag_accentcolor', 'tumblr3_tag_accentcolor' );
 
@@ -53,8 +53,36 @@ add_shortcode( 'tag_titlecolor', 'tumblr3_tag_titlecolor' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
+function tumblr3_tag_titlefont( $atts, $content = '' ): string {
+	return esc_html( get_theme_mod( 'title_font', 'Arial' ) );
+}
+add_shortcode( 'tag_titlefont', 'tumblr3_tag_titlefont' );
+
+/**
+ * Undocumented function
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_titlefontweight( $atts, $content = '' ): string {
+	return esc_html( get_theme_mod( 'title_font_weight', 'bold' ) );
+}
+add_shortcode( 'tag_titlefontweight', 'tumblr3_tag_titlefontweight' );
+
+/**
+ * Undocumented function
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
 function tumblr3_tag_headerimage( $atts, $content = '' ): string {
-	return get_theme_mod( 'header_image', '' );
+	return get_theme_mod( 'header_image', 'remove-header' );
 }
 add_shortcode( 'tag_headerimage', 'tumblr3_tag_headerimage' );
 
@@ -261,6 +289,105 @@ function tumblr3_tag_label( $atts, $content = '' ): string {
 add_shortcode( 'tag_label', 'tumblr3_tag_label' );
 
 /**
+ * Undocumented function
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_pinnedpostlabel( $atts, $content = '' ): string {
+	return TUMBLR3_LANG['Pinned Post'];
+}
+add_shortcode( 'tag_pinnedpostlabel', 'tumblr3_tag_pinnedpostlabel' );
+
+/**
+ * Gets the previous post URL (single post pagination)
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_previouspost( $atts, $content = '' ): string {
+	return get_permalink( get_adjacent_post( false, '', true ) );
+}
+add_shortcode( 'tag_previouspost', 'tumblr3_tag_previouspost' );
+
+/**
+ * Gets the next post URL (single post pagination)
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_nextpost( $atts, $content = '' ): string {
+	return get_permalink( get_adjacent_post( false, '', false ) );
+}
+add_shortcode( 'tag_nextpost', 'tumblr3_tag_nextpost' );
+
+/**
+ * Gets the previous posts page URL (pagination)
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_previouspage( $atts, $content = '' ): string {
+	return get_next_posts_page_link();
+}
+add_shortcode( 'tag_previouspage', 'tumblr3_tag_previouspage' );
+
+/**
+ * Gets the next posts page URL (pagination)
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_nextpage( $atts, $content = '' ): string {
+	return get_previous_posts_page_link();
+}
+add_shortcode( 'tag_nextpage', 'tumblr3_tag_nextpage' );
+
+/**
+ * Gets the current page value (pagination)
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_currentpage( $atts, $content = '' ): string {
+	return get_query_var( 'paged' );
+}
+add_shortcode( 'tag_currentpage', 'tumblr3_tag_currentpage' );
+
+/**
+ * Gets the query total pages (pagination)
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_totalpages( $atts, $content = '' ): string {
+	global $wp_query;
+	return $wp_query->max_num_pages;
+}
+add_shortcode( 'tag_totalpages', 'tumblr3_tag_totalpages' );
+
+/**
  * Displays the span of years your blog has existed.
  *
  * @param array $attributes The attributes of the shortcode.
@@ -271,7 +398,21 @@ add_shortcode( 'tag_label', 'tumblr3_tag_label' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_copyrightyears( $atts, $content = '' ): string {
-	return '';
+	// Get the oldest post.
+	$oldest_post = get_posts(
+		array(
+			'numberposts' => 1,
+			'orderby'     => 'date',
+			'order'       => 'ASC',
+			'fields'      => 'ids',
+		)
+	);
+
+	if ( empty( $oldest_post ) ) {
+		return '';
+	}
+
+	return get_the_date( 'Y', $oldest_post[0] ) . '-' . date( 'Y' );
 }
 add_shortcode( 'tag_copyrightyears', 'tumblr3_tag_copyrightyears' );
 

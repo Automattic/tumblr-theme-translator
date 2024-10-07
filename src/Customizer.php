@@ -46,6 +46,38 @@ class Customizer {
 	 * @return void
 	 */
 	public function global_options( $wp_customize ): void {
+		// Add an accent_color setting.
+		$wp_customize->add_setting(
+			'accent_color',
+			array(
+				'default'           => '#0073aa',
+				'sanitize_callback' => 'sanitize_hex_color',
+			)
+		);
+
+		// Add a control for the accent_color setting.
+		$wp_customize->add_control(
+			new \WP_Customize_Color_Control(
+				$wp_customize,
+				'accent_color',
+				array(
+					'label'    => __( 'Accent Color', 'tumblr3' ),
+					'section'  => 'colors',
+					'settings' => 'accent_color',
+				)
+			)
+		);
+	}
+
+	/**
+	 * Add theme options parsed from the current tumblr theme.
+	 *
+	 * @see https://www.tumblr.com/docs/en/custom_themes#theme-options
+	 *
+	 * @param WP_Customize_Manager $wp_customize
+	 * @return void
+	 */
+	public function theme_specific_options( $wp_customize ): void {
 		// Add Theme HTML section.
 		$wp_customize->add_section(
 			'tumblr3_html',
@@ -122,17 +154,7 @@ class Customizer {
 				'priority' => 10,
 			)
 		);
-	}
 
-	/**
-	 * Add theme options parsed from the current tumblr theme.
-	 *
-	 * @see https://www.tumblr.com/docs/en/custom_themes#theme-options
-	 *
-	 * @param WP_Customize_Manager $wp_customize
-	 * @return void
-	 */
-	public function theme_specific_options( $wp_customize ): void {
 		// Parse the theme HTML.
 		$processor      = new \WP_HTML_Tag_Processor( get_option( 'tumblr3_theme_html', '' ) );
 		$select_options = array();
@@ -184,8 +206,11 @@ class Customizer {
 			 * Font options.
 			 */
 			if ( str_starts_with( $name, 'font:' ) ) {
-				$font = $processor->get_attribute( 'content' );
-				$name = ltrim( $name, 'font:' );
+				$font  = $processor->get_attribute( 'content' );
+				$label = ltrim( $name, 'font:' );
+
+				// Option names need to be lowercase and without spaces.
+				$name = str_replace( ' ', '', strtolower( $label ) );
 
 				$wp_customize->add_setting(
 					$name,
@@ -199,12 +224,19 @@ class Customizer {
 				$wp_customize->add_control(
 					$name,
 					array(
-						'label'    => $name,
+						'label'    => $label,
 						'section'  => 'tumblr3_font',
 						'type'     => 'text',
 						'priority' => 10,
 					)
 				);
+
+				// If it doesn't exist, load the default value into the theme mod.
+				if ( ! get_theme_mod( $name ) ) {
+					set_theme_mod( $name, $font );
+				}
+
+				continue;
 			}
 
 			/**
@@ -212,7 +244,10 @@ class Customizer {
 			 */
 			if ( str_starts_with( $name, 'if:' ) ) {
 				$condition = $processor->get_attribute( 'content' );
-				$name      = ltrim( $name, 'if:' );
+				$label     = ltrim( $name, 'if:' );
+
+				// Option names need to be lowercase and without spaces.
+				$name = str_replace( ' ', '', strtolower( $label ) );
 
 				$wp_customize->add_setting(
 					$name,
@@ -226,12 +261,14 @@ class Customizer {
 				$wp_customize->add_control(
 					$name,
 					array(
-						'label'    => $name,
+						'label'    => $label,
 						'section'  => 'tumblr3_boolean',
 						'type'     => 'checkbox',
 						'priority' => 10,
 					)
 				);
+
+				continue;
 			}
 
 			/**
@@ -288,7 +325,10 @@ class Customizer {
 			 */
 			if ( str_starts_with( $name, 'image:' ) ) {
 				$image = $processor->get_attribute( 'content' );
-				$name  = ltrim( $name, 'image:' );
+				$label = ltrim( $name, 'image:' );
+
+				// Option names need to be lowercase and without spaces.
+				$name = str_replace( ' ', '', strtolower( $label ) );
 
 				$wp_customize->add_setting(
 					$name,
@@ -311,6 +351,13 @@ class Customizer {
 						)
 					)
 				);
+
+				// If it doesn't exist, load the default value into the theme mod.
+				if ( ! get_theme_mod( $name ) ) {
+					set_theme_mod( $name, $image );
+				}
+
+				continue;
 			}
 		}
 
@@ -338,5 +385,47 @@ class Customizer {
 				)
 			);
 		}
+
+		// Add a TitleFont text control.
+		$wp_customize->add_setting(
+			'title_font',
+			array(
+				'default'           => 'Arial',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'title_font',
+			array(
+				'label'    => __( 'Title Font', 'tumblr3' ),
+				'section'  => 'tumblr3_font',
+				'type'     => 'text',
+				'priority' => 10,
+			)
+		);
+
+		// Add a TitleFontWeight select control.
+		$wp_customize->add_setting(
+			'title_font_weight',
+			array(
+				'default'           => 'bold',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'title_font_weight',
+			array(
+				'label'    => __( 'Title Font Weight', 'tumblr3' ),
+				'section'  => 'tumblr3_font',
+				'type'     => 'select',
+				'choices'  => array(
+					'normal' => 'Normal',
+					'bold'   => 'Bold',
+				),
+				'priority' => 10,
+			)
+		);
 	}
 }

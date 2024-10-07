@@ -382,7 +382,7 @@ return array(
 
 	// Recommendation reasons
 	'Pinned Post'                                          => _x(
-		'Label for a pinned post',
-		'Pinned Post'
+		'Pinned Post',
+		'Label for a pinned post'
 	),
 );

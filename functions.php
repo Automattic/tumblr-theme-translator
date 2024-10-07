@@ -63,18 +63,18 @@ function tumblr3_do_shortcode( $content, $ignore_html = false ) {
  * @return void
  */
 function tumblr3_theme_parse( $content ) {
-	$tags    = array_keys( TUMBLR3_TAGS );
-	$blocks  = array_keys( TUMBLR3_BLOCKS );
-	$lang    = array_keys( TUMBLR3_LANG );
-	$options = array_keys( TUMBLR3_OPTIONS );
+	$tags    = array_map( 'strtolower', array_keys( TUMBLR3_TAGS ) );
+	$blocks  = array_map( 'strtolower', array_keys( TUMBLR3_BLOCKS ) );
+	$lang    = array_map( 'strtolower', array_keys( TUMBLR3_LANG ) );
+	$options = array_map( 'strtolower', array_keys( TUMBLR3_OPTIONS ) );
 
 	// Capture each Tumblr Tag in the page and verify it against our arrays.
 	$content = preg_replace_callback(
 		'/\{(.*?)\}/',
 		function ( $matches ) use ( $tags, $blocks, $lang, $options ) {
 			$captured_tag = $matches[0];
-			$raw_tag      = $matches[1];
-			$trim_tag     = explode( ' ', $matches[1] )[0];
+			$raw_tag      = strtolower( $matches[1] );
+			$trim_tag     = strtolower( explode( ' ', $matches[1] )[0] );
 			$attr         = '';
 
 			/**
@@ -85,7 +85,6 @@ function tumblr3_theme_parse( $content ) {
 					array(
 						' ',
 						'block:ifnot',
-						'block:IfNot',
 					),
 					'',
 					strtolower( $raw_tag )
@@ -102,7 +101,6 @@ function tumblr3_theme_parse( $content ) {
 					array(
 						' ',
 						'block:if',
-						'block:If',
 					),
 					'',
 					strtolower( $raw_tag )
@@ -122,7 +120,9 @@ function tumblr3_theme_parse( $content ) {
 
 			// Verify the block against our array.
 			if ( str_starts_with( ltrim( $raw_tag, '/' ), 'block:' ) ) {
-				if ( in_array( ltrim( $raw_tag, '/' ), $blocks, true ) ) {
+				$block_parts = explode( ' ', trim( $raw_tag ) );
+
+				if ( in_array( ltrim( $block_parts[0], '/' ), $blocks, true ) ) {
 					return '[' . str_replace( 'block:', 'block_', strtolower( $raw_tag ) ) . ']';
 				}
 
@@ -157,14 +157,17 @@ function tumblr3_theme_parse( $content ) {
 				$attr     = ' size=' . $split_tag[1];
 			}
 
-			// Verify the tag against our array.
+			// Verify the tag against our array of known tags.
 			if ( in_array( ltrim( $trim_tag, '/' ), $tags, true ) ) {
 				return '[tag_' . strtolower( $trim_tag ) . $attr . ']';
 			}
 
-			// Verify the lang against our array.
-			if ( in_array( ltrim( $raw_tag, 'lang:' ), $lang, true ) ) {
-				$return_lang = TUMBLR3_LANG[ ltrim( $raw_tag, 'lang:' ) ];
+			// Verify the lang tag against our array of known tags.
+			$pos = array_search( substr( $raw_tag, 5 ), $lang, true );
+
+			// If the lang tag is found, return the correct language. Accounts for different return types.
+			if ( false !== $pos ) {
+				$return_lang = array_values( TUMBLR3_LANG )[ $pos ];
 				return ( is_array( $return_lang ) ) ? $return_lang[0] : $return_lang;
 			}
 

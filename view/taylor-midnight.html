@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+{block:Options}
+
+    <meta name="if:Show Group Blog Members" content="0">
+{/block:Options}
+<html lang="{block:English}en-US{/block:English}{block:German}de-DE{/block:German}{block:French}fr-FR{/block:French}{block:Italian}it-IT{/block:Italian}{block:Japanese}ja-JP{/block:Japanese}{block:Turkish}tr-TR{/block:Turkish}{block:Spanish}es-ES{/block:Spanish}{block:Russian}ru-RU{/block:Russian}{block:Polish}pl-PL{/block:Polish}{block:PortuguesePT}pt-PT{/block:PortuguesePT}{block:PortugueseBR}pt-BR{/block:PortugueseBR}{block:Dutch}nl-NL{/block:Dutch}{block:Korean}ko-KR{/block:Korean}{block:ChineseSimplified}zh-CN{/block:ChineseSimplified}{block:ChineseTraditional}zh-TW{/block:ChineseTraditional}{block:ChineseHK}zh-HK{/block:ChineseHK}{block:Indonesian}id-ID{/block:Indonesian}{block:Hindi}hi-IN{/block:Hindi}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{block:PermalinkPage}{block:PostSummary}{PostSummary} — {/block:PostSummary}{/block:PermalinkPage}{Title}{block:SearchPage} — {lang:Search results for SearchQuery}{/block:SearchPage}</title>{block:Description}
+        <meta name="description" content="{MetaDescription}">{/block:Description}
+        <meta name="theme-color" content="{BackgroundColor}">
+        {MobileAppHeaders}
+        <link rel="shortcut icon" href="{Favicon}">
+        <link rel="alternate" type="application/rss+xml" href="{RSS}">
+        <link rel="stylesheet" href="https://static.tumblr.com/2wliono/Vf7pfceur/normalize.css">
+        <link rel="stylesheet" href="https://static.tumblr.com/0du9egr/bukrjphbh/midnights.css">
+        <link rel="stylesheet" href="https://static.tumblr.com/0du9egr/fg8rjjm71/neue_haas.css">
+        <link rel="stylesheet" href="https://static.tumblr.com/0du9egr/bXtr8i7v9/opticaicons.css">
+        <link rel="stylesheet" media="(max-width: 540px)" href="https://static.tumblr.com/0du9egr/lh1rjllrn/midnights-mobile.css">
+        {PostTypographyStyles}
+        <style id="global">
+            :root {
+                --TitleFont: {TitleFont};
+                --TitleFontWeight: {TitleFontWeight};
+                --BackgroundColor: {BackgroundColor};
+                --TitleColor: {TitleColor};
+                --AccentColor: {AccentColor};
+            }
+
+        </style>
+        <style id="custom">{CustomCSS}</style>
+        <script type="text/javascript" src="https://static.tumblr.com/0du9egr/s4drjjn73/midnights.js"></script>
+        {block:IndexPage}
+        <script type="module" src="https://static.tumblr.com/0du9egr/awwrjkedd/endless.js"></script>
+        {/block:IndexPage}
+
+    </head>
+    <body>
+      <div class="karma">
+        <aside>{block:ShowAvatar}
+          <div class="whomst">
+            <div class="lavender-haze">
+              <a href="{BlogURL}">
+            <img id="avatar" class="{AvatarShape}" src="{PortraitURL-128}" alt=""></a>{/block:ShowAvatar}
+
+            </div>
+            <div class="midnight-rain">
+            {block:ShowTitle}
+            <a href="{BlogURL}"><h1 id="title">{Title}</h1></a>{/block:ShowTitle}{block:ShowDescription}
+            <div id="description">{Description}</div>{/block:ShowDescription}
+            </div>
+            </div>
+        </aside>
+        <nav>
+        <a aria-label="open navigation menu" href="javascript:void(0);" onclick="burgerMenu()">
+        <svg aria-hidden="true" width="64" height="51" viewBox="0 0 64 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="burger" fill-rule="evenodd" clip-rule="evenodd" d="M6 9C6 8.44771 6.44772 8 7 8H56C56.5523 8 57 8.44772 57 9V12.6667C57 13.219 56.5523 13.6667 56 13.6667H7C6.44772 13.6667 6 13.219 6 12.6667V9ZM6 23.1667C6 22.6144 6.44772 22.1667 7 22.1667H56C56.5523 22.1667 57 22.6144 57 23.1667V26.8333C57 27.3856 56.5523 27.8333 56 27.8333H7C6.44772 27.8333 6 27.3856 6 26.8333V23.1667ZM7 36.3333C6.44772 36.3333 6 36.781 6 37.3333V41C6 41.5523 6.44772 42 7 42H56C56.5523 42 57 41.5523 57 41V37.3333C57 36.781 56.5523 36.3333 56 36.3333H7Z" fill="#AC9EB8"/>
+        </svg>
+        </a>
+
+        <div id="burgerlinks">
+          <a aria-label="close navigation  menu" class="close-button" href="javascript:void(0);" onclick="burgerMenu()">
+            <svg aria-hidden="true" width="36" height="36" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.05037 0.636033C1.65984 0.245509 1.02668 0.245509 0.636155 0.636033C0.245631 1.02656 0.245631 1.65972 0.636155 2.05025L4.8788 6.29289C5.26932 6.68341 5.26932 7.31658 4.8788 7.7071L0.636155 11.9497C0.245631 12.3403 0.245631 12.9734 0.636155 13.364C1.02668 13.7545 1.65984 13.7545 2.05037 13.364L6.29301 9.12131C6.68353 8.73079 7.3167 8.73079 7.70722 9.12131L11.9499 13.364C12.3404 13.7545 12.9736 13.7545 13.3641 13.364C13.7546 12.9734 13.7546 12.3403 13.3641 11.9497L9.12144 7.7071C8.73091 7.31658 8.73091 6.68341 9.12144 6.29289L13.3641 2.05025C13.7546 1.65972 13.7546 1.02656 13.3641 0.636033C12.9736 0.245509 12.3404 0.245509 11.9499 0.636033L7.70722 4.87867C7.3167 5.2692 6.68353 5.2692 6.29301 4.87867L2.05037 0.636033Z" fill="#455D8D"/>
+            </svg>
+
+          </a>
+
+
+          <div id="heyburger">
+
+
+            <a href="/"{block:HomePage} class="current-page"{/block:HomePage}>{lang:Home}</a>{block:AskEnabled}
+            <a href="/ask"{block:AskPage} class="current-page"{/block:AskPage}>{AskLabel}</a>{/block:AskEnabled}{block:SubmissionsEnabled}
+            <a href="/submit"{block:SubmitPage} class="current-page"{/block:SubmitPage}>{SubmitLabel}</a>{/block:SubmissionsEnabled}{block:Likes}
+            <a href="/likes"{block:LikesPage} class="current-page"{/block:LikesPage}>{lang:Likes}</a>{/block:Likes}{block:ShareFollowing}
+            <a href="/following"{block:FollowingPage} class="current-page"{/block:FollowingPage}>{lang:Following}</a>{/block:ShareFollowing}
+            <a href="/random">{lang:Random}</a>
+            <a href="/archive">{lang:Archive}</a>
+
+            <a href="https://store.taylorswift.com/">Taylor Swift Shop</a>
+            <a href="https://presave.umusic.com/taylorswiftmidnights">Pre-Save Midnights</a>
+            <a href="https://taylorswift.tumblr.com/">Taylor's Tumblr</a>
+
+            {block:HasPages}{block:Pages}
+            <a href="{URL}" class="{CurrentState} {ExternalState}">{Label}</a>{/block:Pages}{/block:HasPages}
+
+            {block:IfShowGroupBlogMembers}
+            {block:GroupMembers}
+            <h2>{lang:Members}</h2>
+            <section id="members">{block:GroupMember}
+                <a href="{GroupMemberURL}" title="{GroupMemberTitle}">
+                    <img src="{GroupMemberPortraitURL-128}" alt="{GroupMemberName}">
+                </a>{/block:GroupMember}
+            </section>{/block:GroupMembers}
+            {/block:IfShowGroupBlogMembers}
+
+            </div>
+
+            <section id="pagination">{block:Pagination}{block:PreviousPage}
+                <a id="previous" href="{PreviousPage}">{lang:Previous}</a>{/block:PreviousPage}{block:NextPage}
+                <a id="next" href="{NextPage}">{lang:Next}</a>{/block:NextPage}{/block:Pagination}{block:PermalinkPagination}{block:PreviousPost}
+                <a id="previous" href="{PreviousPost}">{lang:Previous post}</a>{/block:PreviousPost}{block:NextPost}
+                <a id="next" href="{NextPost}">{lang:Next post}</a>{/block:NextPost}{/block:PermalinkPagination}{block:DayPagination}{block:PreviousDayPage}
+                <a id="previous" href="{PreviousDayPage}">{lang:Previous day}</a>{/block:PreviousDayPage}{block:NextDayPage}
+                <a id="next" href="{NextDayPage}">{lang:Next day}</a>{/block:NextDayPage}{/block:DayPagination}
+            </section>
+            <div class="burger-foot">
+              <a href="https://www.tumblr.com/" {Target}>{lang:Powered by Tumblr}</a>
+              <a href="#" {Target}>{lang:Install this theme}</a>
+            </div>
+
+        </nav>
+        </div>
+        <main role="feed">{block:SearchPage}
+            <h3 class="results">{lang:Found SearchResultCount results for SearchQuery}{block:NoSearchResults}{lang:No search results for SearchQuery}{/block:NoSearchResults}</h3>{/block:SearchPage}{block:TagPage}
+            <h3 class="results">{lang:TagResultCount posts tagged Tag}</h3>{/block:TagPage}{block:DayPage}
+            <h3 class="results">{DayOfWeek} {DayOfMonth}{DayOfMonthSuffix} {Month} {Year}</h3>{/block:DayPage}
+            {block:Posts}
+            <article {block:Date}id="{PostID}" {/block:Date}class="{PostType} post">
+                <header>
+                    {block:RebloggedFrom}
+                    <a class="reblog-parent-name" href="{ReblogParentURL}" title="{ReblogParentTitle}">{ReblogParentName}</a>&emsp;{/block:RebloggedFrom}{block:Submission}
+                    {lang:By PostAuthorName 2}&emsp;{/block:Submission}
+                </header>
+                <section class="media">{block:Text}{block:Title}
+                    <h1>{Title}</h1>{/block:Title}{/block:Text}{block:Photo}
+                    <figure{block:HighRes} class="tmblr-full"{/block:HighRes}>
+                        {LinkOpenTag}
+                            <img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"{block:Exif} title="{block:Camera} {Camera} {/block:Camera}{block:Aperture} {Aperture} {/block:Aperture}{block:Exposure} {Exposure} {/block:Exposure}{block:FocalLength} {FocalLength} {/block:FocalLength}"{/block:Exif}>
+                        {LinkCloseTag}
+                    </figure>{/block:Photo}{block:Panorama}
+                    <figure class="tmblr-full">
+                        {LinkOpenTag}
+                            <img src="{PhotoURL-HighRes}" alt="{PhotoAlt}"{block:Exif} title="{block:Camera} {Camera} {/block:Camera}{block:Aperture} {Aperture} {/block:Aperture}{block:Exposure} {Exposure} {/block:Exposure}{block:FocalLength} {FocalLength} {/block:FocalLength}"{/block:Exif}>
+                        {LinkCloseTag}
+                    </figure>{/block:Panorama}{block:Photoset}
+                    {Photoset}{/block:Photoset}{block:Quote}
+                    <p class="npf_quote {Length}">{Quote}</p>{block:Source}
+                    <table>
+                        <tr>
+                            <td>&mdash;</td>
+                            <td>{Source}</td>
+                        </tr>
+                    </table>{/block:Source}{/block:Quote}{block:Link}
+                    <div class="npf-link-block {block:Thumbnail}has-poster not-{/block:Thumbnail}no-poster">
+                        <a href="{URL}" {Target}>{block:Thumbnail}
+                            <div class="poster" style="background-image: url({Thumbnail-HighRes});">{/block:Thumbnail}
+                                <div class="title">{Name}</div>{block:Thumbnail}
+                            </div>{/block:Thumbnail}
+                            <div class="bottom">{block:Excerpt}
+                                <div class="description">{Excerpt}</div>{/block:Excerpt}{block:Host}
+                                <div class="site-name">{Host}</div>{/block:Host}
+                            </div>
+                        </a>
+                    </div>{/block:Link}{block:Chat}{block:Title}
+                    <h1>{Title}</h1>{/block:Title}{block:Lines}
+                    <p class="npf_chat">{block:Label}
+                        <b>{Label}</b>{/block:Label}
+                        {Line}
+                    </p>{/block:Lines}{/block:Chat}{block:Audio}{block:AudioEmbed}
+                    {AudioEmbed}{/block:AudioEmbed}{/block:Audio}{block:Video}
+                    {VideoEmbed-700}{/block:Video}{block:Answer}
+                    <div class="ask">
+                        <img class="avatar" src="{AskerPortraitURL-64}">
+                        <strong class="username">{lang:Asker asked 2}</strong>
+                        <blockquote >{Question}</blockquote>
+                    </div>{block:Answerer}
+                    <div class="ask">
+                        <img class="avatar" src="{AnswererPortraitURL-64}">
+                        <strong class="username">{Answerer} answered</strong>
+                        <blockquote >{Answer}</blockquote>
+                    </div>{/block:Answerer}{/block:Answer}
+                </section>
+                <section class="body">{block:Reblogs}
+                    <div class="reblog">
+                        <p class="user">{block:HasPermalink}
+                            <a href="{Permalink}" target="_blank">{/block:HasPermalink}{block:HasAvatar}
+                                <img class="avatar" src="{PortraitURL-64}" alt="{Username}">&nbsp;{/block:HasAvatar}
+                                <strong class="username{block:IsDeactivated} deactivated{/block:IsDeactivated}">{Username}</strong>{block:HasPermalink}
+                            </a>{/block:HasPermalink}
+                        </p>
+                        {Body}
+                    </div>{/block:Reblogs}{block:NotReblog}
+                    <div class="original">{block:Text}
+                        {Body}{/block:Text}{block:Photo}{block:Caption}
+                        {Caption}{/block:Caption}{/block:Photo}{block:Panorama}{block:Caption}
+                        {Caption}{/block:Caption}{/block:Panorama}{block:Photoset}{block:Caption}
+                        {Caption}{/block:Caption}{/block:Photoset}{block:Link}{block:Description}
+                        {Description}{/block:Description}{/block:Link}{block:Audio}{block:Caption}
+                        {Caption}{/block:Caption}{/block:Audio}{block:Video}{block:Caption}
+                        {Caption}{/block:Caption}{/block:Video}{block:Answer}
+                        {Answer}{/block:Answer}
+                    </div>{/block:NotReblog}
+                </section>{block:Date}
+                <footer>{block:ContentSource}
+                    <section class="source">
+                        <a href="{SourceURL}" title="{SourceTitle}">{block:SourceLogo}
+                            <img src="{BlackLogoURL}" alt="{SourceTitle}">{/block:SourceLogo}{block:NoSourceLogo}
+                            <p>{lang:Source}: {SourceTitle}</p>{/block:NoSourceLogo}
+                        </a>
+                    </section>{/block:ContentSource}{block:HasTags}
+                    <section class="tags">{block:Tags}
+                        <a class="tag-link" href="{TagURL}">#{Tag}</a>{/block:Tags}
+                    </section>{/block:HasTags}
+                    <section class="panel">{block:NoteCount}
+                      <div class="bejeweled">
+                        <a class="stats" href="{Permalink}#notes">{NoteCountWithLabel}</a>{/block:NoteCount}
+                        <time datetime="{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero} {24HourWithZero}:{Minutes}:{Seconds}.{Beats}" title="{12Hour}:{Minutes}{AmPm} {DayOfWeek} {DayOfMonth}{DayOfMonthSuffix} {Month} {Year}"><a class="date-permalink" href="{Permalink}">{TimeAgo}</a></time>
+                    </div>
+                        <span class="controls">
+                            {ReblogButton}
+                            {LikeButton}
+                        </span>
+                    </section>{block:PostNotes}
+                    <section id="notes">
+                        {PostNotes}
+                    </section>{/block:PostNotes}
+                </footer>{/block:Date}
+            </article>{/block:Posts}
+        </main>
+    </body>
+</html>

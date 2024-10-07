@@ -514,7 +514,7 @@ add_shortcode( 'block_haspages', 'tumblr3_block_haspages' );
  * @return string
  */
 function tumblr3_block_showheaderimage( $atts, $content = '' ): string {
-	return '';
+	return ( 'remove-header' !== get_theme_mod( 'header_image', 'remove-header' ) ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_showheaderimage', 'tumblr3_block_showheaderimage' );
 
@@ -527,14 +527,15 @@ add_shortcode( 'block_showheaderimage', 'tumblr3_block_showheaderimage' );
  * @return string
  */
 function tumblr3_block_hideheaderimage( $atts, $content = '' ): string {
-	return '';
+	return ( 'remove-header' === get_theme_mod( 'header_image', 'remove-header' ) ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_hideheaderimage', 'tumblr3_block_hideheaderimage' );
 
 /**
  * If a post is not a reblog, render the content.
  *
- * @todo This should be conditional, but WordPress doesn't currently support reblogs.
+ * @todo This should be conditional, but WordPress doesn't currently support reblogs so it's static.
+ *
  * @param array $attributes The attributes of the shortcode.
  * @param string $content The content of the shortcode.
  * @return string
@@ -706,6 +707,82 @@ function tumblr3_block_daypage( $atts, $content = '' ): string {
 	return ( is_day() ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_daypage', 'tumblr3_block_daypage' );
+
+/**
+ * Rendered if older posts are available.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_previouspage( $atts, $content = '' ): string {
+	return ( get_next_posts_link() ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_previouspage', 'tumblr3_block_previouspage' );
+
+/**
+ * Rendered if newer posts are available.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_nextpage( $atts, $content = '' ): string {
+	return ( get_previous_posts_link() ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_nextpage', 'tumblr3_block_nextpage' );
+
+/**
+ * Undocumented function
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_permalinkpagination( $atts, $content = '' ): string {
+	if ( ! is_single() ) {
+		return '';
+	}
+
+	return tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_permalinkpagination', 'tumblr3_block_permalinkpagination' );
+
+/**
+ * Check if there's a previous adjacent post.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_previouspost( $atts, $content = '' ): string {
+	return ( get_previous_post() ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_previouspost', 'tumblr3_block_previouspost' );
+
+/**
+ * Check if there's a next adjacent post.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_nextpost( $atts, $content = '' ): string {
+	return ( get_next_post() ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_nextpost', 'tumblr3_block_nextpost' );
+
+/**
+ * Rendered for legacy Text posts and NPF posts.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_pinnedpostlabel( $atts, $content = '' ): string {
+	return is_sticky() ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_pinnedpostlabel', 'tumblr3_block_pinnedpostlabel' );
 
 /**
  * Render content if the current language is English.
