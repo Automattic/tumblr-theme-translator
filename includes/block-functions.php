@@ -662,21 +662,95 @@ add_shortcode( 'block_text', 'tumblr3_block_text' );
 
 /**
  * Rendered for legacy quote posts, or the WordPress quote post format.
+ * Post logic is handled here, and then passed to the global context.
+ * Tags inside the quote block are handed data from the global context.
  *
  * @param array $attributes The attributes of the shortcode.
  * @param string $content The content of the shortcode.
  * @return string
  */
 function tumblr3_block_quote( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
+	global $post;
 
-	$tumblr3_parse_context = 'quote';
-	$content               = ( 'quote' === get_post_format() ) ? tumblr3_do_shortcode( $content ) : '';
-	$tumblr3_parse_context = 'theme';
+	// Don't parse all blocks if the post format is not quote.
+	if ( 'quote' !== get_post_format() ) {
+		return '';
+	}
+
+	$blocks = parse_blocks( $post->post_content );
+	$output = '';
+	$source = '';
+
+	// Handle all blocks in the post content.
+	foreach ( $blocks as $block ) {
+
+		// Stop on the first quote block.
+		if ( 'core/quote' === $block['blockName'] ) {
+
+			// Parse the content of the blocks inside the quote.
+			foreach ( $block['innerBlocks'] as $inner_block ) {
+
+				// Remove any found cite block and pass to the global context.
+				$output .= preg_replace_callback(
+					'/<cite\b[^>]*>(.*?)<\/cite>/',
+					function ( $matches ) use ( &$source ) {
+						if ( isset( $matches[1] ) ) {
+							$source = $matches[1];
+						}
+
+						return '';
+					},
+					$inner_block['innerHTML']
+				);
+			}
+
+			// Only parse the first quote block.
+			break;
+		}
+	}
+
+	// Set the current context.
+	tumblr3_set_parse_context(
+		'quote',
+		array(
+			'quote'  => $output,
+			'source' => $source,
+			'length' => strlen( $output ),
+		)
+	);
+
+	// Parse the content of the quote block before resetting the context.
+	$content = tumblr3_do_shortcode( $content );
+
+	tumblr3_set_parse_context( 'theme', true );
 
 	return $content;
 }
 add_shortcode( 'block_quote', 'tumblr3_block_quote' );
+
+/**
+ * Tests for a source in the quote post format.
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_source( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is a quote post and has a source.
+	if ( isset( $context['quote'] ) &&
+		is_array( $context['quote'] ) &&
+		isset( $context['quote']['source'] ) &&
+		! empty( $context['quote']['source'] )
+	) {
+		return tumblr3_do_shortcode( $content );
+	}
+
+	// Return nothing if no source is found.
+	return '';
+}
+add_shortcode( 'block_source', 'tumblr3_block_source' );
 
 /**
  * Rendered for chat posts.

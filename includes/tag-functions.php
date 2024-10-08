@@ -661,8 +661,6 @@ add_shortcode( 'tag_searchresultcount', 'tumblr3_tag_searchresultcount' );
 /**
  * Quote post content.
  *
- * @todo This.
- *
  * @param array $attributes The attributes of the shortcode.
  * @param string $content The content of the shortcode.
  * @return string
@@ -670,25 +668,20 @@ add_shortcode( 'tag_searchresultcount', 'tumblr3_tag_searchresultcount' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_quote( $atts, $content = '' ): string {
-	$post_content = get_the_content();
-	$processor    = new WP_HTML_Tag_Processor( $post_content );
+	$context = tumblr3_get_parse_context();
 
-	// Find the first blockquote in the post content.
-	while ( $processor->next_tag( 'BLOCKQUOTE' ) ) {
-
-		// If a blockquote was found, return its content.
-		return wp_strip_all_tags( $processor->get_updated_html() );
+	// Test if the current context is a quote post and has a source.
+	if ( isset( $context['quote'] ) && is_array( $context['quote'] ) && isset( $context['quote']['quote'] ) ) {
+		return $context['quote']['quote'];
 	}
 
-	// No blockquote found, return nothing.
+	// Empty string if no quote block is found.
 	return '';
 }
 add_shortcode( 'tag_quote', 'tumblr3_tag_quote' );
 
 /**
  * Quote post source.
- *
- * @todo This.
  *
  * @param array $attributes The attributes of the shortcode.
  * @param string $content The content of the shortcode.
@@ -697,17 +690,45 @@ add_shortcode( 'tag_quote', 'tumblr3_tag_quote' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_source( $atts, $content = '' ): string {
-	$processor = WP_HTML_Processor::create_fragment( get_the_content() );
+	$context = tumblr3_get_parse_context();
 
-	// Find the first blockquote in the post content.
-	while ( $processor->next_tag( array( 'breadcrumbs' => array( 'BLOCKQUOTE', 'CITE' ) ) ) ) {
-		return $processor->get_modifiable_text();
+	// Test if the current context is a quote post and has a source.
+	if ( isset( $context['quote'] ) && is_array( $context['quote'] ) && isset( $context['quote']['source'] ) ) {
+		return $context['quote']['source'];
 	}
 
-	// No Cite found, return nothing.
 	return '';
 }
 add_shortcode( 'tag_source', 'tumblr3_tag_source' );
+
+/**
+ * Quote content length.
+ * "short", "medium", "long"
+ *
+ * @param array $attributes The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ *
+ * @see https://github.tumblr.net/Tumblr/tumblr/blob/046755128a6d61010fcaf4459f8efdc895140ad0/app/models/post.php#L7459
+ */
+function tumblr3_tag_length( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is a quote post and has a length.
+	if ( isset( $context['quote'] ) && is_array( $context['quote'] ) && isset( $context['quote']['length'] ) ) {
+		$length = $context['quote']['length'];
+
+		if ( $length < 100 ) {
+			return 'short';
+		} elseif ( $length < 250 ) {
+			return 'medium';
+		}
+	}
+
+	// Default to long.
+	return 'long';
+}
+add_shortcode( 'tag_length', 'tumblr3_tag_length' );
 
 /**
  * Avatar shape.

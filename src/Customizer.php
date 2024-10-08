@@ -272,18 +272,6 @@ class Customizer {
 			}
 
 			/**
-			 * Select options. These need to be processed after all other options.
-			 */
-			if ( str_starts_with( $name, 'select:' ) ) {
-				$name = ltrim( $name, 'select:' );
-
-				$select_options[ $name ][] = array(
-					'content' => $processor->get_attribute( 'content' ),
-					'title'   => $processor->get_attribute( 'title' ),
-				);
-			}
-
-			/**
 			 * Text options.
 			 */
 			if ( str_starts_with( $name, 'text:' ) ) {
@@ -359,11 +347,26 @@ class Customizer {
 
 				continue;
 			}
+
+			/**
+			 * Select options. These need to be processed after all other options.
+			 */
+			if ( str_starts_with( $name, 'select:' ) ) {
+				$name = ltrim( $name, 'select:' );
+
+				$select_options[ $name ][] = array(
+					'content' => $processor->get_attribute( 'content' ),
+					'title'   => $processor->get_attribute( 'title' ),
+				);
+			}
 		}
 
 		// Parse out select options now that we have aggregated them.
-		foreach ( $select_options as $name => $options ) {
+		foreach ( $select_options as $label => $options ) {
 			$default = ( isset( $options[0], $options[0]['content'] ) ) ? $options[0]['content'] : '';
+
+			// Option names need to be lowercase and without spaces.
+			$name = str_replace( ' ', '', strtolower( $label ) );
 
 			$wp_customize->add_setting(
 				$name,
@@ -377,7 +380,7 @@ class Customizer {
 			$wp_customize->add_control(
 				$name,
 				array(
-					'label'    => $name,
+					'label'    => $label,
 					'section'  => 'tumblr3_select',
 					'type'     => 'select',
 					'choices'  => array_column( $options, 'title', 'content' ),

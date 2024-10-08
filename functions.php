@@ -56,6 +56,16 @@ function tumblr3_do_shortcode( $content, $ignore_html = false ) {
 	return $content;
 }
 
+function tumblr3_get_parse_context() {
+	global $tumblr3_parse_context;
+	return $tumblr3_parse_context;
+}
+
+function tumblr3_set_parse_context( $key, $value ) {
+	global $tumblr3_parse_context;
+	$tumblr3_parse_context = array( $key => $value );
+}
+
 /**
  * Undocumented function
  *
@@ -130,7 +140,10 @@ function tumblr3_theme_parse( $content ) {
 			 */
 			foreach ( $options as $option ) {
 				if ( str_starts_with( $raw_tag, $option ) ) {
-					return get_theme_mod( str_replace( ' ', '', ltrim( $raw_tag, $option ) ) );
+					$option_name = strtolower( str_replace( ' ', '', substr( $raw_tag, strlen( $option ) ) ) );
+					$theme_mod   = get_theme_mod( $option_name );
+
+					return $theme_mod ? $theme_mod : $captured_tag;
 				}
 			}
 
