@@ -161,11 +161,7 @@ add_shortcode( 'block_hidetitle', 'tumblr3_block_hidetitle' );
  * @return string
  */
 function tumblr3_block_showdescription( $atts, $content = '' ): string {
-	if ( ! display_header_text() ) {
-		return '';
-	}
-
-	return tumblr3_do_shortcode( $content );
+	return display_header_text() ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_showdescription', 'tumblr3_block_showdescription' );
 
@@ -177,11 +173,7 @@ add_shortcode( 'block_showdescription', 'tumblr3_block_showdescription' );
  * @return string
  */
 function tumblr3_block_hidedescription( $atts, $content = '' ): string {
-	if ( display_header_text() ) {
-		return '';
-	}
-
-	return tumblr3_do_shortcode( $content );
+	return display_header_text() ? '' : tumblr3_do_shortcode( $content );
 }
 add_shortcode( 'block_hidedescription', 'tumblr3_block_hidedescription' );
 
@@ -195,11 +187,7 @@ add_shortcode( 'block_hidedescription', 'tumblr3_block_hidedescription' );
  * @return string
  */
 function tumblr3_block_more( $atts, $content = '' ): string {
-	if ( ! in_the_loop() ) {
-		return '';
-	}
-
-	return tumblr3_do_shortcode( $content );
+	return in_the_loop() ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_more', 'tumblr3_block_more' );
 
@@ -211,11 +199,7 @@ add_shortcode( 'block_more', 'tumblr3_block_more' );
  * @return string
  */
 function tumblr3_block_description( $atts, $content = '' ): string {
-	if ( ! has_excerpt() ) {
-		return '';
-	}
-
-	return tumblr3_do_shortcode( $content );
+	return has_excerpt() ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_description', 'tumblr3_block_description' );
 
@@ -269,7 +253,7 @@ function tumblr3_block_tags( $atts, $content = '' ): string {
 	$terms  = wp_get_post_terms( get_the_ID() );
 
 	foreach ( $terms as $term ) {
-		tumblr3_set_parse_context( '', $term );
+		tumblr3_set_parse_context( 'term', $term );
 		$output .= tumblr3_do_shortcode( $content );
 	}
 
@@ -316,14 +300,10 @@ add_shortcode( 'block_pages', 'tumblr3_block_pages' );
  *
  * @param [type] $atts
  * @param string $content
- * @return void
+ * @return string
  */
 function tumblr3_block_searchpage( $atts, $content = '' ): string {
-	if ( is_search() ) {
-		return tumblr3_do_shortcode( $content );
-	}
-
-	return '';
+	return is_search() ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_searchpage', 'tumblr3_block_searchpage' );
 
@@ -332,7 +312,7 @@ add_shortcode( 'block_searchpage', 'tumblr3_block_searchpage' );
  *
  * @param [type] $atts
  * @param string $content
- * @return void
+ * @return string
  */
 function tumblr3_block_nosearchresults( $atts, $content = '' ): string {
 	global $wp_query;
@@ -349,11 +329,7 @@ add_shortcode( 'block_nosearchresults', 'tumblr3_block_nosearchresults' );
  * @return string
  */
 function tumblr3_block_tagpage( $atts, $content = '' ): string {
-	if ( is_tag() || is_category() ) {
-		return tumblr3_do_shortcode( $content );
-	}
-
-	return '';
+	return ( is_tag() || is_category() ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_tagpage', 'tumblr3_block_tagpage' );
 
@@ -365,11 +341,7 @@ add_shortcode( 'block_tagpage', 'tumblr3_block_tagpage' );
  * @return string
  */
 function tumblr3_block_permalinkpage( $atts, $content = '' ): string {
-	if ( is_page() || is_single() ) {
-		return tumblr3_do_shortcode( $content );
-	}
-
-	return '';
+	return ( is_page() || is_single() ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_permalinkpage', 'tumblr3_block_permalinkpage' );
 
@@ -381,11 +353,7 @@ add_shortcode( 'block_permalinkpage', 'tumblr3_block_permalinkpage' );
  * @return string
  */
 function tumblr3_block_indexpage( $atts, $content = '' ): string {
-	if ( is_home() ) {
-		return tumblr3_do_shortcode( $content );
-	}
-
-	return '';
+	return is_home() ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_indexpage', 'tumblr3_block_indexpage' );
 
@@ -397,11 +365,7 @@ add_shortcode( 'block_indexpage', 'tumblr3_block_indexpage' );
  * @return string
  */
 function tumblr3_block_homepage( $atts, $content = '' ): string {
-	if ( is_front_page() ) {
-		return tumblr3_do_shortcode( $content );
-	}
-
-	return '';
+	return is_front_page() ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_homepage', 'tumblr3_block_homepage' );
 
@@ -509,12 +473,7 @@ add_shortcode( 'block_jumppage', 'tumblr3_block_jumppage' );
  * @return string
  */
 function tumblr3_block_posttitle( $atts, $content = '' ): string {
-	if ( ! is_single() ) {
-		return '';
-	}
-
-	// Pass this off to the title block to avoid duplication.
-	return tumblr3_block_title( $content );
+	return is_single() ? tumblr3_block_title( $content ) : '';
 }
 add_shortcode( 'block_posttitle', 'tumblr3_block_posttitle' );
 
@@ -705,11 +664,7 @@ function tumblr3_block_source( $atts, $content = '' ): string {
 	$context = tumblr3_get_parse_context();
 
 	// Test if the current context is a quote post and has a source.
-	if ( isset( $context['quote'] ) &&
-		is_array( $context['quote'] ) &&
-		isset( $context['quote']['source'] ) &&
-		! empty( $context['quote']['source'] )
-	) {
+	if ( isset( $context['quote'], $context['quote']['source'] ) && ! empty( $context['quote']['source'] ) ) {
 		return tumblr3_do_shortcode( $content );
 	}
 

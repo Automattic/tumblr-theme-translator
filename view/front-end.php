@@ -19,12 +19,6 @@ wp_footer();
 $footer = ob_get_contents();
 ob_end_clean();
 
-// Capture body_class output.
-ob_start();
-body_class();
-$body_class = ob_get_contents();
-ob_end_clean();
-
 $theme = str_replace( '</head>', $head . '</head>', $theme );
 $theme = str_replace( '</body>', $footer . '</body>', $theme );
 

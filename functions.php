@@ -141,14 +141,15 @@ function tumblr3_theme_parse( $content ): string {
 			 */
 			foreach ( $modifiers as $modifier ) {
 				if ( str_starts_with( $raw_tag, $modifier ) ) {
-
+					// Tag with a modifier at the front.
+					//[tag_name modifier="RGB"]
 				}
 			}
 
 			/**
 			 * Handle theme options (dynamic tags).
 			 *
-			 * @todo This system doesn't account for modifiers at the front of tags.
+			 * @todo This system doesn't account for modifiers at the front of tags. This might not be a problem however.
 			 */
 			foreach ( $options as $option ) {
 				if ( str_starts_with( $raw_tag, $option ) ) {
@@ -160,6 +161,7 @@ function tumblr3_theme_parse( $content ): string {
 			}
 
 			// Verify the block against our array.
+			// @todo write attribute parser.
 			if ( str_starts_with( ltrim( $raw_tag, '/' ), 'block:' ) ) {
 				$block_parts = explode( ' ', trim( $raw_tag ) );
 

@@ -27,10 +27,9 @@ final class Hooks {
 	/**
 	 * Redirects the template to the plugin's front-end template.
 	 *
-	 * @param string $template
 	 * @return string Updated template path.
 	 */
-	public function redirect_frontend_templates( string $template ): string {
+	public function redirect_frontend_templates(): string {
 		return TUMBLR3_PATH . 'view/front-end.php';
 	}
 }
