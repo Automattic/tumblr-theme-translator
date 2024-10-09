@@ -26,7 +26,7 @@ class Customizer {
 	}
 
 	/**
-	 * Customizer sections.
+	 * Remove WordPress default settings and sections.
 	 *
 	 * @param WP_Customize_Manager $wp_customize
 	 * @return void
@@ -40,7 +40,7 @@ class Customizer {
 	}
 
 	/**
-	 * Undocumented function
+	 * Creates global options to match standard Tumblr options.
 	 *
 	 * @param WP_Customize_Manager $wp_customize
 	 * @return void
@@ -65,6 +65,48 @@ class Customizer {
 					'section'  => 'colors',
 					'settings' => 'accent_color',
 				)
+			)
+		);
+
+		// Add a TitleFont text control.
+		$wp_customize->add_setting(
+			'title_font',
+			array(
+				'default'           => 'Arial',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'title_font',
+			array(
+				'label'    => __( 'Title Font', 'tumblr3' ),
+				'section'  => 'tumblr3_font',
+				'type'     => 'text',
+				'priority' => 10,
+			)
+		);
+
+		// Add a TitleFontWeight select control.
+		$wp_customize->add_setting(
+			'title_font_weight',
+			array(
+				'default'           => 'bold',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'title_font_weight',
+			array(
+				'label'    => __( 'Title Font Weight', 'tumblr3' ),
+				'section'  => 'tumblr3_font',
+				'type'     => 'select',
+				'choices'  => array(
+					'normal' => 'Normal',
+					'bold'   => 'Bold',
+				),
+				'priority' => 10,
 			)
 		);
 	}
@@ -388,47 +430,5 @@ class Customizer {
 				)
 			);
 		}
-
-		// Add a TitleFont text control.
-		$wp_customize->add_setting(
-			'title_font',
-			array(
-				'default'           => 'Arial',
-				'sanitize_callback' => 'sanitize_text_field',
-			)
-		);
-
-		$wp_customize->add_control(
-			'title_font',
-			array(
-				'label'    => __( 'Title Font', 'tumblr3' ),
-				'section'  => 'tumblr3_font',
-				'type'     => 'text',
-				'priority' => 10,
-			)
-		);
-
-		// Add a TitleFontWeight select control.
-		$wp_customize->add_setting(
-			'title_font_weight',
-			array(
-				'default'           => 'bold',
-				'sanitize_callback' => 'sanitize_text_field',
-			)
-		);
-
-		$wp_customize->add_control(
-			'title_font_weight',
-			array(
-				'label'    => __( 'Title Font Weight', 'tumblr3' ),
-				'section'  => 'tumblr3_font',
-				'type'     => 'select',
-				'choices'  => array(
-					'normal' => 'Normal',
-					'bold'   => 'Bold',
-				),
-				'priority' => 10,
-			)
-		);
 	}
 }

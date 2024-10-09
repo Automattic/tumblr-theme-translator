@@ -11,8 +11,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_backgroundcolor( $atts, $content = '' ): string {
-	return '#' . ltrim( get_theme_mod( 'background_color', '#fff' ), '#' );
+function tumblr3_tag_backgroundcolor(): string {
+	return '#' . sanitize_hex_color_no_hash( get_theme_mod( 'background_color', '#fff' ) );
 }
 add_shortcode( 'tag_backgroundcolor', 'tumblr3_tag_backgroundcolor' );
 
@@ -25,8 +25,8 @@ add_shortcode( 'tag_backgroundcolor', 'tumblr3_tag_backgroundcolor' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_accentcolor( $atts, $content = '' ): string {
-	return '#' . ltrim( get_theme_mod( 'accent_color', '#0073aa' ), '#' );
+function tumblr3_tag_accentcolor(): string {
+	return '#' . sanitize_hex_color_no_hash( get_theme_mod( 'accent_color', '#0073aa' ) );
 }
 add_shortcode( 'tag_accentcolor', 'tumblr3_tag_accentcolor' );
 
@@ -39,8 +39,8 @@ add_shortcode( 'tag_accentcolor', 'tumblr3_tag_accentcolor' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_titlecolor( $atts, $content = '' ): string {
-	return '#' . ltrim( get_theme_mod( 'header_textcolor', '#000' ), '#' );
+function tumblr3_tag_titlecolor(): string {
+	return '#' . sanitize_hex_color_no_hash( get_theme_mod( 'header_textcolor', '#000' ) );
 }
 add_shortcode( 'tag_titlecolor', 'tumblr3_tag_titlecolor' );
 
@@ -53,7 +53,7 @@ add_shortcode( 'tag_titlecolor', 'tumblr3_tag_titlecolor' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_titlefont( $atts, $content = '' ): string {
+function tumblr3_tag_titlefont(): string {
 	return esc_html( get_theme_mod( 'title_font', 'Arial' ) );
 }
 add_shortcode( 'tag_titlefont', 'tumblr3_tag_titlefont' );
@@ -67,7 +67,7 @@ add_shortcode( 'tag_titlefont', 'tumblr3_tag_titlefont' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_titlefontweight( $atts, $content = '' ): string {
+function tumblr3_tag_titlefontweight(): string {
 	return esc_html( get_theme_mod( 'title_font_weight', 'bold' ) );
 }
 add_shortcode( 'tag_titlefontweight', 'tumblr3_tag_titlefontweight' );
@@ -81,7 +81,7 @@ add_shortcode( 'tag_titlefontweight', 'tumblr3_tag_titlefontweight' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_headerimage( $atts, $content = '' ): string {
+function tumblr3_tag_headerimage(): string {
 	return get_theme_mod( 'header_image', 'remove-header' );
 }
 add_shortcode( 'tag_headerimage', 'tumblr3_tag_headerimage' );
@@ -95,11 +95,11 @@ add_shortcode( 'tag_headerimage', 'tumblr3_tag_headerimage' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_title( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
+function tumblr3_tag_title(): string {
+	$context = tumblr3_get_parse_context();
 
 	// Consume global context and return the appropriate title.
-	return ( 'theme' === $tumblr3_parse_context ) ? get_bloginfo( 'name' ) : get_the_title();
+	return ( isset( $context['theme'] ) ) ? get_bloginfo( 'name' ) : get_the_title();
 }
 add_shortcode( 'tag_title', 'tumblr3_tag_title' );
 add_shortcode( 'tag_posttitle', 'tumblr3_tag_title' );
@@ -113,7 +113,7 @@ add_shortcode( 'tag_posttitle', 'tumblr3_tag_title' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_body( $atts, $content = '' ): string {
+function tumblr3_tag_body(): string {
 	return apply_filters( 'the_content', get_the_content() );
 }
 add_shortcode( 'tag_body', 'tumblr3_tag_body' );
@@ -127,8 +127,8 @@ add_shortcode( 'tag_body', 'tumblr3_tag_body' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_description( $atts, $content = '' ): string {
-	return get_bloginfo( 'description' );
+function tumblr3_tag_description(): string {
+	return wp_kses_post( get_bloginfo( 'description' ) );
 }
 add_shortcode( 'tag_description', 'tumblr3_tag_description' );
 
@@ -141,7 +141,7 @@ add_shortcode( 'tag_description', 'tumblr3_tag_description' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_metadescription( $atts, $content = '' ): string {
+function tumblr3_tag_metadescription(): string {
 	return esc_attr( get_the_excerpt() );
 }
 add_shortcode( 'tag_metadescription', 'tumblr3_tag_metadescription' );
@@ -155,7 +155,7 @@ add_shortcode( 'tag_metadescription', 'tumblr3_tag_metadescription' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_blogurl( $atts, $content = '' ): string {
+function tumblr3_tag_blogurl(): string {
 	return esc_url( home_url( '/' ) );
 }
 add_shortcode( 'tag_blogurl', 'tumblr3_tag_blogurl' );
@@ -183,7 +183,7 @@ add_shortcode( 'tag_rss', 'tumblr3_tag_rss' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_favicon( $atts, $content = '' ): string {
+function tumblr3_tag_favicon(): string {
 	return esc_url( get_site_icon_url() );
 }
 add_shortcode( 'tag_favicon', 'tumblr3_tag_favicon' );
@@ -267,11 +267,11 @@ add_shortcode( 'tag_postsummary', 'tumblr3_tag_postsummary' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_url( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
+	$context = tumblr3_get_parse_context();
 
 	// Handle the jump pagination context for this tag.
-	if ( is_int( $tumblr3_parse_context ) ) {
-		return '/page/' . $tumblr3_parse_context;
+	if ( isset( $context['jumppagination'] ) ) {
+		return '/page/' . intval( $context['jumppagination'] );
 	}
 
 	return get_permalink();
@@ -280,6 +280,7 @@ add_shortcode( 'tag_url', 'tumblr3_tag_url' );
 add_shortcode( 'tag_permalink', 'tumblr3_tag_url' );
 add_shortcode( 'tag_relativepermalink', 'tumblr3_tag_url' );
 add_shortcode( 'tag_shorturl', 'tumblr3_tag_url' );
+add_shortcode( 'tag_embedurl', 'tumblr3_tag_url' );
 
 /**
  * Undocumented function
@@ -367,11 +368,11 @@ add_shortcode( 'tag_nextpost', 'tumblr3_tag_nextpost' );
  *
  * @param array $attributes The attributes of the shortcode.
  * @param string $content The content of the shortcode.
- * @return string
+ * @return string|null
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_previouspage( $atts, $content = '' ): string {
+function tumblr3_tag_previouspage(): string|null {
 	return get_next_posts_page_link();
 }
 add_shortcode( 'tag_previouspage', 'tumblr3_tag_previouspage' );
@@ -381,11 +382,11 @@ add_shortcode( 'tag_previouspage', 'tumblr3_tag_previouspage' );
  *
  * @param array $attributes The attributes of the shortcode.
  * @param string $content The content of the shortcode.
- * @return string
+ * @return string|null
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_nextpage( $atts, $content = '' ): string {
+function tumblr3_tag_nextpage(): string|null {
 	return get_previous_posts_page_link();
 }
 add_shortcode( 'tag_nextpage', 'tumblr3_tag_nextpage' );
@@ -399,7 +400,7 @@ add_shortcode( 'tag_nextpage', 'tumblr3_tag_nextpage' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_currentpage( $atts, $content = '' ): string {
+function tumblr3_tag_currentpage(): string {
 	return get_query_var( 'paged' );
 }
 add_shortcode( 'tag_currentpage', 'tumblr3_tag_currentpage' );
@@ -411,9 +412,9 @@ add_shortcode( 'tag_currentpage', 'tumblr3_tag_currentpage' );
  * @param string $content The content of the shortcode.
  * @return string
  */
-function tumblr3_tag_pagenumber( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
-	return (string) $tumblr3_parse_context;
+function tumblr3_tag_pagenumber(): string {
+	$context = tumblr3_get_parse_context();
+	return isset( $context['jumppagination'] ) ? (string) $context['jumppagination'] : '';
 }
 add_shortcode( 'tag_pagenumber', 'tumblr3_tag_pagenumber' );
 
@@ -499,15 +500,15 @@ add_shortcode( 'tag_posttype', 'tumblr3_tag_posttype' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_tag( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
+function tumblr3_tag_tag(): string {
+	$context = tumblr3_get_parse_context();
 
 	// Check if we are in a tag context.
-	if ( ! is_a( $tumblr3_parse_context, 'WP_Term' ) ) {
+	if ( ! isset( $context['term'] ) || ! is_a( $context['term'], 'WP_Term' ) ) {
 		return '';
 	}
 
-	return $tumblr3_parse_context->name;
+	return $context['term']->name;
 }
 add_shortcode( 'tag_tag', 'tumblr3_tag_tag' );
 
@@ -520,15 +521,15 @@ add_shortcode( 'tag_tag', 'tumblr3_tag_tag' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_urlsafetag( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
+function tumblr3_tag_urlsafetag(): string {
+	$context = tumblr3_get_parse_context();
 
 	// Check if we are in a tag context.
-	if ( ! is_a( $tumblr3_parse_context, 'WP_Term' ) ) {
+	if ( ! isset( $context['term'] ) || ! is_a( $context['term'], 'WP_Term' ) ) {
 		return '';
 	}
 
-	return rawurlencode( $tumblr3_parse_context->name );
+	return rawurlencode( $context['term']->name );
 }
 add_shortcode( 'tag_urlsafetag', 'tumblr3_tag_urlsafetag' );
 
@@ -541,15 +542,15 @@ add_shortcode( 'tag_urlsafetag', 'tumblr3_tag_urlsafetag' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_tagurl( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
+function tumblr3_tag_tagurl(): string {
+	$context = tumblr3_get_parse_context();
 
 	// Check if we are in a tag context.
-	if ( ! is_a( $tumblr3_parse_context, 'WP_Term' ) ) {
+	if ( ! isset( $context['term'] ) || ! is_a( $context['term'], 'WP_Term' ) ) {
 		return '';
 	}
 
-	return get_term_link( $tumblr3_parse_context );
+	return get_term_link( $context['term'] );
 }
 add_shortcode( 'tag_tagurl', 'tumblr3_tag_tagurl' );
 add_shortcode( 'tag_tagurlchrono', 'tumblr3_tag_tagurl' );
@@ -743,23 +744,6 @@ function tumblr3_tag_avatarshape( $atts, $content = '' ): string {
 	return get_theme_mod( 'avatar_shape', 'circle' );
 }
 add_shortcode( 'tag_avatarshape', 'tumblr3_tag_avatarshape' );
-
-/**
- * The answer section of an ask post. {answer} and {replies} do the same thing.
- *
- * @todo This needs hooking up to a question/answer system.
- *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
- *
- * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
- */
-function tumblr3_tag_answer( $atts, $content = '' ): string {
-	return 'The answer.';
-}
-add_shortcode( 'tag_answer', 'tumblr3_tag_answer' );
-add_shortcode( 'tag_replies', 'tumblr3_tag_answer' );
 
 /**
  *

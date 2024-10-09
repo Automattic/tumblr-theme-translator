@@ -3,8 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Shortcodes don't currently have a doing_shortcode() or similar. So we need a global to track the context.
-global $tumblr3_parse_context;
-$tumblr3_parse_context = 'theme';
+tumblr3_set_parse_context( 'theme', true );
 
 $theme = get_option( 'tumblr3_theme_html', '' );
 

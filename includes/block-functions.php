@@ -139,11 +139,7 @@ add_shortcode( 'block_hideavatar', 'tumblr3_block_hideavatar' );
  * @return string
  */
 function tumblr3_block_showtitle( $atts, $content = '' ): string {
-	if ( ! display_header_text() ) {
-		return '';
-	}
-
-	return tumblr3_do_shortcode( $content );
+	return display_header_text() ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_showtitle', 'tumblr3_block_showtitle' );
 
@@ -155,11 +151,7 @@ add_shortcode( 'block_showtitle', 'tumblr3_block_showtitle' );
  * @return string
  */
 function tumblr3_block_hidetitle( $atts, $content = '' ): string {
-	if ( display_header_text() ) {
-		return '';
-	}
-
-	return tumblr3_do_shortcode( $content );
+	return display_header_text() ? '' : tumblr3_do_shortcode( $content );
 }
 add_shortcode( 'block_hidetitle', 'tumblr3_block_hidetitle' );
 
@@ -237,10 +229,8 @@ add_shortcode( 'block_description', 'tumblr3_block_description' );
  * @return string
  */
 function tumblr3_block_posts( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
-
-	$tumblr3_parse_context = 'posts';
-	$output                = '';
+	tumblr3_set_parse_context( 'posts', true );
+	$output = '';
 
 	// Use the content inside this shortcode as a template for each post.
 	if ( have_posts() ) {
@@ -251,7 +241,7 @@ function tumblr3_block_posts( $atts, $content = '' ): string {
 		}
 	}
 
-	$tumblr3_parse_context = 'theme';
+	tumblr3_set_parse_context( 'theme', true );
 
 	return $output;
 }
@@ -277,17 +267,15 @@ add_shortcode( 'block_noposts', 'tumblr3_block_noposts' );
  * @return string
  */
 function tumblr3_block_tags( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
-
 	$output = '';
 	$terms  = wp_get_post_terms( get_the_ID() );
 
 	foreach ( $terms as $term ) {
-		$tumblr3_parse_context = $term;
-		$output               .= tumblr3_do_shortcode( $content );
+		tumblr3_set_parse_context( '', $term );
+		$output .= tumblr3_do_shortcode( $content );
 	}
 
-	$tumblr3_parse_context = 'theme';
+	tumblr3_set_parse_context( 'theme', true );
 
 	return $output;
 }
@@ -301,10 +289,7 @@ add_shortcode( 'block_tags', 'tumblr3_block_tags' );
  * @return string
  */
 function tumblr3_block_pages( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
-
-	$tumblr3_parse_context = 'pages';
-	$output                = '';
+	$output = '';
 
 	$pages_query = new WP_Query(
 		array(
@@ -323,8 +308,6 @@ function tumblr3_block_pages( $atts, $content = '' ): string {
 	}
 
 	wp_reset_postdata();
-
-	$tumblr3_parse_context = 'theme';
 
 	return $output;
 }
@@ -356,11 +339,7 @@ add_shortcode( 'block_searchpage', 'tumblr3_block_searchpage' );
 function tumblr3_block_nosearchresults( $atts, $content = '' ): string {
 	global $wp_query;
 
-	if ( is_search() && 0 === $wp_query->found_posts ) {
-		return tumblr3_do_shortcode( $content );
-	}
-
-	return '';
+	return ( is_search() && 0 === $wp_query->found_posts ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_nosearchresults', 'tumblr3_block_nosearchresults' );
 
@@ -436,12 +415,9 @@ add_shortcode( 'block_homepage', 'tumblr3_block_homepage' );
  * @return string
  */
 function tumblr3_block_title( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
-
-	// Set the context to 'title' for the title block.
-	$tumblr3_parse_context = 'title';
-	$content               = tumblr3_do_shortcode( $content );
-	$tumblr3_parse_context = 'theme';
+	tumblr3_set_parse_context( 'title', true );
+	$content = tumblr3_do_shortcode( $content );
+	tumblr3_set_parse_context( 'theme', true );
 
 	return $content;
 }
@@ -457,14 +433,7 @@ add_shortcode( 'block_title', 'tumblr3_block_title' );
  * @return string
  */
 function tumblr3_block_pagination( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
-
-	// Set the context to pagination for everything wrapped in here.
-	$tumblr3_parse_context = 'pagination';
-	$content               = tumblr3_do_shortcode( $content );
-	$tumblr3_parse_context = 'theme';
-
-	return $content;
+	return tumblr3_do_shortcode( $content );
 }
 add_shortcode( 'block_pagination', 'tumblr3_block_pagination' );
 
@@ -485,17 +454,16 @@ function tumblr3_block_jumppagination( $atts, $content = '' ): string {
 		'block_jumppagination'
 	);
 
-	global $tumblr3_parse_context;
 	$output = '';
 
 	if ( $atts['length'] > 0 ) {
 		for ( $i = 1; $i <= $atts['length']; $i++ ) {
-			$tumblr3_parse_context = $i;
-			$output               .= tumblr3_do_shortcode( $content );
+			tumblr3_set_parse_context( 'jumppagination', $i );
+			$output .= tumblr3_do_shortcode( $content );
 		}
 	}
 
-	$tumblr3_parse_context = 'theme';
+	tumblr3_set_parse_context( 'theme', true );
 
 	return $output;
 }
@@ -510,11 +478,11 @@ add_shortcode( 'block_jumppagination', 'tumblr3_block_jumppagination' );
  * @return string
  */
 function tumblr3_block_currentpage( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
-	$var   = get_query_var( 'paged' );
-	$paged = $var ? $var : 1;
+	$context = tumblr3_get_parse_context();
+	$var     = get_query_var( 'paged' );
+	$paged   = $var ? $var : 1;
 
-	return ( $paged === $tumblr3_parse_context ) ? tumblr3_do_shortcode( $content ) : '';
+	return ( isset( $context['jumppagination'] ) && $paged === $context['jumppagination'] ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_currentpage', 'tumblr3_block_currentpage' );
 
@@ -527,11 +495,11 @@ add_shortcode( 'block_currentpage', 'tumblr3_block_currentpage' );
  * @return string
  */
 function tumblr3_block_jumppage( $atts, $content = '' ): string {
-	global $tumblr3_parse_context;
-	$var   = get_query_var( 'paged' );
-	$paged = $var ? $var : 1;
+	$context = tumblr3_get_parse_context();
+	$var     = get_query_var( 'paged' );
+	$paged   = $var ? $var : 1;
 
-	return ( $paged !== $tumblr3_parse_context ) ? tumblr3_do_shortcode( $content ) : '';
+	return ( isset( $context['jumppagination'] ) && $paged !== $context['jumppagination'] ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_jumppage', 'tumblr3_block_jumppage' );
 
