@@ -7,11 +7,9 @@ defined( 'ABSPATH' ) || exit;
  * Effectively, this shortcode strips unwanted HTML.
  * This is the desired outcome, so not marking as a missing block.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  */
-function tumblr3_block_options( $atts, $content = '' ): string {
+function tumblr3_block_options(): string {
 	return '';
 }
 add_shortcode( 'block_options', 'tumblr3_block_options' );

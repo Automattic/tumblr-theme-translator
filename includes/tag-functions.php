@@ -3,6 +3,18 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Avatar shape.
+ *
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_avatarshape(): string {
+	return esc_html( get_theme_mod( 'avatar_shape', 'circle' ) );
+}
+add_shortcode( 'tag_avatarshape', 'tumblr3_tag_avatarshape' );
+
+/**
  * Undocumented function
  *
  * @param array $attributes The attributes of the shortcode.
@@ -169,7 +181,7 @@ add_shortcode( 'tag_blogurl', 'tumblr3_tag_blogurl' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_rss( $atts, $content = '' ): string {
+function tumblr3_tag_rss(): string {
 	return esc_url( get_feed_link() );
 }
 add_shortcode( 'tag_rss', 'tumblr3_tag_rss' );
@@ -197,7 +209,7 @@ add_shortcode( 'tag_favicon', 'tumblr3_tag_favicon' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_portraiturl( $atts, $content = '' ): string {
+function tumblr3_tag_portraiturl( $atts ): string {
 	// Parse shortcode attributes.
 	$atts = shortcode_atts(
 		array(
@@ -237,7 +249,7 @@ add_shortcode( 'tag_portraiturl', 'tumblr3_tag_portraiturl' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_customcss( $atts, $content = '' ): string {
+function tumblr3_tag_customcss(): string {
 	return esc_html( wp_get_custom_css() );
 }
 add_shortcode( 'tag_customcss', 'tumblr3_tag_customcss' );
@@ -251,7 +263,7 @@ add_shortcode( 'tag_customcss', 'tumblr3_tag_customcss' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_postsummary( $atts, $content = '' ): string {
+function tumblr3_tag_postsummary(): string {
 	$title = get_the_title();
 	return ( '' === $title ) ? $title : get_the_excerpt();
 }
@@ -260,13 +272,11 @@ add_shortcode( 'tag_postsummary', 'tumblr3_tag_postsummary' );
 /**
  * Undocumented function
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_url( $atts, $content = '' ): string {
+function tumblr3_tag_url(): string {
 	$context = tumblr3_get_parse_context();
 
 	// Handle the jump pagination context for this tag.
@@ -291,21 +301,19 @@ add_shortcode( 'tag_embedurl', 'tumblr3_tag_url' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_label( $atts, $content = '' ): string {
-	return get_the_title();
+function tumblr3_tag_label(): string {
+	return wp_kses_post( get_the_title() );
 }
 add_shortcode( 'tag_label', 'tumblr3_tag_label' );
 
 /**
  * tagsasclasses outputs the tags of a post as HTML-safe classes.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tagsasclasses( $atts, $content = '' ): string {
+function tumblr3_tagsasclasses(): string {
 	$tags = get_the_tags();
 
 	if ( ! $tags || is_wp_error( $tags ) ) {
@@ -324,78 +332,66 @@ add_shortcode( 'tag_tagsasclasses', 'tumblr3_tagsasclasses' );
 /**
  * Undocumented function
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_pinnedpostlabel( $atts, $content = '' ): string {
-	return TUMBLR3_LANG['Pinned Post'];
+function tumblr3_tag_pinnedpostlabel(): string {
+	return esc_html( TUMBLR3_LANG['Pinned Post'] );
 }
 add_shortcode( 'tag_pinnedpostlabel', 'tumblr3_tag_pinnedpostlabel' );
 
 /**
  * Gets the previous post URL (single post pagination)
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_previouspost( $atts, $content = '' ): string {
-	return get_permalink( get_adjacent_post( false, '', true ) );
+function tumblr3_tag_previouspost(): string {
+	return esc_url( get_permalink( get_adjacent_post( false, '', true ) ) );
 }
 add_shortcode( 'tag_previouspost', 'tumblr3_tag_previouspost' );
 
 /**
  * Gets the next post URL (single post pagination)
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_nextpost( $atts, $content = '' ): string {
-	return get_permalink( get_adjacent_post( false, '', false ) );
+function tumblr3_tag_nextpost(): string {
+	return esc_url( get_permalink( get_adjacent_post( false, '', false ) ) );
 }
 add_shortcode( 'tag_nextpost', 'tumblr3_tag_nextpost' );
 
 /**
  * Gets the previous posts page URL (pagination)
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string|null
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_previouspage(): string|null {
-	return get_next_posts_page_link();
+	return esc_url( get_next_posts_page_link() );
 }
 add_shortcode( 'tag_previouspage', 'tumblr3_tag_previouspage' );
 
 /**
  * Gets the next posts page URL (pagination)
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string|null
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_nextpage(): string|null {
-	return get_previous_posts_page_link();
+	return esc_url( get_previous_posts_page_link() );
 }
 add_shortcode( 'tag_nextpage', 'tumblr3_tag_nextpage' );
 
 /**
  * Gets the current page value (pagination)
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
@@ -408,8 +404,6 @@ add_shortcode( 'tag_currentpage', 'tumblr3_tag_currentpage' );
 /**
  * The pagenumber tag inside jump pagination.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  */
 function tumblr3_tag_pagenumber(): string {
@@ -421,13 +415,11 @@ add_shortcode( 'tag_pagenumber', 'tumblr3_tag_pagenumber' );
 /**
  * Gets the query total pages (pagination)
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_totalpages( $atts, $content = '' ): string {
+function tumblr3_tag_totalpages(): string {
 	global $wp_query;
 	return $wp_query->max_num_pages;
 }
@@ -436,14 +428,12 @@ add_shortcode( 'tag_totalpages', 'tumblr3_tag_totalpages' );
 /**
  * Displays the span of years your blog has existed.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @todo find a way to get the install date of the blog.
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_copyrightyears( $atts, $content = '' ): string {
+function tumblr3_tag_copyrightyears(): string {
 	// Get the oldest post.
 	$oldest_post = get_posts(
 		array(
@@ -458,34 +448,30 @@ function tumblr3_tag_copyrightyears( $atts, $content = '' ): string {
 		return '';
 	}
 
-	return get_the_date( 'Y', $oldest_post[0] ) . '-' . date( 'Y' );
+	return get_the_date( 'Y', $oldest_post[0] ) . '-' . gmdate( 'Y' );
 }
 add_shortcode( 'tag_copyrightyears', 'tumblr3_tag_copyrightyears' );
 
 /**
  * The numeric ID for a post.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_postid( $atts, $content = '' ): string {
-	return get_the_ID();
+function tumblr3_tag_postid(): string {
+	return esc_attr( get_the_ID() );
 }
 add_shortcode( 'tag_postid', 'tumblr3_tag_postid' );
 
 /**
  * The name of the current legacy post type.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_posttype( $atts, $content = '' ): string {
+function tumblr3_tag_posttype(): string {
 	$format = get_post_format();
 	return ( $format ) ? $format : 'text';
 }
@@ -494,8 +480,6 @@ add_shortcode( 'tag_posttype', 'tumblr3_tag_posttype' );
 /**
  * Current tag name in a loop.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
@@ -515,8 +499,6 @@ add_shortcode( 'tag_tag', 'tumblr3_tag_tag' );
 /**
  * Current tag name in a loop.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
@@ -536,8 +518,6 @@ add_shortcode( 'tag_urlsafetag', 'tumblr3_tag_urlsafetag' );
 /**
  * Current tag url in a loop.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
@@ -556,29 +536,25 @@ add_shortcode( 'tag_tagurl', 'tumblr3_tag_tagurl' );
 add_shortcode( 'tag_tagurlchrono', 'tumblr3_tag_tagurl' );
 
 /**
- * Current tag url in a loop.
+ * The total number of comments on a post.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_notecount( $atts, $content = '' ): string {
+function tumblr3_tag_notecount(): string {
 	return get_comment_number();
 }
 add_shortcode( 'tag_notecount', 'tumblr3_tag_notecount' );
 
 /**
- * Current tag url in a loop.
+ * The total number of comments on a post in text form.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_notecountwithlabel( $atts, $content = '' ): string {
+function tumblr3_tag_notecountwithlabel(): string {
 	return get_comments_number_text();
 }
 add_shortcode( 'tag_notecountwithlabel', 'tumblr3_tag_notecountwithlabel' );
@@ -590,12 +566,11 @@ add_shortcode( 'tag_notecountwithlabel', 'tumblr3_tag_notecountwithlabel' );
  * We need to match the output of tumblr post notes for styling consistency.
  *
  * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_postnotes( $atts, $content = '' ): string {
+function tumblr3_tag_postnotes( $atts ): string {
 	// Parse shortcode attributes.
 	$atts = shortcode_atts(
 		array(
@@ -619,27 +594,23 @@ add_shortcode( 'tag_postnotes', 'tumblr3_tag_postnotes' );
 /**
  * The current search query.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_searchquery( $atts, $content = '' ): string {
-	return get_search_query();
+function tumblr3_tag_searchquery(): string {
+	return esc_html( get_search_query() );
 }
 add_shortcode( 'tag_searchquery', 'tumblr3_tag_searchquery' );
 
 /**
  * The current search query URL encoded.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_urlsafesearchquery( $atts, $content = '' ): string {
+function tumblr3_tag_urlsafesearchquery(): string {
 	return rawurlencode( get_search_query() );
 }
 add_shortcode( 'tag_urlsafesearchquery', 'tumblr3_tag_urlsafesearchquery' );
@@ -647,13 +618,11 @@ add_shortcode( 'tag_urlsafesearchquery', 'tumblr3_tag_urlsafesearchquery' );
 /**
  * The found posts count of the search result.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_searchresultcount( $atts, $content = '' ): string {
+function tumblr3_tag_searchresultcount(): string {
 	global $wp_query;
 	return $wp_query->found_posts;
 }
@@ -662,13 +631,11 @@ add_shortcode( 'tag_searchresultcount', 'tumblr3_tag_searchresultcount' );
 /**
  * Quote post content.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_quote( $atts, $content = '' ): string {
+function tumblr3_tag_quote(): string {
 	$context = tumblr3_get_parse_context();
 
 	// Test if the current context is a quote post and has a source.
@@ -684,13 +651,11 @@ add_shortcode( 'tag_quote', 'tumblr3_tag_quote' );
 /**
  * Quote post source.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_source( $atts, $content = '' ): string {
+function tumblr3_tag_source(): string {
 	$context = tumblr3_get_parse_context();
 
 	// Test if the current context is a quote post and has a source.
@@ -706,13 +671,11 @@ add_shortcode( 'tag_source', 'tumblr3_tag_source' );
  * Quote content length.
  * "short", "medium", "long"
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://github.tumblr.net/Tumblr/tumblr/blob/046755128a6d61010fcaf4459f8efdc895140ad0/app/models/post.php#L7459
  */
-function tumblr3_tag_length( $atts, $content = '' ): string {
+function tumblr3_tag_length(): string {
 	$context = tumblr3_get_parse_context();
 
 	// Test if the current context is a quote post and has a length.
@@ -732,381 +695,313 @@ function tumblr3_tag_length( $atts, $content = '' ): string {
 add_shortcode( 'tag_length', 'tumblr3_tag_length' );
 
 /**
- * Avatar shape.
- *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
- *
- * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
- */
-function tumblr3_tag_avatarshape( $atts, $content = '' ): string {
-	return get_theme_mod( 'avatar_shape', 'circle' );
-}
-add_shortcode( 'tag_avatarshape', 'tumblr3_tag_avatarshape' );
-
-/**
- *
- *
  * @todo Understand what Tumblr outputs in this tag.
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
+ *
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_posttypographystyles( $atts, $content = '' ): string {
+function tumblr3_tag_posttypographystyles(): string {
 	return '<style></style>';
 }
 add_shortcode( 'tag_posttypographystyles', 'tumblr3_tag_posttypographystyles' );
-
 /**
- * Undocumented function
+ * Returns the day of the month without leading zeros.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_dayofmonth( $atts, $content = '' ): string {
+function tumblr3_tag_dayofmonth(): string {
 	return get_the_date( 'j' );
 }
 add_shortcode( 'tag_dayofmonth', 'tumblr3_tag_dayofmonth' );
 
 /**
- * Undocumented function
+ * Returns the day of the month with leading zeros.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_dayofmonthwithzero( $atts, $content = '' ): string {
+function tumblr3_tag_dayofmonthwithzero(): string {
 	return get_the_date( 'd' );
 }
 add_shortcode( 'tag_dayofmonthwithzero', 'tumblr3_tag_dayofmonthwithzero' );
 
 /**
- * Undocumented function
+ * Returns the full name of the day of the week.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_dayofweek( $atts, $content = '' ): string {
+function tumblr3_tag_dayofweek(): string {
 	return get_the_date( 'l' );
 }
 add_shortcode( 'tag_dayofweek', 'tumblr3_tag_dayofweek' );
 
 /**
- * Undocumented function
+ * Returns the abbreviated name of the day of the week.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_shortdayofweek( $atts, $content = '' ): string {
+function tumblr3_tag_shortdayofweek(): string {
 	return get_the_date( 'D' );
 }
 add_shortcode( 'tag_shortdayofweek', 'tumblr3_tag_shortdayofweek' );
 
 /**
- * Undocumented function
+ * Returns the day of the week as a number (1 for Monday, 7 for Sunday).
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_dayofweeknumber( $atts, $content = '' ): string {
+function tumblr3_tag_dayofweeknumber(): string {
 	return get_the_date( 'N' );
 }
 add_shortcode( 'tag_dayofweeknumber', 'tumblr3_tag_dayofweeknumber' );
 
 /**
- * Undocumented function
+ * Returns the English ordinal suffix for the day of the month.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_dayofmonthsuffix( $atts, $content = '' ): string {
+function tumblr3_tag_dayofmonthsuffix(): string {
 	return get_the_date( 'S' );
 }
 add_shortcode( 'tag_dayofmonthsuffix', 'tumblr3_tag_dayofmonthsuffix' );
 
 /**
- * Undocumented function
+ * Returns the day of the year (1 to 365).
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_dayofyear( $atts, $content = '' ): string {
+function tumblr3_tag_dayofyear(): string {
 	return get_the_date( 'z' ) + 1; // Adding 1 because PHP date 'z' is zero-indexed
 }
 add_shortcode( 'tag_dayofyear', 'tumblr3_tag_dayofyear' );
 
 /**
- * Undocumented function
+ * Returns the week of the year (1 to 53).
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_weekofyear( $atts, $content = '' ): string {
+function tumblr3_tag_weekofyear(): string {
 	return get_the_date( 'W' );
 }
 add_shortcode( 'tag_weekofyear', 'tumblr3_tag_weekofyear' );
 
 /**
- * Undocumented function
+ * Returns the full name of the current month.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_month( $atts, $content = '' ): string {
+function tumblr3_tag_month(): string {
 	return get_the_date( 'F' );
 }
 add_shortcode( 'tag_month', 'tumblr3_tag_month' );
 
 /**
- * Undocumented function
+ * Returns the abbreviated name of the current month.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_shortmonth( $atts, $content = '' ): string {
+function tumblr3_tag_shortmonth(): string {
 	return get_the_date( 'M' );
 }
 add_shortcode( 'tag_shortmonth', 'tumblr3_tag_shortmonth' );
 
 /**
- * Undocumented function
+ * Returns the numeric representation of the month without leading zeros.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_monthnumber( $atts, $content = '' ): string {
+function tumblr3_tag_monthnumber(): string {
 	return get_the_date( 'n' );
 }
 add_shortcode( 'tag_monthnumber', 'tumblr3_tag_monthnumber' );
 
 /**
- * Undocumented function
+ * Returns the numeric representation of the month with leading zeros.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_monthnumberwithzero( $atts, $content = '' ): string {
+function tumblr3_tag_monthnumberwithzero(): string {
 	return get_the_date( 'm' );
 }
 add_shortcode( 'tag_monthnumberwithzero', 'tumblr3_tag_monthnumberwithzero' );
 
 /**
- * Undocumented function
+ * Returns the full numeric representation of the year (e.g., 2024).
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_year( $atts, $content = '' ): string {
+function tumblr3_tag_year(): string {
 	return get_the_date( 'Y' );
 }
 add_shortcode( 'tag_year', 'tumblr3_tag_year' );
 
 /**
- * Undocumented function
+ * Returns the last two digits of the year (e.g., 24 for 2024).
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_shortyear( $atts, $content = '' ): string {
+function tumblr3_tag_shortyear(): string {
 	return get_the_date( 'y' );
 }
 add_shortcode( 'tag_shortyear', 'tumblr3_tag_shortyear' );
 
 /**
- * Undocumented function
+ * Returns lowercase 'am' or 'pm' based on the time.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_ampm( $atts, $content = '' ): string {
+function tumblr3_tag_ampm(): string {
 	return get_the_date( 'a' );
 }
 add_shortcode( 'tag_ampm', 'tumblr3_tag_ampm' );
 
 /**
- * Undocumented function
+ * Returns uppercase 'AM' or 'PM' based on the time.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_capitalampm( $atts, $content = '' ): string {
+function tumblr3_tag_capitalampm(): string {
 	return get_the_date( 'A' );
 }
 add_shortcode( 'tag_capitalampm', 'tumblr3_tag_capitalampm' );
 
 /**
- * Undocumented function
+ * Returns the hour in 12-hour format without leading zeros.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_12hour( $atts, $content = '' ): string {
+function tumblr3_tag_12hour(): string {
 	return get_the_date( 'g' );
 }
 add_shortcode( 'tag_12hour', 'tumblr3_tag_12hour' );
 
 /**
- * Undocumented function
+ * Returns the hour in 24-hour format without leading zeros.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_24hour( $atts, $content = '' ): string {
+function tumblr3_tag_24hour(): string {
 	return get_the_date( 'G' );
 }
 add_shortcode( 'tag_24hour', 'tumblr3_tag_24hour' );
 
 /**
- * Undocumented function
+ * Returns the hour in 12-hour format with leading zeros.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_12hourwithzero( $atts, $content = '' ): string {
+function tumblr3_tag_12hourwithzero(): string {
 	return get_the_date( 'h' );
 }
 add_shortcode( 'tag_12hourwithzero', 'tumblr3_tag_12hourwithzero' );
 
 /**
- * Undocumented function
+ * Returns the hour in 24-hour format with leading zeros.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_24hourwithzero( $atts, $content = '' ): string {
+function tumblr3_tag_24hourwithzero(): string {
 	return get_the_date( 'H' );
 }
 add_shortcode( 'tag_24hourwithzero', 'tumblr3_tag_24hourwithzero' );
 
 /**
- * Undocumented function
+ * Returns the minutes with leading zeros.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_minutes( $atts, $content = '' ): string {
+function tumblr3_tag_minutes(): string {
 	return get_the_date( 'i' );
 }
 add_shortcode( 'tag_minutes', 'tumblr3_tag_minutes' );
 
 /**
- * Undocumented function
+ * Returns the seconds with leading zeros.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_seconds( $atts, $content = '' ): string {
+function tumblr3_tag_seconds(): string {
 	return get_the_date( 's' );
 }
 add_shortcode( 'tag_seconds', 'tumblr3_tag_seconds' );
 
 /**
- * Undocumented function
+ * Returns the Swatch Internet Time (.beats).
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_beats( $atts, $content = '' ): string {
+function tumblr3_tag_beats(): string {
 	$now = new DateTime( null, new DateTimeZone( 'UTC' ) );
 	return '@' . floor( ( $now->format( 'G' ) * 3600 + $now->format( 'i' ) * 60 + $now->format( 's' ) + 3600 ) / 86.4 );
 }
 add_shortcode( 'tag_beats', 'tumblr3_tag_beats' );
 
 /**
- * Undocumented function
+ * Returns the Unix timestamp of the post.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_timestamp( $atts, $content = '' ): string {
+function tumblr3_tag_timestamp(): string {
 	return get_the_date( 'U' );
 }
 add_shortcode( 'tag_timestamp', 'tumblr3_tag_timestamp' );
 
 /**
- * Undocumented function
+ * Returns the time difference between the post date and now, in human-readable format.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_timeago( $atts, $content = '' ): string {
+function tumblr3_tag_timeago(): string {
 	$post_time    = get_the_time( 'U' );
 	$current_time = current_time( 'timestamp' );
 	$time_diff    = human_time_diff( $post_time, $current_time );

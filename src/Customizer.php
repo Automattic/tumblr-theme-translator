@@ -109,6 +109,67 @@ class Customizer {
 				'priority' => 10,
 			)
 		);
+
+		// Add an avatar shape select control.
+		$wp_customize->add_setting(
+			'avatar_shape',
+			array(
+				'default'           => 'circle',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'avatar_shape',
+			array(
+				'label'    => __( 'Avatar Shape', 'tumblr3' ),
+				'section'  => 'tumblr3_select',
+				'type'     => 'select',
+				'choices'  => array(
+					'circle' => 'Circle',
+					'square' => 'Square',
+				),
+				'priority' => 10,
+			)
+		);
+
+		// Add a stretch header image checkbox control.
+		$wp_customize->add_setting(
+			'stretch_header_image',
+			array(
+				'default'           => 'no',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'stretch_header_image',
+			array(
+				'label'    => __( 'Stretch Header Image', 'tumblr3' ),
+				'section'  => 'tumblr3_boolean',
+				'type'     => 'checkbox',
+				'priority' => 10,
+			)
+		);
+
+		// Add a show avatar checkbox control.
+		$wp_customize->add_setting(
+			'show_avatar',
+			array(
+				'default'           => 'yes',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'show_avatar',
+			array(
+				'label'    => __( 'Show Avatar', 'tumblr3' ),
+				'section'  => 'tumblr3_boolean',
+				'type'     => 'checkbox',
+				'priority' => 10,
+			)
+		);
 	}
 
 	/**
