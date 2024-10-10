@@ -18,6 +18,6 @@ Optional testing steps, before and after screenshots can also be helpful.
 
 🧁 Request a review to team chrysalis to assign a random team member.
 
-🔄 Feel free to ping the team name again to "re-roll" if you're unavailable.
+🔄 Feel free to ping the team name again to "re-roll" or add another team member.
 
 🚀 For now there is no requirement on getting review approvals before merging.
