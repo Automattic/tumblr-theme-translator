@@ -1,14 +1,23 @@
-#### Changes proposed in this Pull Request
+### Summary
 
-*
+A brief summary of the changes.
 
-#### Testing instructions
+### Solution
 
-<!--
-Add as many details as possible to help others reproduce the issue and test the fix.
-"Before / After" screenshots can also be very helpful when the change is visual.
--->
+Any technical notes you want the reviewer to know about the changes.
 
-*
+### Testing steps
 
-Mentions #
+Optional testing steps, before and after screenshots can also be helpful.
+
+**Some new feature**
+
+- [ ] Test step 1
+
+### Reviewing tips
+
+🧁 Request a review to team chrysalis to assign a random team member.
+
+🔄 Feel free to ping the team name again to "re-roll" or add another team member.
+
+🚀 For now there is no requirement on getting review approvals before merging.
