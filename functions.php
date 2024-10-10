@@ -82,6 +82,7 @@ function tumblr3_set_parse_context( $key, $value ): void {
 /**
  * The main parser in the plugin.
  * This turns a Tumblr .HTML template into something parseable by WordPress.
+ * Currently that's [shortcode] syntax, this could change in the future if needed.
  *
  * @param string $content Tumblr theme HTML content.
  * @return string Parsed content.
@@ -222,7 +223,10 @@ function tumblr3_theme_parse( $content ): string {
 	return $content;
 }
 
+// Currently unused, will likely be used in future development before the final release.
 require TUMBLR3_PATH . 'includes/assets.php';
+
+// Include tag and block hydration functions.
 require TUMBLR3_PATH . 'includes/missing-functions.php';
 require TUMBLR3_PATH . 'includes/block-functions.php';
 require TUMBLR3_PATH . 'includes/tag-functions.php';

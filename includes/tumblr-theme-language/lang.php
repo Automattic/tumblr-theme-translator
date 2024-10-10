@@ -385,4 +385,15 @@ return array(
 		'Pinned Post',
 		'Label for a pinned post'
 	),
+
+	// https://github.tumblr.net/Tumblr/tumblr/blob/279a7aec5cb51960de9844af0546f142ff32012a/app/utils/TumblelogThemeStringHelper.php
+	'This Tumblr hasnt made any posts'                     => __( 'This Tumblr hasn\'t made any posts.' ),
+	'This silly Tumblr hasnt posted anything yet'          => __( 'This silly Tumblr hasn\'t posted anything yet.' ),
+	'This Tumblr is cool but empty'                        => __( 'This Tumblr is cool, but empty.' ),
+	'This Tumblr is content-free'                          => __( 'This Tumblr is content-free.' ),
+	'This minimalist Tumblr has no posts'                  => __( 'This minimalist Tumblr has no posts.' ),
+	'Meditate for a while on this empty Tumblr'            => __( 'Meditate for a while on this empty Tumblr.' ),
+	'Posts Nah'                                            => __( 'Posts? Nah.' ),
+	'This Tumblr has hardly any posts None at all in fact' => __( 'This Tumblr has hardly any posts. \nNone at all, in fact.' ),
+	'This Tumblr hasnt posted anything'                    => __( 'This Tumblr hasn\'t posted anything.' ),
 );
