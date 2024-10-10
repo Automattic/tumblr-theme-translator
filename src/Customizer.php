@@ -137,7 +137,7 @@ class Customizer {
 		$wp_customize->add_setting(
 			'stretch_header_image',
 			array(
-				'default'           => 'no',
+				'default'           => '',
 				'sanitize_callback' => 'sanitize_text_field',
 			)
 		);
@@ -167,6 +167,44 @@ class Customizer {
 				'label'    => __( 'Show Avatar', 'tumblr3' ),
 				'section'  => 'tumblr3_boolean',
 				'type'     => 'checkbox',
+				'priority' => 10,
+			)
+		);
+
+		// Add a checkbox to control if links should open in a new tab.
+		$wp_customize->add_setting(
+			'target_blank',
+			array(
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'target_blank',
+			array(
+				'label'    => __( 'Open Links in New Tab', 'tumblr3' ),
+				'section'  => 'tumblr3_boolean',
+				'type'     => 'checkbox',
+				'priority' => 10,
+			)
+		);
+
+		// Add a text control for twitter username.
+		$wp_customize->add_setting(
+			'twitter_username',
+			array(
+				'default'           => '',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'twitter_username',
+			array(
+				'label'    => __( 'Twitter Username', 'tumblr3' ),
+				'section'  => 'tumblr3_text',
+				'type'     => 'text',
 				'priority' => 10,
 			)
 		);
@@ -356,7 +394,7 @@ class Customizer {
 					$name,
 					array(
 						'capability'        => 'edit_theme_options',
-						'default'           => $condition,
+						'default'           => '',
 						'sanitize_callback' => 'sanitize_text_field',
 					)
 				);

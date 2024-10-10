@@ -9,7 +9,7 @@ $theme = get_option( 'tumblr3_theme_html', '' );
 
 /**
  * Capture wp_head output.
- * 
+ *
  * @todo Can this be done in a more elegant way?
  */
 ob_start();
@@ -19,7 +19,7 @@ ob_end_clean();
 
 /**
  * Capture wp_footer output.
- * 
+ *
  * @todo Can this be done in a more elegant way?
  */
 ob_start();

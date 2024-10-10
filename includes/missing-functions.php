@@ -3,22 +3,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Everything here is missing currently, but could be ported over.
- * @todo Implement these.
- */
-add_shortcode( 'tag_groupmembername', 'tumblr3_tag_functionality_missing' );
-add_shortcode( 'tag_groupmembertitle', 'tumblr3_tag_functionality_missing' );
-add_shortcode( 'tag_groupmemberurl', 'tumblr3_tag_functionality_missing' );
-add_shortcode( 'tag_groupmemberportraiturl', 'tumblr3_tag_functionality_missing' );
-add_shortcode( 'tag_postauthorname', 'tumblr3_tag_functionality_missing' );
-add_shortcode( 'tag_postauthortitle', 'tumblr3_tag_functionality_missing' );
-add_shortcode( 'tag_postauthorurl', 'tumblr3_tag_functionality_missing' );
-add_shortcode( 'tag_postauthorportraiturl', 'tumblr3_tag_functionality_missing' );
-add_shortcode( 'tag_npf', 'tumblr3_tag_functionality_missing' );
-add_shortcode( 'block_groupmembers', 'tumblr3_block_functionality_missing' );
-add_shortcode( 'block_groupmember', 'tumblr3_block_functionality_missing' );
-
-/**
  * WordPress doesn't have a following system for noting other blogs you follow.
  * Previously we had the "links" CPT that was used for making blogrolls.
  * Perhaps we could bring that back?

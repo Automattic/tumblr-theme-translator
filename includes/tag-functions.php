@@ -12,6 +12,176 @@ function tumblr3_tag_functionality_missing(): string {
 }
 
 /**
+ * Outputs target attribute for links.
+ *
+ * @return string
+ */
+function tumblr3_tag_target(): string {
+	return get_theme_mod( 'target_blank' ) ? 'target="_blank"' : '';
+}
+add_shortcode( 'tag_target', 'tumblr3_tag_target' );
+
+/**
+ * Returns the NPF JSON string of the current post.
+ *
+ * @todo Rafael is writing a PHP parser for NPF.
+ *
+ * @return string Nothing, this tag is currently not supported.
+ */
+function tumblr3_tag_npf(): string {
+	return '';
+}
+add_shortcode( 'tag_npf', 'tumblr3_tag_npf' );
+
+/**
+ * The author name of the current post.
+ *
+ * @return string Post author name.
+ */
+function tumblr3_tag_postauthorname(): string {
+	return get_the_author();
+}
+add_shortcode( 'tag_postauthorname', 'tumblr3_tag_postauthorname' );
+
+/**
+ * Returns the group member display name.
+ *
+ * @return string Username or empty.
+ */
+function tumblr3_tag_groupmembername(): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( isset( $context['groupmember'] ) && is_a( $context['groupmember'], 'WP_User' ) ) {
+		return $context['groupmember']->user_nicename;
+	}
+
+	return '';
+}
+add_shortcode( 'tag_groupmembername', 'tumblr3_tag_groupmembername' );
+
+/**
+ * The URL of the group members posts page.
+ *
+ * @return string The URL of the group member.
+ */
+function tumblr3_tag_groupmemberurl(): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( isset( $context['groupmember'] ) && is_a( $context['groupmember'], 'WP_User' ) ) {
+		return get_author_posts_url( $context['groupmember']->ID );
+	}
+
+	return '';
+}
+add_shortcode( 'tag_groupmemberurl', 'tumblr3_tag_groupmemberurl' );
+
+/**
+ * Gets the group member portrait URL.
+ *
+ * @param array $atts Shortcode attributes.
+ * @return string The URL of the group member avatar.
+ */
+function tumblr3_tag_groupmemberportraiturl( $atts ): string {
+	// Parse shortcode attributes.
+	$atts = shortcode_atts(
+		array(
+			'size' => '',
+		),
+		$atts,
+		'tag_groupmemberportraiturl'
+	);
+
+	$context = tumblr3_get_parse_context();
+
+	if ( isset( $context['groupmember'] ) && is_a( $context['groupmember'], 'WP_User' ) ) {
+		$groupmember_avatar = get_avatar_url(
+			$context['groupmember']->ID,
+			array(
+				'size' => $atts['size'],
+			)
+		);
+
+		if ( ! $groupmember_avatar ) {
+			return '';
+		}
+
+		return esc_url( $groupmember_avatar );
+	}
+
+	return '';
+}
+add_shortcode( 'tag_groupmemberportraiturl', 'tumblr3_tag_groupmemberportraiturl' );
+
+/**
+ * The blog title of the post author.
+ *
+ * @return string
+ */
+function tumblr3_tag_postauthortitle(): string {
+	return esc_attr( get_bloginfo( 'name' ) );
+}
+add_shortcode( 'tag_postauthortitle', 'tumblr3_tag_postauthortitle' );
+add_shortcode( 'tag_groupmembertitle', 'tumblr3_tag_postauthortitle' );
+
+/**
+ * The URL of the post author.
+ *
+ * @return string URL to the author archive.
+ */
+function tumblr3_tag_postauthorurl(): string {
+	return esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) );
+}
+add_shortcode( 'tag_postauthorurl', 'tumblr3_tag_postauthorurl' );
+
+/**
+ * The portrait URL of the post author.
+ *
+ * @param array $atts The attributes of the shortcode.
+ * @return string The URL of the author portrait.
+ */
+function tumblr3_tag_postauthorportraiturl( $atts ): string {
+	// Parse shortcode attributes.
+	$atts = shortcode_atts(
+		array(
+			'size' => '',
+		),
+		$atts,
+		'tag_postauthorportraiturl'
+	);
+
+	$author_id = get_the_author_meta( 'ID' );
+	$author    = get_user_by( 'ID', $author_id );
+
+	if ( ! $author ) {
+		return '';
+	}
+
+	$author_avatar = get_avatar_url(
+		$author_id,
+		array(
+			'size' => $atts['size'],
+		)
+	);
+
+	if ( ! $author_avatar ) {
+		return '';
+	}
+
+	return esc_url( $author_avatar );
+}
+add_shortcode( 'tag_postauthorportraiturl', 'tumblr3_tag_postauthorportraiturl' );
+
+/**
+ * Outputs the twitter username theme option.
+ *
+ * @return string Attribute safe twitter username.
+ */
+function tumblr3_tag_twitterusername(): string {
+	return esc_attr( get_theme_mod( 'twitter_username' ) );
+}
+add_shortcode( 'tag_twitterusername', 'tumblr3_tag_twitterusername' );
+
+/**
  * The display shape of your avatar ("circle" or "square").
  *
  * @return string Either "circle" or "square".

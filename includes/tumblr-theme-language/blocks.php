@@ -173,4 +173,5 @@ return array(
 	'block:NuOpticaBlogCardsDisabled' => array(),
 	'block:HasRelatedTags'            => array(),
 	'block:RelatedTags'               => array(),
+	'block:Twitter'                   => array(),
 );

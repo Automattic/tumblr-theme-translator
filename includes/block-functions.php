@@ -25,6 +25,73 @@ add_shortcode( 'block_options', 'tumblr3_block_options' );
 add_shortcode( 'block_hidden', 'tumblr3_block_options' );
 
 /**
+ * Returns parsed content if the blog has more than one post author.
+ *
+ * @param array $atts The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_groupmembers( $atts, $content = '' ): string {
+	// Get all users who have published posts
+	$authors = get_users(
+		array(
+			'has_published_posts' => array( 'post' ),
+		)
+	);
+	$output  = '';
+
+	// Check if there is more than one author
+	if ( count( $authors ) > 1 ) {
+		tumblr3_set_parse_context( 'groupmembers', $authors );
+		$output = tumblr3_do_shortcode( $content );
+		tumblr3_set_parse_context( 'theme', true );
+	}
+
+	return $output;
+}
+add_shortcode( 'block_groupmembers', 'tumblr3_block_groupmembers' );
+
+/**
+ * Loops over all group members and parses shortcodes within the block.
+ *
+ * @param array $atts The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_groupmember( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+	$output  = '';
+
+	if ( isset( $context['groupmembers'] ) ) {
+
+		$authors = $context['groupmembers'];
+
+		// Loop over each blog author.
+		foreach ( $authors as $author ) {
+			tumblr3_set_parse_context( 'groupmember', $author );
+			$output .= tumblr3_do_shortcode( $content );
+		}
+
+		tumblr3_set_parse_context( 'theme', true );
+	}
+
+	return $output;
+}
+add_shortcode( 'block_groupmember', 'tumblr3_block_groupmember' );
+
+/**
+ * Outputs content if the twitter username theme set is not empty.
+ *
+ * @param array $atts The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_twitter( $atts, $content = '' ): string {
+	return ( '' !== get_theme_mod( 'twitter_username', '' ) ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_twitter', 'tumblr3_block_twitter' );
+
+/**
  * Boolean check for theme options.
  *
  * @param array $attributes The attributes of the shortcode.
