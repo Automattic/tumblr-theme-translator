@@ -347,4 +347,5 @@ return array(
 	'Positions'               => array(),
 	'TweetSummary'            => array(),
 	'MailSummary'             => array(),
+	'NewPostStyles'           => array(),
 );

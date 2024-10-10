@@ -35,11 +35,10 @@ function tumblr3_get_plugin_slug(): string {
  *
  * @todo nested tags of the same type aren't rendering properly.
  *
- * @param [type] $content
- * @param boolean $ignore_html
- * @return void
+ * @param string $content The content to parse.
+ * @return string The parsed content.
  */
-function tumblr3_do_shortcode( $content, $ignore_html = false ) {
+function tumblr3_do_shortcode( $content ): string {
 	global $shortcode_tags;
 	static $pattern = null;
 
@@ -56,25 +55,38 @@ function tumblr3_do_shortcode( $content, $ignore_html = false ) {
 	return $content;
 }
 
+/**
+ * Gets the current parse context.
+ * Used for informing data tags of their context.
+ * Also used for storing data to pass between tags.
+ *
+ * @return array|null|string The current parse context.
+ */
 function tumblr3_get_parse_context() {
 	global $tumblr3_parse_context;
 	return $tumblr3_parse_context;
 }
 
-function tumblr3_set_parse_context( $key, $value ) {
+/**
+ * Sets the global parse context.
+ *
+ * @param string $key
+ * @param array $value
+ * @return void
+ */
+function tumblr3_set_parse_context( $key, $value ): void {
 	global $tumblr3_parse_context;
 	$tumblr3_parse_context = array( $key => $value );
 }
 
 /**
- * Undocumented function
+ * The main parser in the plugin.
+ * This turns a Tumblr .HTML template into something parseable by WordPress.
  *
- * @todo ltrim is unreliable, should use substr instead.
- *
- * @param [type] $content
- * @return void
+ * @param string $content Tumblr theme HTML content.
+ * @return string Parsed content.
  */
-function tumblr3_theme_parse( $content ) {
+function tumblr3_theme_parse( $content ): string {
 	$tags      = array_map( 'strtolower', array_keys( TUMBLR3_TAGS ) );
 	$blocks    = array_map( 'strtolower', array_keys( TUMBLR3_BLOCKS ) );
 	$lang      = array_map( 'strtolower', array_keys( TUMBLR3_LANG ) );
@@ -129,14 +141,15 @@ function tumblr3_theme_parse( $content ) {
 			 */
 			foreach ( $modifiers as $modifier ) {
 				if ( str_starts_with( $raw_tag, $modifier ) ) {
-
+					// Tag with a modifier at the front.
+					//[tag_name modifier="RGB"]
 				}
 			}
 
 			/**
 			 * Handle theme options (dynamic tags).
 			 *
-			 * @todo This system doesn't account for modifiers at the front of tags.
+			 * @todo This system doesn't account for modifiers at the front of tags. This might not be a problem however.
 			 */
 			foreach ( $options as $option ) {
 				if ( str_starts_with( $raw_tag, $option ) ) {
@@ -148,6 +161,7 @@ function tumblr3_theme_parse( $content ) {
 			}
 
 			// Verify the block against our array.
+			// @todo write attribute parser.
 			if ( str_starts_with( ltrim( $raw_tag, '/' ), 'block:' ) ) {
 				$block_parts = explode( ' ', trim( $raw_tag ) );
 

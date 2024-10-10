@@ -26,7 +26,7 @@ class Customizer {
 	}
 
 	/**
-	 * Customizer sections.
+	 * Remove WordPress default settings and sections.
 	 *
 	 * @param WP_Customize_Manager $wp_customize
 	 * @return void
@@ -40,7 +40,7 @@ class Customizer {
 	}
 
 	/**
-	 * Undocumented function
+	 * Creates global options to match standard Tumblr options.
 	 *
 	 * @param WP_Customize_Manager $wp_customize
 	 * @return void
@@ -65,6 +65,109 @@ class Customizer {
 					'section'  => 'colors',
 					'settings' => 'accent_color',
 				)
+			)
+		);
+
+		// Add a TitleFont text control.
+		$wp_customize->add_setting(
+			'title_font',
+			array(
+				'default'           => 'Arial',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'title_font',
+			array(
+				'label'    => __( 'Title Font', 'tumblr3' ),
+				'section'  => 'tumblr3_font',
+				'type'     => 'text',
+				'priority' => 10,
+			)
+		);
+
+		// Add a TitleFontWeight select control.
+		$wp_customize->add_setting(
+			'title_font_weight',
+			array(
+				'default'           => 'bold',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'title_font_weight',
+			array(
+				'label'    => __( 'Title Font Weight', 'tumblr3' ),
+				'section'  => 'tumblr3_font',
+				'type'     => 'select',
+				'choices'  => array(
+					'normal' => 'Normal',
+					'bold'   => 'Bold',
+				),
+				'priority' => 10,
+			)
+		);
+
+		// Add an avatar shape select control.
+		$wp_customize->add_setting(
+			'avatar_shape',
+			array(
+				'default'           => 'circle',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'avatar_shape',
+			array(
+				'label'    => __( 'Avatar Shape', 'tumblr3' ),
+				'section'  => 'tumblr3_select',
+				'type'     => 'select',
+				'choices'  => array(
+					'circle' => 'Circle',
+					'square' => 'Square',
+				),
+				'priority' => 10,
+			)
+		);
+
+		// Add a stretch header image checkbox control.
+		$wp_customize->add_setting(
+			'stretch_header_image',
+			array(
+				'default'           => 'no',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'stretch_header_image',
+			array(
+				'label'    => __( 'Stretch Header Image', 'tumblr3' ),
+				'section'  => 'tumblr3_boolean',
+				'type'     => 'checkbox',
+				'priority' => 10,
+			)
+		);
+
+		// Add a show avatar checkbox control.
+		$wp_customize->add_setting(
+			'show_avatar',
+			array(
+				'default'           => 'yes',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+
+		$wp_customize->add_control(
+			'show_avatar',
+			array(
+				'label'    => __( 'Show Avatar', 'tumblr3' ),
+				'section'  => 'tumblr3_boolean',
+				'type'     => 'checkbox',
+				'priority' => 10,
 			)
 		);
 	}
@@ -388,47 +491,5 @@ class Customizer {
 				)
 			);
 		}
-
-		// Add a TitleFont text control.
-		$wp_customize->add_setting(
-			'title_font',
-			array(
-				'default'           => 'Arial',
-				'sanitize_callback' => 'sanitize_text_field',
-			)
-		);
-
-		$wp_customize->add_control(
-			'title_font',
-			array(
-				'label'    => __( 'Title Font', 'tumblr3' ),
-				'section'  => 'tumblr3_font',
-				'type'     => 'text',
-				'priority' => 10,
-			)
-		);
-
-		// Add a TitleFontWeight select control.
-		$wp_customize->add_setting(
-			'title_font_weight',
-			array(
-				'default'           => 'bold',
-				'sanitize_callback' => 'sanitize_text_field',
-			)
-		);
-
-		$wp_customize->add_control(
-			'title_font_weight',
-			array(
-				'label'    => __( 'Title Font Weight', 'tumblr3' ),
-				'section'  => 'tumblr3_font',
-				'type'     => 'select',
-				'choices'  => array(
-					'normal' => 'Normal',
-					'bold'   => 'Bold',
-				),
-				'priority' => 10,
-			)
-		);
 	}
 }

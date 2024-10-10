@@ -5,7 +5,7 @@ namespace Chrysalis\T3;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * This class is responsible for mocking a WordPress theme.
+ * This class is responsible for mocking a WordPress theme to enable the theme_mod system and others.
  */
 class Theme {
 	/**
@@ -22,7 +22,7 @@ class Theme {
 	}
 
 	/**
-	 * Undocumented function
+	 * Setup theme support.
 	 *
 	 * @return void
 	 */

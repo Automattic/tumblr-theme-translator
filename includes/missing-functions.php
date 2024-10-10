@@ -46,6 +46,8 @@ add_shortcode( 'tag_postauthorurl', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_postauthorportraiturl', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_npf', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_mobileappheaders', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'tag_answer', 'tumblr3_tag_answer' );
+add_shortcode( 'tag_replies', 'tumblr3_tag_answer' );
 
 /**
  * All non-supported blocks are assigned here.
