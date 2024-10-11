@@ -200,8 +200,9 @@ add_shortcode( 'tag_avatarshape', 'tumblr3_tag_avatarshape' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_backgroundcolor(): string {
-	return '#' . sanitize_hex_color_no_hash( get_theme_mod( 'background_color', '#fff' ) );
+function tumblr3_tag_backgroundcolor( $atts ): string {
+	$output = '#' . sanitize_hex_color_no_hash( get_theme_mod( 'background_color', '#fff' ) );
+	return apply_filters( 'tumblr3_shortcode_output', $output, 'tag_backgroundcolor', $atts );
 }
 add_shortcode( 'tag_backgroundcolor', 'tumblr3_tag_backgroundcolor' );
 
@@ -212,8 +213,9 @@ add_shortcode( 'tag_backgroundcolor', 'tumblr3_tag_backgroundcolor' );
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_accentcolor(): string {
-	return '#' . sanitize_hex_color_no_hash( get_theme_mod( 'accent_color', '#0073aa' ) );
+function tumblr3_tag_accentcolor( $atts ): string {
+	$output = '#' . sanitize_hex_color_no_hash( get_theme_mod( 'accent_color', '#0073aa' ) );
+	return apply_filters( 'tumblr3_shortcode_output', $output, 'tag_accentcolor', $atts );
 }
 add_shortcode( 'tag_accentcolor', 'tumblr3_tag_accentcolor' );
 
