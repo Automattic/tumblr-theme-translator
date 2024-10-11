@@ -6,6 +6,7 @@ defined( 'ABSPATH' ) || exit;
  * WordPress doesn't have a following system for noting other blogs you follow.
  * Previously we had the "links" CPT that was used for making blogrolls.
  * Perhaps we could bring that back?
+ *
  * @see https://www.tumblr.com/docs/en/custom_themes#following
  */
 add_shortcode( 'block_sharefollowing', 'tumblr3_block_functionality_missing' );
@@ -21,6 +22,7 @@ add_shortcode( 'tag_followedportraiturl', 'tumblr3_tag_functionality_missing' );
  * WordPress doesn't have a highligted posts system.
  * Perhaps we could just use the sticky posts system?
  * This seems to exist purely to fulfill a widget in Optica and loads Photo posts only.
+ *
  * @see https://github.tumblr.net/Tumblr/tumblr/blob/5e69aae5fd71f2a151078abf11a4d146d3aa6bd7/app/controllers/tumblelog.php#L4778
  */
 add_shortcode( 'block_hashighlightedposts', 'tumblr3_block_functionality_missing' );
@@ -29,6 +31,7 @@ add_shortcode( 'block_highlightedposts', 'tumblr3_block_functionality_missing' )
 /**
  * WordPress does not have a related tags system.
  * On Tumblr this appears to be handled by Redis.
+ *
  * @see https://github.tumblr.net/Tumblr/tumblr/blob/12a34ac17d5a80eaec05b486f670fc80214d083d/app/controllers/tumblelog/utils/ThemeItemHelper.php#L551
  */
 add_shortcode( 'block_hasrelatedtags', 'tumblr3_block_functionality_missing' );
@@ -36,6 +39,7 @@ add_shortcode( 'block_relatedtags', 'tumblr3_block_functionality_missing' );
 
 /**
  * WordPress does not have a featured tags system.
+ *
  * @see https://www.tumblr.com/docs/en/custom_themes#featured-tags
  */
 add_shortcode( 'block_hasfeaturedtags', 'tumblr3_block_functionality_missing' );
@@ -44,12 +48,14 @@ add_shortcode( 'block_featuredtags', 'tumblr3_block_functionality_missing' );
 /**
  * WordPress does not have a related posts system by default.
  * Jetpack has a related posts module, perhaps we could integrate with that?
+ *
  * @see https://www.tumblr.com/docs/en/custom_themes#related-posts
  */
 add_shortcode( 'block_relatedposts', 'tumblr3_block_functionality_missing' );
 
 /**
  * WordPress does not have a native submission system.
+ *
  * @see https://www.tumblr.com/docs/en/custom_themes#submissions
  */
 add_shortcode( 'block_submissionsenabled', 'tumblr3_block_functionality_missing' );
@@ -62,6 +68,7 @@ add_shortcode( 'tag_submitterportraiturl', 'tumblr3_tag_functionality_missing' )
 
 /**
  * WordPress does not support question/answer systems.
+ *
  * @see https://www.tumblr.com/docs/en/custom_themes#answer-posts
  */
 add_shortcode( 'block_askenabled', 'tumblr3_block_functionality_missing' );
@@ -78,6 +85,7 @@ add_shortcode( 'tag_replies', 'tumblr3_tag_functionality_missing' );
 
 /**
  * WordPress does not support likes.
+ *
  * @see https://www.tumblr.com/docs/en/custom_themes#likes
  */
 add_shortcode( 'block_likes', 'tumblr3_block_functionality_missing' );
@@ -90,6 +98,7 @@ add_shortcode( 'block_likespage', 'tumblr3_block_functionality_missing' );
 
 /**
  * WordPress does not support reblogs.
+ *
  * @see https://www.tumblr.com/docs/en/custom_themes#reblogs
  */
 add_shortcode( 'tag_reblogurl', 'tumblr3_tag_functionality_missing' );
@@ -115,6 +124,7 @@ add_shortcode( 'tag_username', 'tumblr3_tag_functionality_missing' );
 /**
  * WordPress doesn't have a day by day archive system,
  * but date archives are available and traverse with the regular pagination block.
+ *
  * @see https://www.tumblr.com/docs/en/custom_themes#day-pages
  */
 add_shortcode( 'block_daypagination', 'tumblr3_block_functionality_missing' );
@@ -127,6 +137,7 @@ add_shortcode( 'tag_nextdaypage', 'tumblr3_tag_functionality_missing' );
 
 /**
  * WordPress does not support content sources.
+ *
  * @see https://www.tumblr.com/docs/en/custom_themes#content-sources
  */
 add_shortcode( 'tag_blacklogourl', 'tumblr3_tag_functionality_missing' );

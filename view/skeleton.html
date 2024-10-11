@@ -108,8 +108,31 @@
                     <p class="npf_chat">{block:Label}
                         <b>{Label}</b>{/block:Label}
                         {Line}
-                    </p>{/block:Lines}{/block:Chat}{block:Audio}{block:AudioEmbed}
-                    {AudioEmbed}{/block:AudioEmbed}{/block:Audio}{block:Video}
+                    </p>{/block:Lines}{/block:Chat}{block:Audio}
+					{block:AudioPlayer}
+						<div class="audio_player">
+							{block:AlbumArt}
+								<img src="{AlbumArtURL}">
+							{/block:AlbumArt}
+							{AudioPlayer}
+						</div>
+					{/block:AudioPlayer}
+					<div class="audio_info">
+						<ul>
+							<li>Name: {block:TrackName}{TrackName}{/block:TrackName}</li>
+							<li>Artist: {block:Artist}{Artist}{/block:Artist}</li>
+							<li>Album: {block:Album}{Album}{/block:Album}</li>
+						</ul>
+					</div>
+					<!--Original Post-->
+					{block:NotReblog}
+						{Description}
+					{/block:NotReblog}
+					<!--Post is a reblog-->
+					{block:RebloggedFrom}
+						...
+					{/block:RebloggedFrom}
+				{/block:Audio}{block:Video}
                     {VideoEmbed-700}{/block:Video}{block:Answer}
                     <div>
                         <img class="avatar" src="{AskerPortraitURL-64}" alt="">
