@@ -92,7 +92,7 @@ function tumblr3_theme_parse( $content ): string {
 	$blocks    = array_map( 'strtolower', array_keys( TUMBLR3_BLOCKS ) );
 	$lang      = array_map( 'strtolower', array_keys( TUMBLR3_LANG ) );
 	$options   = array_map( 'strtolower', array_keys( TUMBLR3_OPTIONS ) );
-	$modifiers = array_map( 'strtolower', array_keys( TUMBLR3_MODIFIERS ) );
+	$modifiers = array_map( 'strtolower', TUMBLR3_MODIFIERS );
 
 	// Capture each Tumblr Tag in the page and verify it against our arrays.
 	$content = preg_replace_callback(
@@ -142,7 +142,7 @@ function tumblr3_theme_parse( $content ): string {
 			 */
 			foreach ( $modifiers as $modifier ) {
 				if ( str_starts_with( $raw_tag, $modifier ) ) {
-					// Tag with a modifier at the front.
+					$raw_tag = strtolower ( substr( $raw_tag, strlen($modifier) ) );
 					//[tag_name modifier="RGB"]
 				}
 			}
