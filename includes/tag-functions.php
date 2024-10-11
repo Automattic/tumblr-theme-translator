@@ -3,9 +3,188 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Avatar shape.
+ * All non-supported tags are assigned here.
+ *
+ * @return string Nothing, this tag is not supported.
+ */
+function tumblr3_tag_functionality_missing(): string {
+	return '';
+}
+
+/**
+ * Outputs target attribute for links.
  *
  * @return string
+ */
+function tumblr3_tag_target(): string {
+	return get_theme_mod( 'target_blank' ) ? 'target="_blank"' : '';
+}
+add_shortcode( 'tag_target', 'tumblr3_tag_target' );
+
+/**
+ * Returns the NPF JSON string of the current post.
+ *
+ * @todo Rafael is writing a PHP parser for NPF.
+ *
+ * @return string Nothing, this tag is currently not supported.
+ */
+function tumblr3_tag_npf(): string {
+	return '';
+}
+add_shortcode( 'tag_npf', 'tumblr3_tag_npf' );
+
+/**
+ * The author name of the current post.
+ *
+ * @return string Post author name.
+ */
+function tumblr3_tag_postauthorname(): string {
+	return get_the_author();
+}
+add_shortcode( 'tag_postauthorname', 'tumblr3_tag_postauthorname' );
+
+/**
+ * Returns the group member display name.
+ *
+ * @return string Username or empty.
+ */
+function tumblr3_tag_groupmembername(): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( isset( $context['groupmember'] ) && is_a( $context['groupmember'], 'WP_User' ) ) {
+		return $context['groupmember']->user_nicename;
+	}
+
+	return '';
+}
+add_shortcode( 'tag_groupmembername', 'tumblr3_tag_groupmembername' );
+
+/**
+ * The URL of the group members posts page.
+ *
+ * @return string The URL of the group member.
+ */
+function tumblr3_tag_groupmemberurl(): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( isset( $context['groupmember'] ) && is_a( $context['groupmember'], 'WP_User' ) ) {
+		return get_author_posts_url( $context['groupmember']->ID );
+	}
+
+	return '';
+}
+add_shortcode( 'tag_groupmemberurl', 'tumblr3_tag_groupmemberurl' );
+
+/**
+ * Gets the group member portrait URL.
+ *
+ * @param array $atts Shortcode attributes.
+ * @return string The URL of the group member avatar.
+ */
+function tumblr3_tag_groupmemberportraiturl( $atts ): string {
+	// Parse shortcode attributes.
+	$atts = shortcode_atts(
+		array(
+			'size' => '',
+		),
+		$atts,
+		'tag_groupmemberportraiturl'
+	);
+
+	$context = tumblr3_get_parse_context();
+
+	if ( isset( $context['groupmember'] ) && is_a( $context['groupmember'], 'WP_User' ) ) {
+		$groupmember_avatar = get_avatar_url(
+			$context['groupmember']->ID,
+			array(
+				'size' => $atts['size'],
+			)
+		);
+
+		if ( ! $groupmember_avatar ) {
+			return '';
+		}
+
+		return esc_url( $groupmember_avatar );
+	}
+
+	return '';
+}
+add_shortcode( 'tag_groupmemberportraiturl', 'tumblr3_tag_groupmemberportraiturl' );
+
+/**
+ * The blog title of the post author.
+ *
+ * @return string
+ */
+function tumblr3_tag_postauthortitle(): string {
+	return esc_attr( get_bloginfo( 'name' ) );
+}
+add_shortcode( 'tag_postauthortitle', 'tumblr3_tag_postauthortitle' );
+add_shortcode( 'tag_groupmembertitle', 'tumblr3_tag_postauthortitle' );
+
+/**
+ * The URL of the post author.
+ *
+ * @return string URL to the author archive.
+ */
+function tumblr3_tag_postauthorurl(): string {
+	return esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) );
+}
+add_shortcode( 'tag_postauthorurl', 'tumblr3_tag_postauthorurl' );
+
+/**
+ * The portrait URL of the post author.
+ *
+ * @param array $atts The attributes of the shortcode.
+ * @return string The URL of the author portrait.
+ */
+function tumblr3_tag_postauthorportraiturl( $atts ): string {
+	// Parse shortcode attributes.
+	$atts = shortcode_atts(
+		array(
+			'size' => '',
+		),
+		$atts,
+		'tag_postauthorportraiturl'
+	);
+
+	$author_id = get_the_author_meta( 'ID' );
+	$author    = get_user_by( 'ID', $author_id );
+
+	if ( ! $author ) {
+		return '';
+	}
+
+	$author_avatar = get_avatar_url(
+		$author_id,
+		array(
+			'size' => $atts['size'],
+		)
+	);
+
+	if ( ! $author_avatar ) {
+		return '';
+	}
+
+	return esc_url( $author_avatar );
+}
+add_shortcode( 'tag_postauthorportraiturl', 'tumblr3_tag_postauthorportraiturl' );
+
+/**
+ * Outputs the twitter username theme option.
+ *
+ * @return string Attribute safe twitter username.
+ */
+function tumblr3_tag_twitterusername(): string {
+	return esc_attr( get_theme_mod( 'twitter_username' ) );
+}
+add_shortcode( 'tag_twitterusername', 'tumblr3_tag_twitterusername' );
+
+/**
+ * The display shape of your avatar ("circle" or "square").
+ *
+ * @return string Either "circle" or "square".
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -15,11 +194,9 @@ function tumblr3_tag_avatarshape(): string {
 add_shortcode( 'tag_avatarshape', 'tumblr3_tag_avatarshape' );
 
 /**
- * Undocumented function
+ * The background color of your blog.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The background colour in HEX format.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -29,11 +206,9 @@ function tumblr3_tag_backgroundcolor(): string {
 add_shortcode( 'tag_backgroundcolor', 'tumblr3_tag_backgroundcolor' );
 
 /**
- * Undocumented function
+ * The accent color of your blog.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The accent colour in HEX format.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -43,11 +218,9 @@ function tumblr3_tag_accentcolor(): string {
 add_shortcode( 'tag_accentcolor', 'tumblr3_tag_accentcolor' );
 
 /**
- * Undocumented function
+ * The title color of your blog.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The title colour in HEX format.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -57,11 +230,9 @@ function tumblr3_tag_titlecolor(): string {
 add_shortcode( 'tag_titlecolor', 'tumblr3_tag_titlecolor' );
 
 /**
- * Undocumented function
+ * Get the title font theme option.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The title fontname.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -71,11 +242,9 @@ function tumblr3_tag_titlefont(): string {
 add_shortcode( 'tag_titlefont', 'tumblr3_tag_titlefont' );
 
 /**
- * Undocumented function
+ * The weight of your title font ("normal" or "bold").
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string Either "bold" or "normal".
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -85,11 +254,9 @@ function tumblr3_tag_titlefontweight(): string {
 add_shortcode( 'tag_titlefontweight', 'tumblr3_tag_titlefontweight' );
 
 /**
- * Undocumented function
+ * Get the header image theme option.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string Either "remove-header" or the URL of the header image.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -99,11 +266,9 @@ function tumblr3_tag_headerimage(): string {
 add_shortcode( 'tag_headerimage', 'tumblr3_tag_headerimage' );
 
 /**
- * Undocumented function
+ * Get either a post title, or the blog title.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The title of the post or the blog.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -117,11 +282,9 @@ add_shortcode( 'tag_title', 'tumblr3_tag_title' );
 add_shortcode( 'tag_posttitle', 'tumblr3_tag_title' );
 
 /**
- * Undocumented function
+ * The post content.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The content of the post with filters applied.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -131,11 +294,9 @@ function tumblr3_tag_body(): string {
 add_shortcode( 'tag_body', 'tumblr3_tag_body' );
 
 /**
- * Undocumented function
+ * The blog description, or subtitle.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The blog description.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -145,25 +306,21 @@ function tumblr3_tag_description(): string {
 add_shortcode( 'tag_description', 'tumblr3_tag_description' );
 
 /**
- * Undocumented function
+ * Attribute safe blog description.
  *
- * @param string $context
- * @param array $attributes
- * @return string
+ * @return string The blog description with HTML entities encoded.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_metadescription(): string {
-	return esc_attr( get_the_excerpt() );
+	return esc_attr( get_bloginfo( 'description' ) );
 }
 add_shortcode( 'tag_metadescription', 'tumblr3_tag_metadescription' );
 
 /**
- * Undocumented function
+ * The homepage URL of the blog.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The URL of the blog.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -173,11 +330,9 @@ function tumblr3_tag_blogurl(): string {
 add_shortcode( 'tag_blogurl', 'tumblr3_tag_blogurl' );
 
 /**
- * Undocumented function
+ * The RSS feed URL of the blog.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The URL of the blog RSS feed.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -187,11 +342,9 @@ function tumblr3_tag_rss(): string {
 add_shortcode( 'tag_rss', 'tumblr3_tag_rss' );
 
 /**
- * Undocumented function
+ * The site favicon image URL.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The URL of the site favicon.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -201,11 +354,10 @@ function tumblr3_tag_favicon(): string {
 add_shortcode( 'tag_favicon', 'tumblr3_tag_favicon' );
 
 /**
- * Undocumented function
+ * The portrait URL of the blog, uses the custom logo if set.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @param array $atts The attributes of the shortcode.
+ * @return string The URL of the blog portrait.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -241,11 +393,9 @@ function tumblr3_tag_portraiturl( $atts ): string {
 add_shortcode( 'tag_portraiturl', 'tumblr3_tag_portraiturl' );
 
 /**
- * Undocumented function
+ * Returns the custom CSS option of the theme.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The custom CSS of the theme.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -255,11 +405,9 @@ function tumblr3_tag_customcss(): string {
 add_shortcode( 'tag_customcss', 'tumblr3_tag_customcss' );
 
 /**
- * Undocumented function
+ * Identical to {PostTitle}, but will automatically generate a summary if a title doesn't exist.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
- * @return string
+ * @return string The post title or summary.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -270,9 +418,22 @@ function tumblr3_tag_postsummary(): string {
 add_shortcode( 'tag_postsummary', 'tumblr3_tag_postsummary' );
 
 /**
- * Undocumented function
+ * Character limited version of {PostSummary} that is suitable for Twitter.
  *
- * @return string
+ * @return string The post summary limited to 280 characters.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_tweetsummary(): string {
+	return esc_html( substr( tumblr3_tag_postsummary(), 0, 280 ) );
+}
+add_shortcode( 'tag_tweetsummary', 'tumblr3_tag_tweetsummary' );
+add_shortcode( 'tag_mailsummary', 'tumblr3_tag_tweetsummary' );
+
+/**
+ * Various contextual uses, typically outputs a post permalink.
+ *
+ * @return string The URL of the post.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -293,10 +454,10 @@ add_shortcode( 'tag_shorturl', 'tumblr3_tag_url' );
 add_shortcode( 'tag_embedurl', 'tumblr3_tag_url' );
 
 /**
- * Undocumented function
+ * Typically a page title, used in a page loop e.g navigation.
  *
- * @param array $attributes The attributes of the shortcode.
- * @param string $content The content of the shortcode.
+ * @todo This tag is also used in legacy chat posts.
+ *
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
@@ -330,9 +491,9 @@ function tumblr3_tagsasclasses(): string {
 add_shortcode( 'tag_tagsasclasses', 'tumblr3_tagsasclasses' );
 
 /**
- * Undocumented function
+ * Label in post footer indicating this is a pinned post.
  *
- * @return string
+ * @return string The label for a pinned post.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
@@ -705,6 +866,8 @@ function tumblr3_tag_posttypographystyles(): string {
 	return '<style></style>';
 }
 add_shortcode( 'tag_posttypographystyles', 'tumblr3_tag_posttypographystyles' );
+add_shortcode( 'tag_newpoststyles', 'tumblr3_tag_posttypographystyles' );
+
 /**
  * Returns the day of the month without leading zeros.
  *
