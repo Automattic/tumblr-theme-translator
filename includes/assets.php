@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @return  array|null
  */
 function tumblr3_get_asset_meta( string $asset_path, ?array $extra_dependencies = null ): ?array {
-	if ( ! file_exists( $asset_path ) || ! str_starts_with( $asset_path, TUMBLR3_PATH) ) {
+	if ( ! file_exists( $asset_path ) || ! str_starts_with( $asset_path, TUMBLR3_PATH ) ) {
 		return null;
 	}
 

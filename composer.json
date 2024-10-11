@@ -25,6 +25,7 @@
     "ext-json": "*"
   },
   "require-dev": {
+	"a8cteam51/team51-configs": "dev-trunk",
     "wp-coding-standards/wpcs": "^3",
     "phpcompatibility/phpcompatibility-wp": "*",
     "roave/security-advisories": "dev-latest",
