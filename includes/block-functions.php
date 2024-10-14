@@ -155,6 +155,8 @@ function tumblr3_block_body( $atts, $content = '' ): string {
 add_shortcode( 'block_body', 'tumblr3_block_body' );
 add_shortcode( 'block_date', 'tumblr3_block_body' );
 add_shortcode( 'block_postsummary', 'tumblr3_block_body' );
+add_shortcode( 'block_excerpt', 'tumblr3_block_body' );
+add_shortcode( 'block_host', 'tumblr3_block_body' );
 
 /**
  * Outputs content if we should stretch the header image.
@@ -698,11 +700,28 @@ function tumblr3_block_quote( $atts, $content = '' ): string {
 		// Stop on the first quote block.
 		if ( 'core/quote' === $block['blockName'] ) {
 
-			// Remove any found cite block and pass to the global context.
-			preg_match_all( '/<cite\b[^>]*>(.*?)<\/cite>/', $block['innerHTML'], $matches );
-			$source = isset( $matches[1][0] ) ? $matches[1][0] : '';
+			$processor = new Chrysalis\T3\Processor( $block['innerHTML'] );
 
-			// Rebuild the quote block content.
+			// Set bookmarks to extract HTML positions.
+			while ( $processor->next_tag(
+				array(
+					'tag_name'    => 'CITE',
+					'tag_closers' => 'visit',
+				)
+			) ) {
+				$processor->is_tag_closer() ? $processor->set_bookmark( 'CITE-CLOSE' ) : $processor->set_bookmark( 'CITE-OPEN' );
+			}
+
+			// Get the processor bookmarks.
+			$offset_open  = $processor->get_bookmark( 'CITE-OPEN' );
+			$offset_close = $processor->get_bookmark( 'CITE-CLOSE' );
+
+			// Extract the source from the quote block.
+			if ( is_a( $offset_open, 'WP_HTML_Span' ) && is_a( $offset_close, 'WP_HTML_Span' ) ) {
+				$source = substr( $block['innerHTML'], $offset_open->start, $offset_close->start + $offset_close->length - $offset_open->start );
+			}
+
+			// Rebuild the quote block content. CITE does not live in an innerBlock.
 			foreach ( $block['innerBlocks'] as $inner_block ) {
 				$output .= $inner_block['innerHTML'];
 			}
@@ -720,8 +739,9 @@ function tumblr3_block_quote( $atts, $content = '' ): string {
 				$output,
 				array(
 					'br'     => array(),
-					'em'     => array(),
+					'span'   => array(),
 					'strong' => array(),
+					'em'     => array(),
 				)
 			),
 			'source' => $source,
@@ -797,25 +817,41 @@ function tumblr3_block_audio( $atts, $content = '' ): string {
 		return '';
 	}
 
-	$blocks = parse_blocks( $post->post_content );
-	$output = '';
+	$blocks    = parse_blocks( $post->post_content );
+	$player    = '';
+	$trackname = '';
+	$artist    = '';
+	$album     = '';
+	$media_id  = null;
 
 	// Handle all blocks in the post content.
 	foreach ( $blocks as $block ) {
 
 		// Stop on the first audio block.
 		if ( 'core/audio' === $block['blockName'] ) {
-			$output = $block['innerHTML'];
-			// Only parse the first audio block.
+			$media_id = $block['attrs']['id'];
+			$player   = apply_filters( 'the_content', serialize_block( $block ) );
 			break;
 		}
+	}
+
+	// Extract metadata from the media ID.
+	if ( is_int( $media_id ) ) {
+		$meta      = wp_get_attachment_metadata( $media_id );
+		$trackname = isset( $meta['title'] ) ? $meta['title'] : '';
+		$artist    = isset( $meta['artist'] ) ? $meta['artist'] : '';
+		$album     = isset( $meta['album'] ) ? $meta['album'] : '';
 	}
 
 	// Set the current context.
 	tumblr3_set_parse_context(
 		'audio',
 		array(
-			'audioplayer' => $output,
+			'player'    => $player,
+			'art'       => get_the_post_thumbnail_url(),
+			'trackname' => $trackname,
+			'artist'    => $artist,
+			'album'     => $album,
 		)
 	);
 
@@ -838,9 +874,66 @@ add_shortcode( 'block_audio', 'tumblr3_block_audio' );
 function tumblr3_block_audioplayer( $atts, $content = '' ): string {
 	$context = tumblr3_get_parse_context();
 
-	return $context['audio']['audioplayer'] ? tumblr3_do_shortcode( $content ) : '';
+	return ( isset( $context['audio']['player'] ) && ! empty( $context['audio']['player'] ) ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_audioplayer', 'tumblr3_block_audioplayer' );
+add_shortcode( 'block_audioembed', 'tumblr3_block_audioplayer' );
+
+/**
+ * Rendered for audio posts with a featured image set.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_albumart( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['audio']['player'] ) && ! empty( $context['audio']['player'] ) ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_albumart', 'tumblr3_block_albumart' );
+
+/**
+ * Rendered for audio posts with a track name set.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_trackname( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['audio']['trackname'] ) && '' !== $context['audio']['trackname'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_trackname', 'tumblr3_block_trackname' );
+
+/**
+ * Rendered for audio posts with an artist name set.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_artist( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['audio']['artist'] ) && '' !== $context['audio']['artist'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_artist', 'tumblr3_block_artist' );
+
+/**
+ * Rendered for audio posts with an album name set.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_album( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['audio']['album'] ) && '' !== $context['audio']['album'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_album', 'tumblr3_block_album' );
 
 /**
  * Rendered for video posts.
@@ -850,7 +943,46 @@ add_shortcode( 'block_audioplayer', 'tumblr3_block_audioplayer' );
  * @return string
  */
 function tumblr3_block_video( $atts, $content = '' ): string {
-	return ( 'video' === get_post_format() ) ? tumblr3_do_shortcode( $content ) : '';
+	global $post;
+
+	// Don't parse all blocks if the post format is not quote.
+	if ( 'video' !== get_post_format() ) {
+		return '';
+	}
+
+	$blocks   = parse_blocks( $post->post_content );
+	$media_id = null;
+
+	// Handle all blocks in the post content.
+	foreach ( $blocks as $block ) {
+
+		// Stop on the first video block.
+		if ( 'core/video' === $block['blockName'] ) {
+			$player = apply_filters( 'the_content', serialize_block( $block ) );
+			break;
+		}
+
+		// No video block found, check for an embed block instead.
+		if ( 'core/embed' === $block['blockName'] ) {
+			$player = apply_filters( 'the_content', serialize_block( $block ) );
+			break;
+		}
+	}
+
+	// Set the current context.
+	tumblr3_set_parse_context(
+		'video',
+		array(
+			'player' => $player,
+		)
+	);
+
+	// Parse the content of the quote block before resetting the context.
+	$content = tumblr3_do_shortcode( $content );
+
+	tumblr3_set_parse_context( 'theme', true );
+
+	return $content;
 }
 add_shortcode( 'block_video', 'tumblr3_block_video' );
 
@@ -862,10 +994,189 @@ add_shortcode( 'block_video', 'tumblr3_block_video' );
  * @return string
  */
 function tumblr3_block_photo( $atts, $content = '' ): string {
-	return ( 'image' === get_post_format() ) ? tumblr3_do_shortcode( $content ) : '';
+	global $post;
+
+	// Don't parse all blocks if the post format is not quote.
+	if ( 'image' !== get_post_format() ) {
+		return '';
+	}
+
+	$blocks        = parse_blocks( $post->post_content );
+	$highres       = false;
+	$highres_sizes = array( 'large', 'full' );
+	$image_id      = 0;
+	$link_dest     = 'none';
+	$caption       = '';
+	$lightbox      = false;
+
+	// Handle all blocks in the post content.
+	foreach ( $blocks as $key => $block ) {
+
+		if ( 'core/image' === $block['blockName'] ) {
+			$highres   = isset( $block['attrs']['sizeSlug'] ) ? in_array( $block['attrs']['sizeSlug'], $highres_sizes, true ) : false;
+			$image_id  = $block['attrs']['id'];
+			$link_dest = isset( $block['attrs']['linkDestination'] ) ? $block['attrs']['linkDestination'] : 'none';
+			$lightbox  = isset( $block['attrs']['lightbox'] );
+
+			/**
+			 * In Image (Photo) posts, the caption tag is for the rest of the post content.
+			 *
+			 * @see https://www.tumblr.com/docs/en/custom_themes#photo-posts:~:text=%7BCaption%7D%20for%20legacy%20Photo%20and%20Photoset%20posts
+			 */
+			unset( $blocks[ $key ] );
+
+			// Only parse the first image block.
+			break;
+		}
+	}
+
+	// Set the current context.
+	tumblr3_set_parse_context(
+		'image',
+		array(
+			'highres'  => $highres,
+			'image'    => $image_id,
+			'link'     => $link_dest,
+			'lightbox' => $lightbox,
+			'caption'  => serialize_blocks( $blocks ),
+			'data'     => wp_get_attachment_metadata( $image_id, true ),
+		)
+	);
+
+	// Parse the content of the quote block before resetting the context.
+	$content = tumblr3_do_shortcode( $content );
+
+	tumblr3_set_parse_context( 'theme', true );
+
+	return $content;
 }
 add_shortcode( 'block_photo', 'tumblr3_block_photo' );
-add_shortcode( 'block_panorama', 'tumblr3_block_photo' );
+
+/**
+ * Rendered for photo and panorama posts which have a link set on the image.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_linkurl( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['link'] ) ) {
+		return '';
+	}
+
+	return ( true === $context['image']['lightbox'] || 'none' !== $context['image']['link'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_linkurl', 'tumblr3_block_linkurl' );
+
+/**
+ * Rendered for photo and panorama posts which have the image size set as "large" or "fullsize".
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_highres( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['image']['highres'] ) && true === $context['image']['highres'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_highres', 'tumblr3_block_highres' );
+
+/**
+ * Rendered render content if the image has exif data.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_exif( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['image']['data'] ) && ! empty( $context['image']['data']['image_meta'] ) ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_exif', 'tumblr3_block_exif' );
+
+/**
+ * Conditionally load content based on if the image has camera exif data.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_camera( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['data']['image_meta']['camera'] ) ) {
+		return '';
+	}
+
+	$camera = $context['image']['data']['image_meta']['camera'];
+
+	return ( empty( $camera ) || '0' === $camera ) ? '' : tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_camera', 'tumblr3_block_camera' );
+
+/**
+ * Conditionally load content based on if the image has lens exif data.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_aperture( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['data']['image_meta']['aperture'] ) ) {
+		return '';
+	}
+
+	$aperture = $context['image']['data']['image_meta']['aperture'];
+
+	return ( empty( $aperture ) || '0' === $aperture ) ? '' : tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_aperture', 'tumblr3_block_aperture' );
+
+/**
+ * Conditionally load content based on if the image has focal length exif data.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_exposure( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['data']['image_meta']['shutter_speed'] ) ) {
+		return '';
+	}
+
+	$exposure = $context['image']['data']['image_meta']['shutter_speed'];
+
+	return ( empty( $exposure ) || '0' === $exposure ) ? '' : tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_exposure', 'tumblr3_block_exposure' );
+
+/**
+ * Conditionally load content based on if the image has focal length exif data.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_focallength( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['data']['image_meta']['focal_length'] ) ) {
+		return '';
+	}
+
+	$focal_length = $context['image']['data']['image_meta']['focal_length'];
+
+	return ( empty( $focal_length ) || '0' === $focal_length ) ? '' : tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_focallength', 'tumblr3_block_focallength' );
 
 /**
  * Rendered for answer (aside) posts.
@@ -887,9 +1198,86 @@ add_shortcode( 'block_answer', 'tumblr3_block_answer' );
  * @return string
  */
 function tumblr3_block_photoset( $atts, $content = '' ): string {
-	return ( 'gallery' === get_post_format() ) ? tumblr3_do_shortcode( $content ) : '';
+	global $post;
+
+	// Don't parse all blocks if the post format is not quote.
+	if ( 'gallery' !== get_post_format() ) {
+		return '';
+	}
+
+	$blocks     = parse_blocks( $post->post_content );
+	$gallery    = '';
+	$caption    = '';
+	$photocount = 0;
+
+	// Handle all blocks in the post content.
+	foreach ( $blocks as $key => $block ) {
+
+		if ( 'core/gallery' === $block['blockName'] ) {
+			// Capture the gallery block.
+			$gallery = serialize_block( $block );
+
+			/**
+			 * In Gallery posts, the caption tag is for the rest of the post content.
+			 *
+			 * @see https://www.tumblr.com/docs/en/custom_themes#photo-posts:~:text=%7BCaption%7D%20for%20legacy%20Photo%20and%20Photoset%20posts
+			 */
+			unset( $blocks[ $key ] );
+
+			// Only parse the first quote block.
+			break;
+		}
+	}
+
+	// Set the current context.
+	tumblr3_set_parse_context(
+		'gallery',
+		array(
+			'gallery'    => $gallery,
+			'photocount' => $photocount,
+			'caption'    => serialize_blocks( $blocks ),
+		)
+	);
+
+	// Parse the content of the quote block before resetting the context.
+	$content = tumblr3_do_shortcode( $content );
+
+	tumblr3_set_parse_context( 'theme', true );
+
+	return $content;
 }
 add_shortcode( 'block_photoset', 'tumblr3_block_photoset' );
+
+/**
+ * Rendered for link posts with a thumbnail image set.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_thumbnail( $atts, $content = '' ): string {
+	return has_post_thumbnail() ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_thumbnail', 'tumblr3_block_thumbnail' );
+
+/**
+ * Rendered for photoset (gallery) posts with caption content.
+ *
+ * @param array  $attributes The attributes of the shortcode.
+ * @param string $content    The content of the shortcode.
+ * @return string
+ */
+function tumblr3_block_caption( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+	$format  = get_post_format();
+
+	if ( ! isset( $context[ $format ]['caption'] ) ) {
+		return '';
+	}
+
+	return tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_caption', 'tumblr3_block_caption' );
 
 /**
  * Rendered for legacy Text posts and NPF posts.

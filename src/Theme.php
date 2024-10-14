@@ -19,6 +19,7 @@ class Theme {
 	public function initialize(): void {
 		// Setup theme functions.
 		add_action( 'after_setup_theme', array( $this, 'theme_support' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
 	/**
@@ -37,5 +38,12 @@ class Theme {
 		add_theme_support( 'custom-header' );
 		add_theme_support( 'header-text' );
 		add_theme_support( 'custom-logo' );
+	}
+
+	/**
+	 * Enqueue theme styles and scripts.
+	 */
+	public function enqueue_scripts(): void {
+		wp_enqueue_style( 'tumblr3-style', TUMBLR3_URL . 'assets/css/build/index.css', array(), TUMBLR3_METADATA['Version'] );
 	}
 }

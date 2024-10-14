@@ -1,0 +1,347 @@
+/* https://github.tumblr.net/Tumblr/tumblr/tree/279a7aec5cb51960de9844af0546f142ff32012a/client/standalone/blog-network-npf/styles*/
+/* those match NPF heading size better*/
+/**/
+/* ## Font Families*/
+/**/
+/* Defines the standard font families that we use.*/
+/**/
+/* These omit `serif` and `sans-serf` to make it possible to splice in additional fallbacks*/
+/* Standard faces*/
+/* Named faces*/
+/* Default "app" font family*/
+/**/
+/* # Tumblr Color Palette*/
+/**/
+/* These are the main colors that we use throughout the site and UI.*/
+/**/
+/* Names should rellect*/
+/**/
+/**/
+/* ## Named Colors*/
+/**/
+/* [Style Guide](https://github.tumblr.net/pages/Tumblr/tumblrstyleguide/style/colors/)*/
+/**/
+/* If it's worth being a color and it's not a mix of some other colors, put it here.*/
+/* The ONLY exception to this rule is if there is some kind of one-off page that isn't using the*/
+/* standard set of Tumblr-y colors in the first place.*/
+/**/
+/**/
+/* ### "Colorful" Basics*/
+/**/
+/* These are the go-tos for the creative team when they need a Tumblr-y color palette.*/
+/**/
+/* The below have Neue Color variants*/
+/**/
+/* ### Tumblr Neue Colors*/
+/**/
+/* These are the colors we use for Tumblr's Neue branding.*/
+/**/
+/* These replace old accent colors*/
+/* Red*/
+/* Orange*/
+/* Yellow*/
+/* Green*/
+/* Light Blue*/
+/* Purple*/
+/* These are new*/
+/* Dark Blue, new brand color*/
+/* Pink*/
+/* Off-Black*/
+/* project x red*/
+/**/
+/* ### 50 Shades of Gray*/
+/**/
+/* The grays that we use on the site (aside from the default button gray) must all be mixtures of*/
+/* white an "Tumblr black," which allows us to specify the colors as percentage mixes.*/
+/**/
+/* #444444*/
+/* #8f8f8f*/
+/* #b4b4b4*/
+/* #d0d0d0*/
+/* #e7e7e7*/
+/* #f2f2f2*/
+/**/
+/* ### 50 Transparent Verisons of Black*/
+/**/
+/* These are transparent versions of Tumblr black, which one would use for dark text on a light*/
+/* background when you're not committed to matting on white, such as when highlighting a row in a*/
+/* menu or table with a background color.*/
+/**/
+/* Probably you won't need these, but they are here in case you do.*/
+/**/
+/* rgba(0, 0, 0, 0.439216)*/
+/* rgba(0, 0, 0, 0.294118)*/
+/* rgba(0, 0, 0, 0.184314)*/
+/* rgba(0, 0, 0, 0.0941176)*/
+/* rgba(0, 0, 0, 0.0509804)*/
+/**/
+/* ### 50 Transparent Versions of White*/
+/**/
+/* These are transparent versions of white, which are similar to the blue-grays above, but can be used*/
+/* over any dark background, not just tumblr-blue.*/
+/**/
+/* rgba(255, 255, 255, 0.6);*/
+/* rgba(255, 255, 255, 0.4);*/
+/* rgba(255, 255, 255, 0.25);*/
+/* rgba(255, 255, 255, 0.13);*/
+/* rgba(255, 255, 255, 0.07);*/
+p.npf_quote {
+  font-family: Georgia, Times, "Times New Roman", serif;
+  font-size: 23px;
+}
+
+p.npf_quirky {
+  font-family: Fairwater, serif;
+  font-size: 24px;
+  line-height: 1.3em;
+}
+
+p.npf_chat {
+  font-family: "Source Code Pro", monospace;
+}
+
+p.npf_color_joey,
+span.npf_color_joey {
+  color: #ff492f;
+}
+
+p.npf_color_monica,
+span.npf_color_monica {
+  color: #ff8a00;
+}
+
+p.npf_color_phoebe,
+span.npf_color_phoebe {
+  color: #e8d73a;
+}
+
+p.npf_color_ross,
+span.npf_color_ross {
+  color: #00cf35;
+}
+
+p.npf_color_rachel,
+span.npf_color_rachel {
+  color: #00b8ff;
+}
+
+p.npf_color_chandler,
+span.npf_color_chandler {
+  color: #7c5cff;
+}
+
+p.npf_color_niles,
+span.npf_color_niles {
+  color: #ff62ce;
+}
+
+p.npf_color_frasier,
+span.npf_color_frasier {
+  color: #001935;
+}
+
+p.npf_color_mr_big,
+span.npf_color_mr_big {
+  color: #000c1a;
+}
+
+div.npf-link-block {
+  align-items: center;
+  border: 1px solid prima-mix(#444444, 0.25);
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+  overflow: hidden;
+}
+div.npf-link-block > a {
+  color: inherit;
+  width: 100%;
+  text-decoration: none;
+}
+div.npf-link-block .title {
+  font-size: 25px;
+  line-height: 34px;
+  max-height: 136px;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+}
+div.npf-link-block.no-poster .title {
+  padding: 16px 12px 0;
+}
+div.npf-link-block .poster {
+  align-items: center;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-clip: content-box;
+  border-bottom: 1px solid prima-mix(#444444, 0.25);
+  display: flex;
+  height: 250px;
+  justify-content: center;
+  position: relative;
+}
+div.npf-link-block .poster::before {
+  background: #000000;
+  content: "";
+  display: block;
+  height: 100%;
+  opacity: 0.4;
+  position: absolute;
+  width: 100%;
+}
+div.npf-link-block .poster .title {
+  color: #ffffff;
+  font-weight: 400;
+  padding: 16px 12px;
+  position: absolute;
+  text-align: center;
+}
+div.npf-link-block .bottom {
+  color: inherit;
+  line-height: 24px;
+  padding: 8px 12px 16px;
+}
+div.npf-link-block .bottom .description {
+  color: inherit;
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0;
+  max-height: 48px;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+}
+div.npf-link-block .bottom .site-name {
+  color: inherit;
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 18px;
+  margin-top: 10px;
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+
+.tmblr-full > video {
+  height: 100%;
+  width: 100%;
+}
+
+.post div.npf_row,
+.post-content div.npf_row,
+body div.npf_row {
+  align-items: stretch;
+  display: flex;
+  margin-top: 0;
+  overflow: hidden;
+}
+.post div.npf_row figure.tmblr-full,
+.post-content div.npf_row figure.tmblr-full,
+body div.npf_row figure.tmblr-full {
+  flex: 1;
+  justify-content: space-between;
+  margin: 0;
+  overflow-y: hidden;
+}
+.post div.npf_row figure.tmblr-full,
+.post div.npf_row .npf_col,
+.post-content div.npf_row figure.tmblr-full,
+.post-content div.npf_row .npf_col,
+body div.npf_row figure.tmblr-full,
+body div.npf_row .npf_col {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.post div.npf_row figure.tmblr-full:first-child,
+.post div.npf_row .npf_col:first-child,
+.post-content div.npf_row figure.tmblr-full:first-child,
+.post-content div.npf_row .npf_col:first-child,
+body div.npf_row figure.tmblr-full:first-child,
+body div.npf_row .npf_col:first-child {
+  padding-left: 0;
+  padding-right: 2px;
+}
+.post div.npf_row figure.tmblr-full:last-child,
+.post div.npf_row .npf_col:last-child,
+.post-content div.npf_row figure.tmblr-full:last-child,
+.post-content div.npf_row .npf_col:last-child,
+body div.npf_row figure.tmblr-full:last-child,
+body div.npf_row .npf_col:last-child {
+  padding-left: 2px;
+  padding-right: 0;
+}
+.post div.npf_row figure.tmblr-full:only-child,
+.post div.npf_row .npf_col:only-child,
+.post-content div.npf_row figure.tmblr-full:only-child,
+.post-content div.npf_row .npf_col:only-child,
+body div.npf_row figure.tmblr-full:only-child,
+body div.npf_row .npf_col:only-child {
+  padding-left: 0;
+  padding-right: 0;
+}
+.post div.npf_row img,
+.post-content div.npf_row img,
+body div.npf_row img {
+  height: auto;
+}
+.post div.npf_row .npf_col,
+.post-content div.npf_row .npf_col,
+body div.npf_row .npf_col {
+  flex: 1;
+}
+.post div.npf_row .npf_col figure,
+.post-content div.npf_row .npf_col figure,
+body div.npf_row .npf_col figure {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  text-align: left;
+}
+.post div.npf_row .npf_col figure img,
+.post-content div.npf_row .npf_col figure img,
+body div.npf_row .npf_col figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.post div.npf_row .npf_col figure p.tmblr-attribution,
+.post-content div.npf_row .npf_col figure p.tmblr-attribution,
+body div.npf_row .npf_col figure p.tmblr-attribution {
+  width: 100%;
+}
+.post figure[data-enable-lightbox="1"],
+.post a.post_media_photo_anchor,
+.post-content figure[data-enable-lightbox="1"],
+.post-content a.post_media_photo_anchor,
+body figure[data-enable-lightbox="1"],
+body a.post_media_photo_anchor {
+  cursor: pointer;
+}
+.post p + div.npf_row,
+.post div.npf_row + p,
+.post-content p + div.npf_row,
+.post-content div.npf_row + p,
+body p + div.npf_row,
+body div.npf_row + p {
+  margin-top: 15px;
+}
+.post .crt-video + div.npf_row,
+.post div.npf_row + .crt-video,
+.post-content .crt-video + div.npf_row,
+.post-content div.npf_row + .crt-video,
+body .crt-video + div.npf_row,
+body div.npf_row + .crt-video {
+  margin-top: 15px;
+}
+.post div.npf_row + figure.tmblr-full,
+.post div.npf_row + div.npf_row,
+.post-content div.npf_row + figure.tmblr-full,
+.post-content div.npf_row + div.npf_row,
+body div.npf_row + figure.tmblr-full,
+body div.npf_row + div.npf_row {
+  margin-top: 4px;
+}
+/*# sourceMappingURL=index.css.map */

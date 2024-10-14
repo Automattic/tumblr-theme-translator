@@ -349,4 +349,5 @@ return array(
 	'MailSummary'             => array(),
 	'NewPostStyles'           => array(),
 	'TwitterUsername'         => array(),
+	'PostBlogName'            => array(),
 );

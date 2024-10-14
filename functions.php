@@ -227,14 +227,6 @@ function tumblr3_theme_parse( $content ): string {
 	return $content;
 }
 
-// Currently unused, will likely be used in future development before the final release.
-require TUMBLR3_PATH . 'includes/assets.php';
-
-// Include tag and block hydration functions.
-require TUMBLR3_PATH . 'includes/missing-functions.php';
-require TUMBLR3_PATH . 'includes/block-functions.php';
-require TUMBLR3_PATH . 'includes/tag-functions.php';
-
 /**
  * Filter to handle modifiers in shortcode output.
  *
@@ -272,3 +264,11 @@ function tumblr3_handle_modifiers( $output, $tag, $attr ) {
 	return $output;
 }
 add_filter( 'do_shortcode_tag', 'tumblr3_handle_modifiers', 10, 3 );
+
+// Currently unused, will likely be used in future development before the final release.
+require TUMBLR3_PATH . 'includes/assets.php';
+
+// Include tag and block hydration functions.
+require TUMBLR3_PATH . 'includes/block-functions.php';
+require TUMBLR3_PATH . 'includes/tag-functions.php';
+require TUMBLR3_PATH . 'includes/missing-functions.php';
