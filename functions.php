@@ -271,4 +271,4 @@ function tumblr3_handle_modifiers( $output, $tag, $attr ) {
 	}
 	return $output;
 }
-add_filter( 'tumblr3_shortcode_output', 'tumblr3_handle_modifiers', 10, 3 );
+add_filter( 'do_shortcode_tag', 'tumblr3_handle_modifiers', 10, 3 );
