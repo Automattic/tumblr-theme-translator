@@ -36,6 +36,7 @@ function tumblr3_get_plugin_slug(): string {
  * @todo nested tags of the same type aren't rendering properly.
  *
  * @param string $content The content to parse.
+ *
  * @return string The parsed content.
  */
 function tumblr3_do_shortcode( $content ): string {
@@ -70,8 +71,9 @@ function tumblr3_get_parse_context() {
 /**
  * Sets the global parse context.
  *
- * @param string $key
- * @param array  $value
+ * @param string $key   The key to set.
+ * @param array  $value The value to set.
+ *
  * @return void
  */
 function tumblr3_set_parse_context( $key, $value ): void {
@@ -85,6 +87,7 @@ function tumblr3_set_parse_context( $key, $value ): void {
  * Currently that's [shortcode] syntax, this could change in the future if needed.
  *
  * @param string $content Tumblr theme HTML content.
+ *
  * @return string Parsed content.
  */
 function tumblr3_theme_parse( $content ): string {
@@ -233,6 +236,7 @@ function tumblr3_theme_parse( $content ): string {
  * @param string $output The shortcode output.
  * @param string $tag    The shortcode name.
  * @param array  $attr   The shortcode attributes.
+ *
  * @return string The modified output.
  */
 function tumblr3_handle_modifiers( $output, $tag, $attr ) {
@@ -257,7 +261,7 @@ function tumblr3_handle_modifiers( $output, $tag, $attr ) {
 				$output = wp_json_encode( wp_strip_all_tags( $output ) );
 				break;
 			case 'urlencoded':
-				$output = urlencode( $output );
+				$output = rawurlencode( $output );
 				break;
 		}
 	}

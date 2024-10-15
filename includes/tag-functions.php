@@ -976,6 +976,31 @@ function tumblr3_tag_album(): string {
 add_shortcode( 'tag_album', 'tumblr3_tag_album' );
 
 /**
+ * Renders the audio player media URL if it's external.
+ *
+ * @return string
+ */
+function tumblr3_tag_externalaudiourl(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is an audio post and has a player.
+	if ( isset( $context['audio'], $context['audio']['player'] ) ) {
+		$processor = new Chrysalis\T3\Processor( $context['audio']['player'] );
+
+		while ( $processor->next_tag( 'AUDIO' ) ) {
+			$src = $processor->get_attribute( 'SRC' );
+
+			if ( $src ) {
+				return esc_url( $src );
+			}
+		}
+	}
+
+	return '';
+}
+add_shortcode( 'tag_externalaudiourl', 'tumblr3_tag_externalaudiourl' );
+
+/**
  * Renders the post gallery if one was found.
  *
  * @return string
@@ -1012,7 +1037,7 @@ add_shortcode( 'tag_caption', 'tumblr3_tag_caption' );
 /**
  * Renders the post image URL if one was found.
  *
- * @param array $atts
+ * @param array  $atts
  * @param string $content
  * @param string $shortcode_name
  * @return string
@@ -1045,7 +1070,7 @@ add_shortcode( 'tag_photourl-75sq', 'tumblr3_tag_photourl' );
 /**
  * Renders the post image thumbnail URL if one was found.
  *
- * @param array $atts
+ * @param array  $atts
  * @param string $content
  * @param string $shortcode_name
  * @return string
