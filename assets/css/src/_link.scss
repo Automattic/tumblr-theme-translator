@@ -4,90 +4,92 @@ $title-line-height: 34px;
 $description-line-height: 24px;
 
 @mixin text-cutoff {
-    overflow: hidden;
-    overflow-wrap: anywhere;
-    text-overflow: ellipsis;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+	text-overflow: ellipsis;
 }
 
 div.npf-link-block {
-    align-items: center;
-    border: 1px solid $color-gray-25;
-    border-radius: 6px;
-    display: flex;
-    justify-content: center;
-    margin: 15px 0;
-    overflow: hidden;
+	align-items: center;
+	border: 1px solid $color-gray-25;
+	border-radius: 6px;
+	display: flex;
+	justify-content: center;
+	margin: 15px 0;
+	overflow: hidden;
 
-    > a {
-        color: inherit;
-        width: 100%;
-        text-decoration: none;
-    }
+	> a {
+		color: inherit;
+		width: 100%;
+		text-decoration: none;
+	}
 
-    .title {
-        font-size: 25px;
-        line-height: $title-line-height;
-        max-height: $title-line-height * 4; // This needs to be equal to (line-height * 4) - We want to show a maximum of 4 lines here
-        @include text-cutoff;
-    }
+	.title {
+		font-size: 25px;
+		line-height: $title-line-height;
+		max-height: $title-line-height * 4; // This needs to be equal to (line-height * 4) - We want to show a maximum of 4 lines here
 
-    &.no-poster .title {
-        padding: 16px 12px 0;
-    }
+		@include text-cutoff;
+	}
 
-    .poster {
-        align-items: center;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-clip: content-box;
-        border-bottom: 1px solid $color-gray-25;
-        display: flex;
-        height: 250px;
-        justify-content: center;
-        position: relative;
+	&.no-poster .title {
+		padding: 16px 12px 0;
+	}
 
-        &::before {
-            background: $color-black;
-            content: '';
-            display: block;
-            height: 100%;
-            opacity: 0.4;
-            position: absolute;
-            width: 100%;
-        }
+	.poster {
+		align-items: center;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-clip: content-box;
+		border-bottom: 1px solid $color-gray-25;
+		display: flex;
+		height: 250px;
+		justify-content: center;
+		position: relative;
 
-        .title {
-            color: $color-white;
-            font-weight: 400;
-            padding: 16px 12px;
-            position: absolute;
-            text-align: center;
-        }
-    }
+		&::before {
+			background: $color-black;
+			content: "";
+			display: block;
+			height: 100%;
+			opacity: 0.4;
+			position: absolute;
+			width: 100%;
+		}
 
-    .bottom {
-        color: inherit;
-        line-height: 24px;
-        padding: 8px 12px 16px;
+		.title {
+			color: $color-white;
+			font-weight: 400;
+			padding: 16px 12px;
+			position: absolute;
+			text-align: center;
+		}
+	}
 
-        .description {
-            color: inherit;
-            font-size: 16px;
-            line-height: $description-line-height;
-            margin: 0;
-            max-height: $description-line-height * 2; // This needs to be equal to (line-height * 2) - We want to show a maximum of 2 lines here
-            @include text-cutoff;
-        }
+	.bottom {
+		color: inherit;
+		line-height: 24px;
+		padding: 8px 12px 16px;
 
-        .site-name {
-            color: inherit;
-            font-size: 12.5px;
-            font-weight: 400;
-            line-height: 18px;
-            margin-top: 10px;
-            opacity: 0.65;
-            text-transform: uppercase;
-        }
-    }
+		.description {
+			color: inherit;
+			font-size: 16px;
+			line-height: $description-line-height;
+			margin: 0;
+			max-height: $description-line-height * 2; // This needs to be equal to (line-height * 2) - We want to show a maximum of 2 lines here
+
+			@include text-cutoff;
+		}
+
+		.site-name {
+			color: inherit;
+			font-size: 12.5px;
+			font-weight: 400;
+			line-height: 18px;
+			margin-top: 10px;
+			opacity: 0.65;
+			text-transform: uppercase;
+		}
+	}
 }
