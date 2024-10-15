@@ -3,6 +3,17 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * WordPress does not support playcount tracking for attached audio files.
+ * This would need to be implemented as a custom meta field on the attachment.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#audio-posts
+ */
+add_shortcode( 'tag_playcount', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'tag_formattedplaycount', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'tag_playcountwithlabel', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'block_playcount', 'tumblr3_block_functionality_missing' );
+
+/**
  * WordPress doesn't support a panorama post format out of the box.
  * Could this be safely mapped to the Image post format?
  *

@@ -1022,8 +1022,9 @@ function tumblr3_block_video( $atts, $content = '' ): string {
 		return '';
 	}
 
-	$blocks   = parse_blocks( $post->post_content );
-	$media_id = null;
+	$blocks    = parse_blocks( $post->post_content );
+	$media_id  = null;
+	$thumbnail = '';
 
 	// Handle all blocks in the post content.
 	foreach ( $blocks as $block ) {
@@ -1032,6 +1033,14 @@ function tumblr3_block_video( $atts, $content = '' ): string {
 		if ( 'core/video' === $block['blockName'] ) {
 			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
 			$player = apply_filters( 'the_content', serialize_block( $block ) );
+
+			// Extract the video poster from the video block.
+			$processor = new Chrysalis\T3\Processor( $player );
+			while ( $processor->next_tag( 'VIDEO' ) ) {
+				$thumbnail = $processor->get_attribute( 'poster' );
+				break;
+			}
+
 			break;
 		}
 
@@ -1047,7 +1056,8 @@ function tumblr3_block_video( $atts, $content = '' ): string {
 	tumblr3_set_parse_context(
 		'video',
 		array(
-			'player' => $player,
+			'player'    => $player,
+			'thumbnail' => $thumbnail,
 		)
 	);
 
@@ -1059,6 +1069,22 @@ function tumblr3_block_video( $atts, $content = '' ): string {
 	return $content;
 }
 add_shortcode( 'block_video', 'tumblr3_block_video' );
+
+/**
+ * Rendered for video posts with a video player and video thumbnail.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_videothumbnail( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['video']['thumbnail'] ) && ! empty( $context['video']['thumbnail'] ) ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_videothumbnail', 'tumblr3_block_videothumbnail' );
+add_shortcode( 'block_videothumbnails', 'tumblr3_block_videothumbnail' );
 
 /**
  * Rendered for photo and panorama posts.
@@ -1463,7 +1489,7 @@ add_shortcode( 'block_pinnedpostlabel', 'tumblr3_block_pinnedpostlabel' );
  *
  * @return string The parsed content or an empty string.
  */
-function tumblr3_block_language( $atts, $content = '', $shortcode_name ): string {
+function tumblr3_block_language( $atts, $content, $shortcode_name ): string {
 	// Map shortcodes to their respective locales
 	$language_map = array(
 		'block_english'            => 'en_US',
@@ -1524,7 +1550,7 @@ add_shortcode( 'block_hindi', 'tumblr3_block_language' );
  *
  * @return string The parsed content or an empty string.
  */
-function tumblr3_block_post_n( $atts, $content = '', $shortcode_name ): string {
+function tumblr3_block_post_n( $atts, $content, $shortcode_name ): string {
 	global $wp_query;
 
 	// Extract the post number from the shortcode name (assuming 'block_postN' where N is a number)

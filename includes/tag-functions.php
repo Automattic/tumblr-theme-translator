@@ -182,6 +182,18 @@ function tumblr3_tag_twitterusername(): string {
 add_shortcode( 'tag_twitterusername', 'tumblr3_tag_twitterusername' );
 
 /**
+ * The current state of a page in nav.
+ * E.g is this the current page?
+ *
+ * @return string
+ */
+function tumblr3_tag_currentstate(): string {
+	return get_the_permalink() === home_url( add_query_arg( null, null ) ) ? 'current-page' : '';
+}
+add_shortcode( 'tag_currentstate', 'tumblr3_tag_currentstate' );
+add_shortcode( 'tag_externalstate', 'tumblr3_tag_currentstate' );
+
+/**
  * The display shape of your avatar ("circle" or "square").
  *
  * @return string Either "circle" or "square".
@@ -999,6 +1011,7 @@ function tumblr3_tag_externalaudiourl(): string {
 	return '';
 }
 add_shortcode( 'tag_externalaudiourl', 'tumblr3_tag_externalaudiourl' );
+add_shortcode( 'tag_rawaudiourl', 'tumblr3_tag_externalaudiourl' );
 
 /**
  * Renders the post gallery if one was found.
@@ -1042,7 +1055,7 @@ add_shortcode( 'tag_caption', 'tumblr3_tag_caption' );
  * @param string $shortcode_name
  * @return string
  */
-function tumblr3_tag_photourl( $atts, $content = '', $shortcode_name ): string {
+function tumblr3_tag_photourl( $atts, $content, $shortcode_name ): string {
 	// Parse shortcode attributes.
 	$atts = shortcode_atts(
 		array(
@@ -1075,7 +1088,7 @@ add_shortcode( 'tag_photourl-75sq', 'tumblr3_tag_photourl' );
  * @param string $shortcode_name
  * @return string
  */
-function tumblr3_tag_thumbnail( $atts, $content = '', $shortcode_name ): string {
+function tumblr3_tag_thumbnail( $atts, $content, $shortcode_name ): string {
 	$sizes = array(
 		'tag_thumbnail'         => 'thumbnail',
 		'tag_thumbnail-highres' => 'full',
@@ -1259,6 +1272,23 @@ function tumblr3_tag_video(): string {
 }
 add_shortcode( 'tag_video', 'tumblr3_tag_video' );
 add_shortcode( 'tag_videoembed', 'tumblr3_tag_video' );
+
+/**
+ * Renders the post video thumbnail URL.
+ *
+ * @return string
+ */
+function tumblr3_tag_videothumbnailurl(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is a video post and has a player.
+	if ( isset( $context['video'], $context['video']['thumbnail'] ) ) {
+		return $context['video']['thumbnail'];
+	}
+
+	return '';
+}
+add_shortcode( 'tag_videothumbnailurl', 'tumblr3_tag_videothumbnailurl' );
 
 /**
  * The link post type title (This is also the link URL).
