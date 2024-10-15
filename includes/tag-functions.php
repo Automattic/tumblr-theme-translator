@@ -79,6 +79,7 @@ add_shortcode( 'tag_groupmemberurl', 'tumblr3_tag_groupmemberurl' );
  * Gets the group member portrait URL.
  *
  * @param array $atts Shortcode attributes.
+ *
  * @return string The URL of the group member avatar.
  */
 function tumblr3_tag_groupmemberportraiturl( $atts ): string {
@@ -122,6 +123,7 @@ function tumblr3_tag_postauthortitle(): string {
 }
 add_shortcode( 'tag_postauthortitle', 'tumblr3_tag_postauthortitle' );
 add_shortcode( 'tag_groupmembertitle', 'tumblr3_tag_postauthortitle' );
+add_shortcode( 'tag_postblogname', 'tumblr3_tag_postauthortitle' );
 
 /**
  * The URL of the post author.
@@ -137,6 +139,7 @@ add_shortcode( 'tag_postauthorurl', 'tumblr3_tag_postauthorurl' );
  * The portrait URL of the post author.
  *
  * @param array $atts The attributes of the shortcode.
+ *
  * @return string The URL of the author portrait.
  */
 function tumblr3_tag_postauthorportraiturl( $atts ): string {
@@ -301,6 +304,7 @@ add_shortcode( 'tag_posttitle', 'tumblr3_tag_title' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_body(): string {
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
 	return apply_filters( 'the_content', get_the_content() );
 }
 add_shortcode( 'tag_body', 'tumblr3_tag_body' );
@@ -313,6 +317,7 @@ add_shortcode( 'tag_body', 'tumblr3_tag_body' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_excerpt(): string {
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
 	return wp_strip_all_tags( apply_filters( 'the_content', get_the_content() ) );
 }
 add_shortcode( 'tag_excerpt', 'tumblr3_tag_excerpt' );
@@ -339,6 +344,7 @@ function tumblr3_tag_description(): string {
 		}
 
 		// Re-build the content without audio blocks.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
 		return apply_filters( 'the_content', serialize_blocks( $blocks ) );
 	}
 
@@ -399,6 +405,7 @@ add_shortcode( 'tag_favicon', 'tumblr3_tag_favicon' );
  * The portrait URL of the blog, uses the custom logo if set.
  *
  * @param array $atts The attributes of the shortcode.
+ *
  * @return string The URL of the blog portrait.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
@@ -510,7 +517,7 @@ function tumblr3_tag_label(): string {
 add_shortcode( 'tag_label', 'tumblr3_tag_label' );
 
 /**
- * tagsasclasses outputs the tags of a post as HTML-safe classes.
+ * Tagsasclasses outputs the tags of a post as HTML-safe classes.
  *
  * @return string
  *
@@ -768,7 +775,8 @@ add_shortcode( 'tag_notecountwithlabel', 'tumblr3_tag_notecountwithlabel' );
  * @todo Comments template should be in the theme.
  * We need to match the output of tumblr post notes for styling consistency.
  *
- * @param array $attributes The attributes of the shortcode.
+ * @param array $atts The attributes of the shortcode.
+ *
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
@@ -1026,9 +1034,38 @@ function tumblr3_tag_photoset(): string {
 		return '';
 	}
 
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
 	return apply_filters( 'the_content', $context['gallery']['gallery'] );
 }
 add_shortcode( 'tag_photoset', 'tumblr3_tag_photoset' );
+
+/**
+ * Renders the post gallery layout if one was found.
+ *
+ * @return string
+ */
+function tumblr3_tag_photosetlayout(): string {
+	return tumblr3_tag_photocount();
+}
+add_shortcode( 'tag_photosetlayout', 'tumblr3_tag_photosetlayout' );
+
+/**
+ * Renders the post gallery photo count if one was found.
+ *
+ * @return string
+ */
+function tumblr3_tag_photocount(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Return nothing if no gallery is found.
+	if ( ! isset( $context['gallery']['photocount'] ) ) {
+		return '';
+	}
+
+	return esc_html( $context['gallery']['photocount'] );
+}
+add_shortcode( 'tag_photocount', 'tumblr3_tag_photocount' );
+add_shortcode( 'tag_photosetlayout', 'tumblr3_tag_photocount' );
 
 /**
  * Renders the post gallery caption if one was found.
@@ -1043,6 +1080,7 @@ function tumblr3_tag_caption(): string {
 		return '';
 	}
 
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
 	return apply_filters( 'the_content', $context[ $format ]['caption'] );
 }
 add_shortcode( 'tag_caption', 'tumblr3_tag_caption' );
@@ -1050,9 +1088,10 @@ add_shortcode( 'tag_caption', 'tumblr3_tag_caption' );
 /**
  * Renders the post image URL if one was found.
  *
- * @param array  $atts
- * @param string $content
- * @param string $shortcode_name
+ * @param array  $atts           The attributes of the shortcode.
+ * @param string $content        The content of the shortcode.
+ * @param string $shortcode_name The name of the shortcode.
+ *
  * @return string
  */
 function tumblr3_tag_photourl( $atts, $content, $shortcode_name ): string {
@@ -1083,9 +1122,10 @@ add_shortcode( 'tag_photourl-75sq', 'tumblr3_tag_photourl' );
 /**
  * Renders the post image thumbnail URL if one was found.
  *
- * @param array  $atts
- * @param string $content
- * @param string $shortcode_name
+ * @param array  $atts           The attributes of the shortcode.
+ * @param string $content        The content of the shortcode.
+ * @param string $shortcode_name The name of the shortcode.
+ *
  * @return string
  */
 function tumblr3_tag_thumbnail( $atts, $content, $shortcode_name ): string {
@@ -1319,19 +1359,6 @@ function tumblr3_tag_host(): string {
 	return $parsed_url['host'];
 }
 add_shortcode( 'tag_host', 'tumblr3_tag_host' );
-
-/**
- * @todo Understand what Tumblr outputs in this tag.
- *
- * @return string
- *
- * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
- */
-function tumblr3_tag_posttypographystyles(): string {
-	return '<style></style>';
-}
-add_shortcode( 'tag_posttypographystyles', 'tumblr3_tag_posttypographystyles' );
-add_shortcode( 'tag_newpoststyles', 'tumblr3_tag_posttypographystyles' );
 
 /**
  * Returns the day of the month without leading zeros.

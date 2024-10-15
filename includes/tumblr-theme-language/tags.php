@@ -142,7 +142,6 @@ return array(
 	),
 	'PhotoCount'              => array(),
 	'PhotosetLayout'          => array(),
-	'JSPhotosetLayout'        => array(),
 	'Quote'                   => array(),
 	'Source'                  => array(),
 	'Length'                  => array(),

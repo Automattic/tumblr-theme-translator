@@ -175,6 +175,9 @@ add_shortcode( 'block_nosourcelogo', 'tumblr3_block_functionality_missing' );
  * These tags/blocks are extremely specific to Tumblr and are not supported by WordPress.
  * Tags here will never be supported by WordPress. Unlike other sections which may be supported in the future.
  */
+add_shortcode( 'tag_posttypographystyles', 'tumblr3_tag_posttypographystyles' );
+add_shortcode( 'tag_newpoststyles', 'tumblr3_tag_posttypographystyles' );
+add_shortcode( 'tag_postnotesurl', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_mobileappheaders', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'block_showadsonthispage', 'tumblr3_block_functionality_missing' );
 add_shortcode( 'block_newcta', 'tumblr3_block_functionality_missing' );

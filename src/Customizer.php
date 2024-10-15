@@ -28,7 +28,8 @@ class Customizer {
 	/**
 	 * Remove WordPress default settings and sections.
 	 *
-	 * @param WP_Customize_Manager $wp_customize
+	 * @param WP_Customize_Manager $wp_customize The customizer manager.
+	 *
 	 * @return void
 	 */
 	public function remove_defaults( $wp_customize ): void {
@@ -42,7 +43,8 @@ class Customizer {
 	/**
 	 * Creates global options to match standard Tumblr options.
 	 *
-	 * @param WP_Customize_Manager $wp_customize
+	 * @param WP_Customize_Manager $wp_customize The customizer manager.
+	 *
 	 * @return void
 	 */
 	public function global_options( $wp_customize ): void {
@@ -215,7 +217,8 @@ class Customizer {
 	 *
 	 * @see https://www.tumblr.com/docs/en/custom_themes#theme-options
 	 *
-	 * @param WP_Customize_Manager $wp_customize
+	 * @param WP_Customize_Manager $wp_customize The customizer manager.
+	 *
 	 * @return void
 	 */
 	public function theme_specific_options( $wp_customize ): void {
@@ -274,6 +277,8 @@ class Customizer {
 		);
 
 		/**
+		 * Theme HTML setting.
+		 *
 		 * @todo lack of sanitization is a security risk.
 		 */
 		$wp_customize->add_setting(

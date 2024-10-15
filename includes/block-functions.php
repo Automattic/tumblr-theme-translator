@@ -149,6 +149,7 @@ add_shortcode( 'block_ifnot_theme_option', 'tumblr3_block_ifnot_theme_option' );
 
 /**
  * Conditional check for if we're in the loop.
+ * This catches a bunch of blocks that should only render in the loop.
  *
  * @param array  $atts    The attributes of the shortcode.
  * @param string $content The content of the shortcode.
@@ -163,6 +164,7 @@ add_shortcode( 'block_date', 'tumblr3_block_body' );
 add_shortcode( 'block_postsummary', 'tumblr3_block_body' );
 add_shortcode( 'block_excerpt', 'tumblr3_block_body' );
 add_shortcode( 'block_host', 'tumblr3_block_body' );
+add_shortcode( 'block_author', 'tumblr3_block_body' );
 
 /**
  * Outputs content if we should stretch the header image.
@@ -686,7 +688,7 @@ add_shortcode( 'block_hastags', 'tumblr3_block_hastags' );
  * @return string
  */
 function tumblr3_block_post_notes( $atts, $content = '' ): string {
-	return is_single() && ( get_comments_number() || comments_open() ) ? tumblr3_do_shortcode( $content ) : '';
+	return ( is_single() || is_page() ) && ( get_comments_number() || comments_open() ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_postnotes', 'tumblr3_block_post_notes' );
 
@@ -1318,10 +1320,14 @@ function tumblr3_block_photoset( $atts, $content = '' ): string {
 	$gallery    = '';
 	$caption    = '';
 	$photocount = 0;
+	$photos     = array();
 
 	// Handle all blocks in the post content.
 	foreach ( $blocks as $key => $block ) {
 		if ( 'core/gallery' === $block['blockName'] ) {
+			$photocount = count( $block['innerBlocks'] );
+			$photos     = $block['innerBlocks'];
+
 			// Capture the gallery block.
 			$gallery = serialize_block( $block );
 
@@ -1344,6 +1350,7 @@ function tumblr3_block_photoset( $atts, $content = '' ): string {
 			'gallery'    => $gallery,
 			'photocount' => $photocount,
 			'caption'    => serialize_blocks( $blocks ),
+			'photos'     => $photos,
 		)
 	);
 
@@ -1355,6 +1362,49 @@ function tumblr3_block_photoset( $atts, $content = '' ): string {
 	return $content;
 }
 add_shortcode( 'block_photoset', 'tumblr3_block_photoset' );
+
+/**
+ * Render each photo in a photoset (gallery) post.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_photos( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+	$output  = '';
+
+	if ( ! isset( $context['gallery']['photos'] ) || empty( $context['gallery']['photos'] ) ) {
+		return '';
+	}
+
+	foreach ( $context['gallery']['photos'] as $block ) {
+		$highres_sizes = array( 'large', 'full' );
+		$highres       = isset( $block['attrs']['sizeSlug'] ) ? in_array( $block['attrs']['sizeSlug'], $highres_sizes, true ) : false;
+		$image_id      = $block['attrs']['id'];
+		$link_dest     = isset( $block['attrs']['linkDestination'] ) ? $block['attrs']['linkDestination'] : 'none';
+		$lightbox      = isset( $block['attrs']['lightbox'] );
+
+		// Set the current context.
+		tumblr3_set_parse_context(
+			'image',
+			array(
+				'highres'  => $highres,
+				'image'    => $image_id,
+				'link'     => $link_dest,
+				'lightbox' => $lightbox,
+				'data'     => wp_get_attachment_metadata( $image_id, true ),
+			)
+		);
+
+		// Parse the content of the quote block before resetting the context.
+		$output .= tumblr3_do_shortcode( $content );
+	}
+
+	return $output;
+}
+add_shortcode( 'block_photos', 'tumblr3_block_photos' );
 
 /**
  * Rendered for link posts with a thumbnail image set.
