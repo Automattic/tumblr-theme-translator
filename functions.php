@@ -92,7 +92,7 @@ function tumblr3_theme_parse( $content ): string {
 	$blocks    = array_map( 'strtolower', array_keys( TUMBLR3_BLOCKS ) );
 	$lang      = array_map( 'strtolower', array_keys( TUMBLR3_LANG ) );
 	$options   = array_map( 'strtolower', array_keys( TUMBLR3_OPTIONS ) );
-	$modifiers = array_map( 'strtolower', array_keys( TUMBLR3_MODIFIERS ) );
+	$modifiers = array_map( 'strtolower', TUMBLR3_MODIFIERS );
 
 	// Capture each Tumblr Tag in the page and verify it against our arrays.
 	$content = preg_replace_callback(
@@ -137,13 +137,14 @@ function tumblr3_theme_parse( $content ): string {
 
 			/**
 			 * Test for modifiers.
-			 *
-			 * @todo This.
 			 */
+			$applied_modifier = '';
 			foreach ( $modifiers as $modifier ) {
 				if ( str_starts_with( $raw_tag, $modifier ) ) {
-					// Tag with a modifier at the front.
-					//[tag_name modifier="RGB"]
+					$applied_modifier = strtolower( $modifier );
+					$raw_tag          = strtolower( substr( $raw_tag, strlen( $modifier ) ) );
+					$trim_tag         = strtolower( substr( $trim_tag, strlen( $modifier ) ) );
+					break;
 				}
 			}
 
@@ -203,7 +204,10 @@ function tumblr3_theme_parse( $content ): string {
 
 			// Verify the tag against our array of known tags.
 			if ( in_array( ltrim( $trim_tag, '/' ), $tags, true ) ) {
-				return '[tag_' . strtolower( $trim_tag ) . $attr . ']';
+				$shortcode         = 'tag_' . strtolower( $trim_tag );
+				$attributes        = array_filter( array( $attr, $applied_modifier ? "modifier=\"$applied_modifier\"" : '' ) );
+				$attributes_string = implode( ' ', $attributes );
+				return "[{$shortcode} {$attributes_string}]";
 			}
 
 			// Verify the lang tag against our array of known tags.
@@ -230,3 +234,41 @@ require TUMBLR3_PATH . 'includes/assets.php';
 require TUMBLR3_PATH . 'includes/missing-functions.php';
 require TUMBLR3_PATH . 'includes/block-functions.php';
 require TUMBLR3_PATH . 'includes/tag-functions.php';
+
+/**
+ * Filter to handle modifiers in shortcode output.
+ *
+ * @param string $output The shortcode output.
+ * @param string $tag    The shortcode name.
+ * @param array  $attr   The shortcode attributes.
+ * @return string The modified output.
+ */
+function tumblr3_handle_modifiers( $output, $tag, $attr ) {
+	if ( isset( $attr['modifier'] ) ) {
+		switch ( $attr['modifier'] ) {
+			case 'rgb':
+				// Convert hex to RGB
+				if ( preg_match( '/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i', $output, $parts ) ) {
+					$r      = hexdec( $parts[1] );
+					$g      = hexdec( $parts[2] );
+					$b      = hexdec( $parts[3] );
+					$output = "$r, $g, $b";
+				}
+				break;
+			case 'plaintext':
+				$output = wp_strip_all_tags( $output );
+				break;
+			case 'js':
+				$output = wp_json_encode( $output );
+				break;
+			case 'jsplaintext':
+				$output = wp_json_encode( wp_strip_all_tags( $output ) );
+				break;
+			case 'urlencoded':
+				$output = urlencode( $output );
+				break;
+		}
+	}
+	return $output;
+}
+add_filter( 'do_shortcode_tag', 'tumblr3_handle_modifiers', 10, 3 );
