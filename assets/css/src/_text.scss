@@ -1,0 +1,64 @@
+// NPF text block styles - namely, to add NPF colors.
+
+// Disabled SelectorFormat to use underscored selector names
+// scss-lint:disable SelectorFormat
+
+p.npf_quote {
+	font-family: Georgia, Times, "Times New Roman", serif;
+	font-size: 23px;
+}
+
+p.npf_quirky {
+	font-family: Fairwater, serif;
+	font-size: $font-size-post-text-quirky;
+	line-height: $line-height-post-text-quirky;
+}
+
+p.npf_chat {
+	font-family: "Source Code Pro", monospace;
+}
+
+p.npf_color_joey,
+span.npf_color_joey {
+	color: $color-joey;
+}
+
+p.npf_color_monica,
+span.npf_color_monica {
+	color: $color-monica;
+}
+
+p.npf_color_phoebe,
+span.npf_color_phoebe {
+	color: $color-phoebe;
+}
+
+p.npf_color_ross,
+span.npf_color_ross {
+	color: $color-ross;
+}
+
+p.npf_color_rachel,
+span.npf_color_rachel {
+	color: $color-rachel;
+}
+
+p.npf_color_chandler,
+span.npf_color_chandler {
+	color: $color-chandler;
+}
+
+p.npf_color_niles,
+span.npf_color_niles {
+	color: $color-niles;
+}
+
+p.npf_color_frasier,
+span.npf_color_frasier {
+	color: $color-frasier;
+}
+
+p.npf_color_mr_big,
+span.npf_color_mr_big {
+	color: $color-mr-big;
+}

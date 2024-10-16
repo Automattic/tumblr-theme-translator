@@ -29,6 +29,7 @@ add_shortcode( 'block_hidden', 'tumblr3_block_options' );
  *
  * @param array  $atts    The attributes of the shortcode.
  * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_groupmembers( $atts, $content = '' ): string {
@@ -56,6 +57,7 @@ add_shortcode( 'block_groupmembers', 'tumblr3_block_groupmembers' );
  *
  * @param array  $atts    The attributes of the shortcode.
  * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_groupmember( $atts, $content = '' ): string {
@@ -83,6 +85,7 @@ add_shortcode( 'block_groupmember', 'tumblr3_block_groupmember' );
  *
  * @param array  $atts    The attributes of the shortcode.
  * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_twitter( $atts, $content = '' ): string {
@@ -93,8 +96,9 @@ add_shortcode( 'block_twitter', 'tumblr3_block_twitter' );
 /**
  * Boolean check for theme options.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_if_theme_option( $atts, $content = '' ): string {
@@ -119,8 +123,9 @@ add_shortcode( 'block_if_theme_option', 'tumblr3_block_if_theme_option' );
 /**
  * Boolean check for theme options.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_ifnot_theme_option( $atts, $content = '' ): string {
@@ -144,9 +149,11 @@ add_shortcode( 'block_ifnot_theme_option', 'tumblr3_block_ifnot_theme_option' );
 
 /**
  * Conditional check for if we're in the loop.
+ * This catches a bunch of blocks that should only render in the loop.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_body( $atts, $content = '' ): string {
@@ -155,12 +162,16 @@ function tumblr3_block_body( $atts, $content = '' ): string {
 add_shortcode( 'block_body', 'tumblr3_block_body' );
 add_shortcode( 'block_date', 'tumblr3_block_body' );
 add_shortcode( 'block_postsummary', 'tumblr3_block_body' );
+add_shortcode( 'block_excerpt', 'tumblr3_block_body' );
+add_shortcode( 'block_host', 'tumblr3_block_body' );
+add_shortcode( 'block_author', 'tumblr3_block_body' );
 
 /**
  * Outputs content if we should stretch the header image.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_stretchheaderimage( $atts, $content = '' ): string {
@@ -171,8 +182,9 @@ add_shortcode( 'block_stretchheaderimage', 'tumblr3_block_stretchheaderimage' );
 /**
  * Outputs content if we should not stretch the header image.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_nostretchheaderimage( $atts, $content = '' ): string {
@@ -183,8 +195,9 @@ add_shortcode( 'block_nostretchheaderimage', 'tumblr3_block_nostretchheaderimage
 /**
  * Output content if we've chosen to show the site avatar.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_showavatar( $atts, $content = '' ): string {
@@ -195,8 +208,9 @@ add_shortcode( 'block_showavatar', 'tumblr3_block_showavatar' );
 /**
  * Output content if we've chosen to hide the site avatar.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_hideavatar( $atts, $content = '' ): string {
@@ -207,8 +221,9 @@ add_shortcode( 'block_hideavatar', 'tumblr3_block_hideavatar' );
 /**
  * Output content if we've chosen to show the site title and description.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_showtitle( $atts, $content = '' ): string {
@@ -219,8 +234,9 @@ add_shortcode( 'block_showtitle', 'tumblr3_block_showtitle' );
 /**
  * Output content if we've chosen to hide the site title and description.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_hidetitle( $atts, $content = '' ): string {
@@ -231,8 +247,9 @@ add_shortcode( 'block_hidetitle', 'tumblr3_block_hidetitle' );
 /**
  * Output content if we've chosen to show the site description.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_showdescription( $atts, $content = '' ): string {
@@ -243,8 +260,9 @@ add_shortcode( 'block_showdescription', 'tumblr3_block_showdescription' );
 /**
  * Output content if we've chosen to hide the site description.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_hidedescription( $atts, $content = '' ): string {
@@ -257,8 +275,9 @@ add_shortcode( 'block_hidedescription', 'tumblr3_block_hidedescription' );
  *
  * @todo Test if the post has a read-more tag, currently this is always true if we're in the loop.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_more( $atts, $content = '' ): string {
@@ -269,8 +288,9 @@ add_shortcode( 'block_more', 'tumblr3_block_more' );
 /**
  * Rendered if the post has an excerpt.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_description( $atts, $content = '' ): string {
@@ -281,8 +301,9 @@ add_shortcode( 'block_description', 'tumblr3_block_description' );
 /**
  * The main posts loop.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_posts( $atts, $content = '' ): string {
@@ -307,8 +328,9 @@ add_shortcode( 'block_posts', 'tumblr3_block_posts' );
 /**
  * Conditional if there are no posts.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_noposts( $atts, $content = '' ): string {
@@ -319,8 +341,9 @@ add_shortcode( 'block_noposts', 'tumblr3_block_noposts' );
 /**
  * Post tags loop.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_tags( $atts, $content = '' ): string {
@@ -341,8 +364,9 @@ add_shortcode( 'block_tags', 'tumblr3_block_tags' );
 /**
  * Rendered for each custom page.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_pages( $atts, $content = '' ): string {
@@ -373,8 +397,9 @@ add_shortcode( 'block_pages', 'tumblr3_block_pages' );
 /**
  * Boolean check for if we're on a search page.
  *
- * @param array  $atts
- * @param string $content
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_searchpage( $atts, $content = '' ): string {
@@ -385,8 +410,9 @@ add_shortcode( 'block_searchpage', 'tumblr3_block_searchpage' );
 /**
  * Render content if there are no search results.
  *
- * @param array  $atts
- * @param string $content
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_nosearchresults( $atts, $content = '' ): string {
@@ -399,8 +425,9 @@ add_shortcode( 'block_nosearchresults', 'tumblr3_block_nosearchresults' );
 /**
  * Render content if this site is not currently public.
  *
- * @param array  $atts
- * @param string $content
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_hidefromsearchenabled( $atts, $content = '' ): string {
@@ -411,8 +438,9 @@ add_shortcode( 'block_hidefromsearchenabled', 'tumblr3_block_hidefromsearchenabl
 /**
  * Boolean check for if we're on a taxonomy page.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_tagpage( $atts, $content = '' ): string {
@@ -423,8 +451,9 @@ add_shortcode( 'block_tagpage', 'tumblr3_block_tagpage' );
 /**
  * Boolean check for if we're on a single post or page.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_permalinkpage( $atts, $content = '' ): string {
@@ -435,8 +464,9 @@ add_shortcode( 'block_permalinkpage', 'tumblr3_block_permalinkpage' );
 /**
  * Boolean check for if we're on the home page.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_indexpage( $atts, $content = '' ): string {
@@ -448,8 +478,9 @@ add_shortcode( 'block_indexpage', 'tumblr3_block_indexpage' );
  * Boolean check for if we're on the "front page".
  * (This changes depending on settings chosen inside WordPress).
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_homepage( $atts, $content = '' ): string {
@@ -460,8 +491,9 @@ add_shortcode( 'block_homepage', 'tumblr3_block_homepage' );
 /**
  * Sets the global parse context so we know we're outputting a post title.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_title( $atts, $content = '' ): string {
@@ -476,8 +508,9 @@ add_shortcode( 'block_title', 'tumblr3_block_title' );
 /**
  * If the current page is able to pagination, render the content.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_pagination( $atts, $content = '' ): string {
@@ -488,8 +521,9 @@ add_shortcode( 'block_pagination', 'tumblr3_block_pagination' );
 /**
  * The Jump pagination block.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_jumppagination( $atts, $content = '' ): string {
@@ -521,8 +555,9 @@ add_shortcode( 'block_jumppagination', 'tumblr3_block_jumppagination' );
  * The currentpage block inside jumppagination.
  * Renders only if the current page is equal to the context.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_currentpage( $atts, $content = '' ): string {
@@ -538,8 +573,9 @@ add_shortcode( 'block_currentpage', 'tumblr3_block_currentpage' );
  * The jumppage block inside jumppagination.
  * Render if the current page is not equal to the context.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_jumppage( $atts, $content = '' ): string {
@@ -554,8 +590,9 @@ add_shortcode( 'block_jumppage', 'tumblr3_block_jumppage' );
 /**
  * Boolean check for if we're on a single post or page.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_posttitle( $atts, $content = '' ): string {
@@ -566,8 +603,9 @@ add_shortcode( 'block_posttitle', 'tumblr3_block_posttitle' );
 /**
  * Rendered if you have defined any custom pages.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_haspages( $atts, $content = '' ): string {
@@ -587,8 +625,10 @@ add_shortcode( 'block_haspages', 'tumblr3_block_haspages' );
  * Rendered if you have "Show header image" enabled.
  *
  * @todo This.
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_showheaderimage( $atts, $content = '' ): string {
@@ -600,8 +640,10 @@ add_shortcode( 'block_showheaderimage', 'tumblr3_block_showheaderimage' );
  * Rendered if you have "Show header image" disabled.
  *
  * @todo This.
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_hideheaderimage( $atts, $content = '' ): string {
@@ -614,8 +656,9 @@ add_shortcode( 'block_hideheaderimage', 'tumblr3_block_hideheaderimage' );
  *
  * @todo This should be conditional, but WordPress doesn't currently support reblogs so it's static.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_notreblog( $atts, $content = '' ): string {
@@ -626,8 +669,9 @@ add_shortcode( 'block_notreblog', 'tumblr3_block_notreblog' );
 /**
  * Rendered if the post has tags.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_hastags( $atts, $content = '' ): string {
@@ -638,20 +682,22 @@ add_shortcode( 'block_hastags', 'tumblr3_block_hastags' );
 /**
  * Rendered if the post has comments or comments open.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_post_notes( $atts, $content = '' ): string {
-	return is_single() && ( get_comments_number() || comments_open() ) ? tumblr3_do_shortcode( $content ) : '';
+	return ( is_single() || is_page() ) && ( get_comments_number() || comments_open() ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_postnotes', 'tumblr3_block_post_notes' );
 
 /**
  * Rendered if the post has at least one comment.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_notecount( $atts, $content = '' ): string {
@@ -662,8 +708,9 @@ add_shortcode( 'block_notecount', 'tumblr3_block_notecount' );
 /**
  * Rendered for legacy Text posts and NPF posts.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_text( $atts, $content = '' ): string {
@@ -676,8 +723,9 @@ add_shortcode( 'block_text', 'tumblr3_block_text' );
  * Post logic is handled here, and then passed to the global context.
  * Tags inside the quote block are handed data from the global context.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_quote( $atts, $content = '' ): string {
@@ -697,12 +745,28 @@ function tumblr3_block_quote( $atts, $content = '' ): string {
 
 		// Stop on the first quote block.
 		if ( 'core/quote' === $block['blockName'] ) {
+			$processor = new Chrysalis\T3\Processor( $block['innerHTML'] );
 
-			// Remove any found cite block and pass to the global context.
-			preg_match_all( '/<cite\b[^>]*>(.*?)<\/cite>/', $block['innerHTML'], $matches );
-			$source = isset( $matches[1][0] ) ? $matches[1][0] : '';
+			// Set bookmarks to extract HTML positions.
+			while ( $processor->next_tag(
+				array(
+					'tag_name'    => 'CITE',
+					'tag_closers' => 'visit',
+				)
+			) ) {
+				$processor->is_tag_closer() ? $processor->set_bookmark( 'CITE-CLOSE' ) : $processor->set_bookmark( 'CITE-OPEN' );
+			}
 
-			// Rebuild the quote block content.
+			// Get the processor bookmarks.
+			$offset_open  = $processor->get_bookmark( 'CITE-OPEN' );
+			$offset_close = $processor->get_bookmark( 'CITE-CLOSE' );
+
+			// Extract the source from the quote block.
+			if ( is_a( $offset_open, 'WP_HTML_Span' ) && is_a( $offset_close, 'WP_HTML_Span' ) ) {
+				$source = substr( $block['innerHTML'], $offset_open->start, $offset_close->start + $offset_close->length - $offset_open->start );
+			}
+
+			// Rebuild the quote block content. CITE does not live in an innerBlock.
 			foreach ( $block['innerBlocks'] as $inner_block ) {
 				$output .= $inner_block['innerHTML'];
 			}
@@ -720,8 +784,9 @@ function tumblr3_block_quote( $atts, $content = '' ): string {
 				$output,
 				array(
 					'br'     => array(),
-					'em'     => array(),
+					'span'   => array(),
 					'strong' => array(),
+					'em'     => array(),
 				)
 			),
 			'source' => $source,
@@ -741,8 +806,9 @@ add_shortcode( 'block_quote', 'tumblr3_block_quote' );
 /**
  * Tests for a source in the quote post format.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_source( $atts, $content = '' ): string {
@@ -761,8 +827,9 @@ add_shortcode( 'block_source', 'tumblr3_block_source' );
 /**
  * Rendered for chat posts.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_chat( $atts, $content = '' ): string {
@@ -773,8 +840,9 @@ add_shortcode( 'block_chat', 'tumblr3_block_chat' );
 /**
  * Rendered for link posts.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_link( $atts, $content = '' ): string {
@@ -785,8 +853,9 @@ add_shortcode( 'block_link', 'tumblr3_block_link' );
 /**
  * Rendered for audio posts.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_audio( $atts, $content = '' ): string {
@@ -797,25 +866,44 @@ function tumblr3_block_audio( $atts, $content = '' ): string {
 		return '';
 	}
 
-	$blocks = parse_blocks( $post->post_content );
-	$output = '';
+	$blocks    = parse_blocks( $post->post_content );
+	$player    = '';
+	$trackname = '';
+	$artist    = '';
+	$album     = '';
+	$media_id  = null;
 
 	// Handle all blocks in the post content.
 	foreach ( $blocks as $block ) {
 
 		// Stop on the first audio block.
 		if ( 'core/audio' === $block['blockName'] ) {
-			$output = $block['innerHTML'];
-			// Only parse the first audio block.
+			$media_id = isset( $block['attrs']['id'] ) ? $block['attrs']['id'] : 0;
+
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
+			$player = apply_filters( 'the_content', serialize_block( $block ) );
 			break;
 		}
+	}
+
+	// Extract metadata from the media ID.
+	if ( is_int( $media_id ) ) {
+		$meta      = wp_get_attachment_metadata( $media_id );
+		$trackname = isset( $meta['title'] ) ? $meta['title'] : '';
+		$artist    = isset( $meta['artist'] ) ? $meta['artist'] : '';
+		$album     = isset( $meta['album'] ) ? $meta['album'] : '';
 	}
 
 	// Set the current context.
 	tumblr3_set_parse_context(
 		'audio',
 		array(
-			'audioplayer' => $output,
+			'player'    => $player,
+			'art'       => get_the_post_thumbnail_url(),
+			'trackname' => $trackname,
+			'artist'    => $artist,
+			'album'     => $album,
+			'media_id'  => $media_id,
 		)
 	);
 
@@ -831,47 +919,380 @@ add_shortcode( 'block_audio', 'tumblr3_block_audio' );
 /**
  * Rendered for audio posts with an audioplayer block.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_audioplayer( $atts, $content = '' ): string {
 	$context = tumblr3_get_parse_context();
 
-	return $context['audio']['audioplayer'] ? tumblr3_do_shortcode( $content ) : '';
+	return ( isset( $context['audio']['player'] ) && ! empty( $context['audio']['player'] ) ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_audioplayer', 'tumblr3_block_audioplayer' );
+add_shortcode( 'block_audioembed', 'tumblr3_block_audioplayer' );
+
+/**
+ * Rendered for audio posts with an external audio block.
+ * Calculated as meaning the media ID is 0, which means it's an external audio file.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_externalaudio( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['audio']['media_id'] ) && 0 === $context['audio']['media_id'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_externalaudio', 'tumblr3_block_externalaudio' );
+
+/**
+ * Rendered for audio posts with a featured image set.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_albumart( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['audio']['player'] ) && ! empty( $context['audio']['player'] ) ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_albumart', 'tumblr3_block_albumart' );
+
+/**
+ * Rendered for audio posts with a track name set.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_trackname( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['audio']['trackname'] ) && '' !== $context['audio']['trackname'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_trackname', 'tumblr3_block_trackname' );
+
+/**
+ * Rendered for audio posts with an artist name set.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_artist( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['audio']['artist'] ) && '' !== $context['audio']['artist'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_artist', 'tumblr3_block_artist' );
+
+/**
+ * Rendered for audio posts with an album name set.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_album( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['audio']['album'] ) && '' !== $context['audio']['album'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_album', 'tumblr3_block_album' );
 
 /**
  * Rendered for video posts.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_video( $atts, $content = '' ): string {
-	return ( 'video' === get_post_format() ) ? tumblr3_do_shortcode( $content ) : '';
+	global $post;
+
+	// Don't parse all blocks if the post format is not quote.
+	if ( 'video' !== get_post_format() ) {
+		return '';
+	}
+
+	$blocks    = parse_blocks( $post->post_content );
+	$media_id  = null;
+	$thumbnail = '';
+
+	// Handle all blocks in the post content.
+	foreach ( $blocks as $block ) {
+
+		// Stop on the first video block.
+		if ( 'core/video' === $block['blockName'] ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
+			$player = apply_filters( 'the_content', serialize_block( $block ) );
+
+			// Extract the video poster from the video block.
+			$processor = new Chrysalis\T3\Processor( $player );
+			while ( $processor->next_tag( 'VIDEO' ) ) {
+				$thumbnail = $processor->get_attribute( 'poster' );
+				break;
+			}
+
+			break;
+		}
+
+		// No video block found, check for an embed block instead.
+		if ( 'core/embed' === $block['blockName'] ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
+			$player = apply_filters( 'the_content', serialize_block( $block ) );
+			break;
+		}
+	}
+
+	// Set the current context.
+	tumblr3_set_parse_context(
+		'video',
+		array(
+			'player'    => $player,
+			'thumbnail' => $thumbnail,
+		)
+	);
+
+	// Parse the content of the quote block before resetting the context.
+	$content = tumblr3_do_shortcode( $content );
+
+	tumblr3_set_parse_context( 'theme', true );
+
+	return $content;
 }
 add_shortcode( 'block_video', 'tumblr3_block_video' );
 
 /**
+ * Rendered for video posts with a video player and video thumbnail.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_videothumbnail( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['video']['thumbnail'] ) && ! empty( $context['video']['thumbnail'] ) ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_videothumbnail', 'tumblr3_block_videothumbnail' );
+add_shortcode( 'block_videothumbnails', 'tumblr3_block_videothumbnail' );
+
+/**
  * Rendered for photo and panorama posts.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_photo( $atts, $content = '' ): string {
-	return ( 'image' === get_post_format() ) ? tumblr3_do_shortcode( $content ) : '';
+	global $post;
+
+	// Don't parse all blocks if the post format is not quote.
+	if ( 'image' !== get_post_format() ) {
+		return '';
+	}
+
+	$blocks        = parse_blocks( $post->post_content );
+	$highres       = false;
+	$highres_sizes = array( 'large', 'full' );
+	$image_id      = 0;
+	$link_dest     = 'none';
+	$caption       = '';
+	$lightbox      = false;
+
+	// Handle all blocks in the post content.
+	foreach ( $blocks as $key => $block ) {
+		if ( 'core/image' === $block['blockName'] ) {
+			$highres   = isset( $block['attrs']['sizeSlug'] ) ? in_array( $block['attrs']['sizeSlug'], $highres_sizes, true ) : false;
+			$image_id  = $block['attrs']['id'];
+			$link_dest = isset( $block['attrs']['linkDestination'] ) ? $block['attrs']['linkDestination'] : 'none';
+			$lightbox  = isset( $block['attrs']['lightbox'] );
+
+			/**
+			 * In Image (Photo) posts, the caption tag is for the rest of the post content.
+			 *
+			 * @see https://www.tumblr.com/docs/en/custom_themes#photo-posts:~:text=%7BCaption%7D%20for%20legacy%20Photo%20and%20Photoset%20posts
+			 */
+			unset( $blocks[ $key ] );
+
+			// Only parse the first image block.
+			break;
+		}
+	}
+
+	// Set the current context.
+	tumblr3_set_parse_context(
+		'image',
+		array(
+			'highres'  => $highres,
+			'image'    => $image_id,
+			'link'     => $link_dest,
+			'lightbox' => $lightbox,
+			'caption'  => serialize_blocks( $blocks ),
+			'data'     => wp_get_attachment_metadata( $image_id, true ),
+		)
+	);
+
+	// Parse the content of the quote block before resetting the context.
+	$content = tumblr3_do_shortcode( $content );
+
+	tumblr3_set_parse_context( 'theme', true );
+
+	return $content;
 }
 add_shortcode( 'block_photo', 'tumblr3_block_photo' );
-add_shortcode( 'block_panorama', 'tumblr3_block_photo' );
+
+/**
+ * Rendered for photo and panorama posts which have a link set on the image.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_linkurl( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['link'] ) ) {
+		return '';
+	}
+
+	return ( true === $context['image']['lightbox'] || 'none' !== $context['image']['link'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_linkurl', 'tumblr3_block_linkurl' );
+
+/**
+ * Rendered for photo and panorama posts which have the image size set as "large" or "fullsize".
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_highres( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['image']['highres'] ) && true === $context['image']['highres'] ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_highres', 'tumblr3_block_highres' );
+
+/**
+ * Rendered render content if the image has exif data.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_exif( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['image']['data'] ) && ! empty( $context['image']['data']['image_meta'] ) ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_exif', 'tumblr3_block_exif' );
+
+/**
+ * Conditionally load content based on if the image has camera exif data.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_camera( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['data']['image_meta']['camera'] ) ) {
+		return '';
+	}
+
+	$camera = $context['image']['data']['image_meta']['camera'];
+
+	return ( empty( $camera ) || '0' === $camera ) ? '' : tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_camera', 'tumblr3_block_camera' );
+
+/**
+ * Conditionally load content based on if the image has lens exif data.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_aperture( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['data']['image_meta']['aperture'] ) ) {
+		return '';
+	}
+
+	$aperture = $context['image']['data']['image_meta']['aperture'];
+
+	return ( empty( $aperture ) || '0' === $aperture ) ? '' : tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_aperture', 'tumblr3_block_aperture' );
+
+/**
+ * Conditionally load content based on if the image has focal length exif data.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_exposure( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['data']['image_meta']['shutter_speed'] ) ) {
+		return '';
+	}
+
+	$exposure = $context['image']['data']['image_meta']['shutter_speed'];
+
+	return ( empty( $exposure ) || '0' === $exposure ) ? '' : tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_exposure', 'tumblr3_block_exposure' );
+
+/**
+ * Conditionally load content based on if the image has focal length exif data.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_focallength( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['data']['image_meta']['focal_length'] ) ) {
+		return '';
+	}
+
+	$focal_length = $context['image']['data']['image_meta']['focal_length'];
+
+	return ( empty( $focal_length ) || '0' === $focal_length ) ? '' : tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_focallength', 'tumblr3_block_focallength' );
 
 /**
  * Rendered for answer (aside) posts.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_answer( $atts, $content = '' ): string {
@@ -882,20 +1303,148 @@ add_shortcode( 'block_answer', 'tumblr3_block_answer' );
 /**
  * Rendered for photoset (gallery) posts.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_photoset( $atts, $content = '' ): string {
-	return ( 'gallery' === get_post_format() ) ? tumblr3_do_shortcode( $content ) : '';
+	global $post;
+
+	// Don't parse all blocks if the post format is not quote.
+	if ( 'gallery' !== get_post_format() ) {
+		return '';
+	}
+
+	$blocks     = parse_blocks( $post->post_content );
+	$gallery    = '';
+	$caption    = '';
+	$photocount = 0;
+	$photos     = array();
+
+	// Handle all blocks in the post content.
+	foreach ( $blocks as $key => $block ) {
+		if ( 'core/gallery' === $block['blockName'] ) {
+			$photocount = count( $block['innerBlocks'] );
+			$photos     = $block['innerBlocks'];
+
+			// Capture the gallery block.
+			$gallery = serialize_block( $block );
+
+			/**
+			 * In Gallery posts, the caption tag is for the rest of the post content.
+			 *
+			 * @see https://www.tumblr.com/docs/en/custom_themes#photo-posts:~:text=%7BCaption%7D%20for%20legacy%20Photo%20and%20Photoset%20posts
+			 */
+			unset( $blocks[ $key ] );
+
+			// Only parse the first quote block.
+			break;
+		}
+	}
+
+	// Set the current context.
+	tumblr3_set_parse_context(
+		'gallery',
+		array(
+			'gallery'    => $gallery,
+			'photocount' => $photocount,
+			'caption'    => serialize_blocks( $blocks ),
+			'photos'     => $photos,
+		)
+	);
+
+	// Parse the content of the quote block before resetting the context.
+	$content = tumblr3_do_shortcode( $content );
+
+	tumblr3_set_parse_context( 'theme', true );
+
+	return $content;
 }
 add_shortcode( 'block_photoset', 'tumblr3_block_photoset' );
 
 /**
+ * Render each photo in a photoset (gallery) post.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_photos( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+	$output  = '';
+
+	if ( ! isset( $context['gallery']['photos'] ) || empty( $context['gallery']['photos'] ) ) {
+		return '';
+	}
+
+	foreach ( $context['gallery']['photos'] as $block ) {
+		$highres_sizes = array( 'large', 'full' );
+		$highres       = isset( $block['attrs']['sizeSlug'] ) ? in_array( $block['attrs']['sizeSlug'], $highres_sizes, true ) : false;
+		$image_id      = $block['attrs']['id'];
+		$link_dest     = isset( $block['attrs']['linkDestination'] ) ? $block['attrs']['linkDestination'] : 'none';
+		$lightbox      = isset( $block['attrs']['lightbox'] );
+
+		// Set the current context.
+		tumblr3_set_parse_context(
+			'image',
+			array(
+				'highres'  => $highres,
+				'image'    => $image_id,
+				'link'     => $link_dest,
+				'lightbox' => $lightbox,
+				'data'     => wp_get_attachment_metadata( $image_id, true ),
+			)
+		);
+
+		// Parse the content of the quote block before resetting the context.
+		$output .= tumblr3_do_shortcode( $content );
+	}
+
+	return $output;
+}
+add_shortcode( 'block_photos', 'tumblr3_block_photos' );
+
+/**
+ * Rendered for link posts with a thumbnail image set.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_thumbnail( $atts, $content = '' ): string {
+	return has_post_thumbnail() ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_thumbnail', 'tumblr3_block_thumbnail' );
+
+/**
+ * Rendered for photoset (gallery) posts with caption content.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_caption( $atts, $content = '' ): string {
+	$context = tumblr3_get_parse_context();
+	$format  = get_post_format();
+
+	if ( ! isset( $context[ $format ]['caption'] ) ) {
+		return '';
+	}
+
+	return tumblr3_do_shortcode( $content );
+}
+add_shortcode( 'block_caption', 'tumblr3_block_caption' );
+
+/**
  * Rendered for legacy Text posts and NPF posts.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_daypage( $atts, $content = '' ): string {
@@ -906,8 +1455,9 @@ add_shortcode( 'block_daypage', 'tumblr3_block_daypage' );
 /**
  * Rendered if older posts are available.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_previouspage( $atts, $content = '' ): string {
@@ -918,8 +1468,9 @@ add_shortcode( 'block_previouspage', 'tumblr3_block_previouspage' );
 /**
  * Rendered if newer posts are available.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_nextpage( $atts, $content = '' ): string {
@@ -930,8 +1481,9 @@ add_shortcode( 'block_nextpage', 'tumblr3_block_nextpage' );
 /**
  * Boolean check for if we're on a single post or page.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_permalinkpagination( $atts, $content = '' ): string {
@@ -942,8 +1494,9 @@ add_shortcode( 'block_permalinkpagination', 'tumblr3_block_permalinkpagination' 
 /**
  * Check if there's a previous adjacent post.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_previouspost( $atts, $content = '' ): string {
@@ -954,8 +1507,9 @@ add_shortcode( 'block_previouspost', 'tumblr3_block_previouspost' );
 /**
  * Check if there's a next adjacent post.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_nextpost( $atts, $content = '' ): string {
@@ -966,8 +1520,9 @@ add_shortcode( 'block_nextpost', 'tumblr3_block_nextpost' );
 /**
  * Rendered if the post has been marked as sticky.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_pinnedpostlabel( $atts, $content = '' ): string {
@@ -978,12 +1533,13 @@ add_shortcode( 'block_pinnedpostlabel', 'tumblr3_block_pinnedpostlabel' );
 /**
  * Render content if the current language is equal to the specified language.
  *
- * @param array  $attributes     The attributes of the shortcode.
+ * @param array  $atts           The attributes of the shortcode.
  * @param string $content        The content of the shortcode.
  * @param string $shortcode_name The name of the shortcode.
+ *
  * @return string The parsed content or an empty string.
  */
-function tumblr3_block_language( $atts, $content = '', $shortcode_name ): string {
+function tumblr3_block_language( $atts, $content, $shortcode_name ): string {
 	// Map shortcodes to their respective locales
 	$language_map = array(
 		'block_english'            => 'en_US',
@@ -1038,12 +1594,13 @@ add_shortcode( 'block_hindi', 'tumblr3_block_language' );
 /**
  * Rendered if this is post number N (0 - 15) in the loop.
  *
- * @param array  $attributes     The attributes of the shortcode.
+ * @param array  $atts           The attributes of the shortcode.
  * @param string $content        The content of the shortcode.
  * @param string $shortcode_name The name of the shortcode.
+ *
  * @return string The parsed content or an empty string.
  */
-function tumblr3_block_post_n( $atts, $content = '', $shortcode_name ): string {
+function tumblr3_block_post_n( $atts, $content, $shortcode_name ): string {
 	global $wp_query;
 
 	// Extract the post number from the shortcode name (assuming 'block_postN' where N is a number)
@@ -1077,8 +1634,9 @@ add_shortcode( 'block_post15', 'tumblr3_block_post_n' );
 /**
  * Render content if the current post is an odd post in the loop.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_odd( $atts, $content = '' ): string {
@@ -1092,8 +1650,9 @@ add_shortcode( 'block_odd', 'tumblr3_block_odd' );
 /**
  * Render content if the current post is an even post in the loop.
  *
- * @param array  $attributes The attributes of the shortcode.
- * @param string $content    The content of the shortcode.
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
  * @return string
  */
 function tumblr3_block_even( $atts, $content = '' ): string {

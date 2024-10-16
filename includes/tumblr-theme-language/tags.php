@@ -142,7 +142,6 @@ return array(
 	),
 	'PhotoCount'              => array(),
 	'PhotosetLayout'          => array(),
-	'JSPhotosetLayout'        => array(),
 	'Quote'                   => array(),
 	'Source'                  => array(),
 	'Length'                  => array(),
@@ -349,4 +348,5 @@ return array(
 	'MailSummary'             => array(),
 	'NewPostStyles'           => array(),
 	'TwitterUsername'         => array(),
+	'PostBlogName'            => array(),
 );
