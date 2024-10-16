@@ -3,6 +3,28 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * WordPress does not support playcount tracking for attached audio files.
+ * This would need to be implemented as a custom meta field on the attachment.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#audio-posts
+ */
+add_shortcode( 'tag_playcount', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'tag_formattedplaycount', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'tag_playcountwithlabel', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'block_playcount', 'tumblr3_block_functionality_missing' );
+
+/**
+ * WordPress doesn't support a panorama post format out of the box.
+ * Could this be safely mapped to the Image post format?
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#panorama-posts
+ */
+add_shortcode( 'block_panorama', 'tumblr3_block_functionality_missing' );
+add_shortcode( 'tag_photourl-panorama', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'tag_photowidth-panorama', 'tumblr3_tag_functionality_missing' );
+add_shortcode( 'tag_photoheight-panorama', 'tumblr3_tag_functionality_missing' );
+
+/**
  * WordPress doesn't have a following system for noting other blogs you follow.
  * Previously we had the "links" CPT that was used for making blogrolls.
  * Perhaps we could bring that back?
@@ -153,6 +175,9 @@ add_shortcode( 'block_nosourcelogo', 'tumblr3_block_functionality_missing' );
  * These tags/blocks are extremely specific to Tumblr and are not supported by WordPress.
  * Tags here will never be supported by WordPress. Unlike other sections which may be supported in the future.
  */
+add_shortcode( 'tag_posttypographystyles', 'tumblr3_tag_posttypographystyles' );
+add_shortcode( 'tag_newpoststyles', 'tumblr3_tag_posttypographystyles' );
+add_shortcode( 'tag_postnotesurl', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'tag_mobileappheaders', 'tumblr3_tag_functionality_missing' );
 add_shortcode( 'block_showadsonthispage', 'tumblr3_block_functionality_missing' );
 add_shortcode( 'block_newcta', 'tumblr3_block_functionality_missing' );

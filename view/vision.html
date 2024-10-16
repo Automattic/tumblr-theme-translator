@@ -84,7 +84,7 @@
                         <a href="/submit">{SubmitLabel}</a>{/block:SubmissionsEnabled}
                         <a href="/archive">{lang:Archive}</a>{block:Likes}
                         <a href="/likes">{lang:Likes}</a>{/block:Likes}{block:HasPages}{block:Pages}
-                        <a href="{URL}">{Label}</a>{/block:Pages}{/block:HasPages}
+                        <a href="{URL}" class="{CurrentState} {ExternalState}">{Label}</a>{/block:Pages}{/block:HasPages}
                     </nav>
                 </section>{block:IfWidgetCode}
                 <section id="widget">

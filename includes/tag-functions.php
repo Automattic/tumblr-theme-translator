@@ -79,6 +79,7 @@ add_shortcode( 'tag_groupmemberurl', 'tumblr3_tag_groupmemberurl' );
  * Gets the group member portrait URL.
  *
  * @param array $atts Shortcode attributes.
+ *
  * @return string The URL of the group member avatar.
  */
 function tumblr3_tag_groupmemberportraiturl( $atts ): string {
@@ -122,6 +123,7 @@ function tumblr3_tag_postauthortitle(): string {
 }
 add_shortcode( 'tag_postauthortitle', 'tumblr3_tag_postauthortitle' );
 add_shortcode( 'tag_groupmembertitle', 'tumblr3_tag_postauthortitle' );
+add_shortcode( 'tag_postblogname', 'tumblr3_tag_postauthortitle' );
 
 /**
  * The URL of the post author.
@@ -137,6 +139,7 @@ add_shortcode( 'tag_postauthorurl', 'tumblr3_tag_postauthorurl' );
  * The portrait URL of the post author.
  *
  * @param array $atts The attributes of the shortcode.
+ *
  * @return string The URL of the author portrait.
  */
 function tumblr3_tag_postauthorportraiturl( $atts ): string {
@@ -180,6 +183,18 @@ function tumblr3_tag_twitterusername(): string {
 	return esc_attr( get_theme_mod( 'twitter_username' ) );
 }
 add_shortcode( 'tag_twitterusername', 'tumblr3_tag_twitterusername' );
+
+/**
+ * The current state of a page in nav.
+ * E.g is this the current page?
+ *
+ * @return string
+ */
+function tumblr3_tag_currentstate(): string {
+	return get_the_permalink() === home_url( add_query_arg( null, null ) ) ? 'current-page' : '';
+}
+add_shortcode( 'tag_currentstate', 'tumblr3_tag_currentstate' );
+add_shortcode( 'tag_externalstate', 'tumblr3_tag_currentstate' );
 
 /**
  * The display shape of your avatar ("circle" or "square").
@@ -289,9 +304,23 @@ add_shortcode( 'tag_posttitle', 'tumblr3_tag_title' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_body(): string {
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
 	return apply_filters( 'the_content', get_the_content() );
 }
 add_shortcode( 'tag_body', 'tumblr3_tag_body' );
+
+/**
+ * The post content.
+ *
+ * @return string The content of the post with filters applied.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_excerpt(): string {
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
+	return wp_strip_all_tags( apply_filters( 'the_content', get_the_content() ) );
+}
+add_shortcode( 'tag_excerpt', 'tumblr3_tag_excerpt' );
 
 /**
  * The blog description, or subtitle.
@@ -301,6 +330,25 @@ add_shortcode( 'tag_body', 'tumblr3_tag_body' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_description(): string {
+	$context = tumblr3_get_parse_context();
+
+	// This tag is used as the_content for audio posts.
+	if ( isset( $context['audio'] ) ) {
+		$blocks = parse_blocks( get_the_content() );
+
+		// Remove audio blocks from the content.
+		foreach ( $blocks as $key => $block ) {
+			if ( 'core/audio' === $block['blockName'] ) {
+				unset( $blocks[ $key ] );
+			}
+		}
+
+		// Re-build the content without audio blocks.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
+		return apply_filters( 'the_content', serialize_blocks( $blocks ) );
+	}
+
+	// By default, return the blog description.
 	return wp_kses_post( get_bloginfo( 'description' ) );
 }
 add_shortcode( 'tag_description', 'tumblr3_tag_description' );
@@ -357,6 +405,7 @@ add_shortcode( 'tag_favicon', 'tumblr3_tag_favicon' );
  * The portrait URL of the blog, uses the custom logo if set.
  *
  * @param array $atts The attributes of the shortcode.
+ *
  * @return string The URL of the blog portrait.
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
@@ -468,7 +517,7 @@ function tumblr3_tag_label(): string {
 add_shortcode( 'tag_label', 'tumblr3_tag_label' );
 
 /**
- * tagsasclasses outputs the tags of a post as HTML-safe classes.
+ * Tagsasclasses outputs the tags of a post as HTML-safe classes.
  *
  * @return string
  *
@@ -726,7 +775,8 @@ add_shortcode( 'tag_notecountwithlabel', 'tumblr3_tag_notecountwithlabel' );
  * @todo Comments template should be in the theme.
  * We need to match the output of tumblr post notes for styling consistency.
  *
- * @param array $attributes The attributes of the shortcode.
+ * @param array $atts The attributes of the shortcode.
+ *
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
@@ -800,7 +850,7 @@ function tumblr3_tag_quote(): string {
 	$context = tumblr3_get_parse_context();
 
 	// Test if the current context is a quote post and has a source.
-	if ( isset( $context['quote'] ) && is_array( $context['quote'] ) && isset( $context['quote']['quote'] ) ) {
+	if ( isset( $context['quote'], $context['quote']['quote'] ) ) {
 		return $context['quote']['quote'];
 	}
 
@@ -820,7 +870,7 @@ function tumblr3_tag_source(): string {
 	$context = tumblr3_get_parse_context();
 
 	// Test if the current context is a quote post and has a source.
-	if ( isset( $context['quote'] ) && is_array( $context['quote'] ) && isset( $context['quote']['source'] ) ) {
+	if ( isset( $context['quote'], $context['quote']['source'] ) ) {
 		return $context['quote']['source'];
 	}
 
@@ -840,7 +890,7 @@ function tumblr3_tag_length(): string {
 	$context = tumblr3_get_parse_context();
 
 	// Test if the current context is a quote post and has a length.
-	if ( isset( $context['quote'] ) && is_array( $context['quote'] ) && isset( $context['quote']['length'] ) ) {
+	if ( isset( $context['quote'], $context['quote']['length'] ) ) {
 		$length = $context['quote']['length'];
 
 		if ( $length < 100 ) {
@@ -856,17 +906,459 @@ function tumblr3_tag_length(): string {
 add_shortcode( 'tag_length', 'tumblr3_tag_length' );
 
 /**
- * @todo Understand what Tumblr outputs in this tag.
+ * Audioplayer HTML.
  *
  * @return string
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tag_posttypographystyles(): string {
-	return '<style></style>';
+function tumblr3_tag_audioplayer(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is an audio post and has a player.
+	if ( isset( $context['audio'], $context['audio']['player'] ) ) {
+		return $context['audio']['player'];
+	}
+
+	return '';
 }
-add_shortcode( 'tag_posttypographystyles', 'tumblr3_tag_posttypographystyles' );
-add_shortcode( 'tag_newpoststyles', 'tumblr3_tag_posttypographystyles' );
+add_shortcode( 'tag_audioplayer', 'tumblr3_tag_audioplayer' );
+add_shortcode( 'tag_audioembed', 'tumblr3_tag_audioplayer' );
+
+/**
+ * Album art URL, uses the featured image if available.
+ *
+ * @return string
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
+ */
+function tumblr3_tag_albumarturl(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is an audio post and has a player.
+	if ( isset( $context['audio'], $context['audio']['art'] ) ) {
+		return $context['audio']['art'];
+	}
+
+	return '';
+}
+add_shortcode( 'tag_albumarturl', 'tumblr3_tag_albumarturl' );
+
+/**
+ * Renders the audio player track name.
+ *
+ * @return string
+ */
+function tumblr3_tag_trackname(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is an audio post and has a player.
+	if ( isset( $context['audio'], $context['audio']['trackname'] ) ) {
+		return $context['audio']['trackname'];
+	}
+
+	return '';
+}
+add_shortcode( 'tag_trackname', 'tumblr3_tag_trackname' );
+
+/**
+ * Renders the audio player artist name.
+ *
+ * @return string
+ */
+function tumblr3_tag_artist(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is an audio post and has a player.
+	if ( isset( $context['audio'], $context['audio']['artist'] ) ) {
+		return $context['audio']['artist'];
+	}
+
+	return '';
+}
+add_shortcode( 'tag_artist', 'tumblr3_tag_artist' );
+
+/**
+ * Renders the audio player album name.
+ *
+ * @return string
+ */
+function tumblr3_tag_album(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is an audio post and has a player.
+	if ( isset( $context['audio'], $context['audio']['album'] ) ) {
+		return $context['audio']['album'];
+	}
+
+	return '';
+}
+add_shortcode( 'tag_album', 'tumblr3_tag_album' );
+
+/**
+ * Renders the audio player media URL if it's external.
+ *
+ * @return string
+ */
+function tumblr3_tag_externalaudiourl(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is an audio post and has a player.
+	if ( isset( $context['audio'], $context['audio']['player'] ) ) {
+		$processor = new Chrysalis\T3\Processor( $context['audio']['player'] );
+
+		while ( $processor->next_tag( 'AUDIO' ) ) {
+			$src = $processor->get_attribute( 'SRC' );
+
+			if ( $src ) {
+				return esc_url( $src );
+			}
+		}
+	}
+
+	return '';
+}
+add_shortcode( 'tag_externalaudiourl', 'tumblr3_tag_externalaudiourl' );
+add_shortcode( 'tag_rawaudiourl', 'tumblr3_tag_externalaudiourl' );
+
+/**
+ * Renders the post gallery if one was found.
+ *
+ * @return string
+ */
+function tumblr3_tag_photoset(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Return nothing if no gallery is found.
+	if ( ! isset( $context['gallery']['gallery'] ) || empty( $context['gallery']['gallery'] ) ) {
+		return '';
+	}
+
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
+	return apply_filters( 'the_content', $context['gallery']['gallery'] );
+}
+add_shortcode( 'tag_photoset', 'tumblr3_tag_photoset' );
+
+/**
+ * Renders the post gallery layout if one was found.
+ *
+ * @return string
+ */
+function tumblr3_tag_photosetlayout(): string {
+	return tumblr3_tag_photocount();
+}
+add_shortcode( 'tag_photosetlayout', 'tumblr3_tag_photosetlayout' );
+
+/**
+ * Renders the post gallery photo count if one was found.
+ *
+ * @return string
+ */
+function tumblr3_tag_photocount(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Return nothing if no gallery is found.
+	if ( ! isset( $context['gallery']['photocount'] ) ) {
+		return '';
+	}
+
+	return esc_html( $context['gallery']['photocount'] );
+}
+add_shortcode( 'tag_photocount', 'tumblr3_tag_photocount' );
+add_shortcode( 'tag_photosetlayout', 'tumblr3_tag_photocount' );
+
+/**
+ * Renders the post gallery caption if one was found.
+ *
+ * @return string
+ */
+function tumblr3_tag_caption(): string {
+	$context = tumblr3_get_parse_context();
+	$format  = get_post_format();
+
+	if ( ! isset( $context[ $format ] ) ) {
+		return '';
+	}
+
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
+	return apply_filters( 'the_content', $context[ $format ]['caption'] );
+}
+add_shortcode( 'tag_caption', 'tumblr3_tag_caption' );
+
+/**
+ * Renders the post image URL if one was found.
+ *
+ * @param array  $atts           The attributes of the shortcode.
+ * @param string $content        The content of the shortcode.
+ * @param string $shortcode_name The name of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_tag_photourl( $atts, $content, $shortcode_name ): string {
+	// Parse shortcode attributes.
+	$atts = shortcode_atts(
+		array(
+			'size' => '',
+		),
+		$atts,
+		$shortcode_name
+	);
+
+	$context = tumblr3_get_parse_context();
+
+	// Return nothing if no gallery is found.
+	if ( ! isset( $context['image']['image'] ) ) {
+		return '';
+	}
+
+	$src = wp_get_attachment_image_src( $context['image']['image'] );
+
+	return ( false === $src ) ? '' : esc_url( $src[0] );
+}
+add_shortcode( 'tag_photourl', 'tumblr3_tag_photourl' );
+add_shortcode( 'tag_photourl-highres', 'tumblr3_tag_photourl' );
+add_shortcode( 'tag_photourl-75sq', 'tumblr3_tag_photourl' );
+
+/**
+ * Renders the post image thumbnail URL if one was found.
+ *
+ * @param array  $atts           The attributes of the shortcode.
+ * @param string $content        The content of the shortcode.
+ * @param string $shortcode_name The name of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_tag_thumbnail( $atts, $content, $shortcode_name ): string {
+	$sizes = array(
+		'tag_thumbnail'         => 'thumbnail',
+		'tag_thumbnail-highres' => 'full',
+	);
+
+	return get_the_post_thumbnail_url( get_the_id(), $sizes[ $shortcode_name ] );
+}
+add_shortcode( 'tag_thumbnail', 'tumblr3_tag_thumbnail' );
+add_shortcode( 'tag_thumbnail-highres', 'tumblr3_tag_thumbnail' );
+
+/**
+ * Renders the post image link URL if one was found.
+ *
+ * @todo Hook up lightbox and custom link contexts.
+ *
+ * @return string
+ */
+function tumblr3_tag_linkurl(): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['link'] ) ) {
+		return '';
+	}
+
+	// Links to attachment pages.
+	if ( 'attachment' === $context['image']['link'] || 'media' === $context['image']['link'] ) {
+		return get_permalink( $context['image']['image'] );
+	}
+
+	// Links to a custom URL.
+	if ( 'custom' === $context['image']['link'] ) {
+		return $context['image']['custom'];
+	}
+
+	// Links to lightbox.
+	if ( true === $context['image']['lightbox'] ) {
+		return wp_get_attachment_image_src( $context['image']['image'] )[0];
+	}
+
+	return '';
+}
+add_shortcode( 'tag_linkurl', 'tumblr3_tag_linkurl' );
+
+/**
+ * Renders the post image link open tag conditionally.
+ *
+ * @uses tumblr3_tag_linkurl()
+ * @return string
+ */
+function tumblr3_tag_linkopentag(): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['image']['link'] ) && 'none' !== $context['image']['link'] ) ? '<a href="' . tumblr3_tag_linkurl() . '">' : '';
+}
+add_shortcode( 'tag_linkopentag', 'tumblr3_tag_linkopentag' );
+
+/**
+ * Renders the post image link close tag conditionally.
+ *
+ * @return string
+ */
+function tumblr3_tag_linkclosetag(): string {
+	$context = tumblr3_get_parse_context();
+
+	return ( isset( $context['image']['link'] ) && 'none' !== $context['image']['link'] ) ? '</a>' : '';
+}
+add_shortcode( 'tag_linkclosetag', 'tumblr3_tag_linkclosetag' );
+
+/**
+ * Renders the post image camera exif data if found.
+ *
+ * @return string
+ */
+function tumblr3_tag_camera(): string {
+	$context = tumblr3_get_parse_context();
+
+	return isset( $context['image']['data']['image_meta']['camera'] ) ? esc_html( $context['image']['data']['image_meta']['camera'] ) : '';
+}
+add_shortcode( 'tag_camera', 'tumblr3_tag_camera' );
+
+/**
+ * Renders the post image lens exif data if found.
+ *
+ * @return string
+ */
+function tumblr3_tag_aperture(): string {
+	$context = tumblr3_get_parse_context();
+
+	return isset( $context['image']['data']['image_meta']['aperture'] ) ? esc_html( $context['image']['data']['image_meta']['aperture'] ) : '';
+}
+add_shortcode( 'tag_aperture', 'tumblr3_tag_aperture' );
+
+/**
+ * Renders the post image focal length exif data if found.
+ *
+ * @return string
+ */
+function tumblr3_tag_focallength(): string {
+	$context = tumblr3_get_parse_context();
+
+	return isset( $context['image']['data']['image_meta']['focal_length'] ) ? esc_html( $context['image']['data']['image_meta']['focal_length'] ) : '';
+}
+add_shortcode( 'tag_focallength', 'tumblr3_tag_focallength' );
+
+/**
+ * Renders the post image shutter speed exif data if found.
+ *
+ * @return string
+ */
+function tumblr3_tag_exposure(): string {
+	$context = tumblr3_get_parse_context();
+
+	return isset( $context['image']['data']['image_meta']['shutter_speed'] ) ? esc_html( $context['image']['data']['image_meta']['shutter_speed'] ) : '';
+}
+add_shortcode( 'tag_exposure', 'tumblr3_tag_exposure' );
+
+/**
+ * Renders the post image alt text if one was found.
+ *
+ * @return string
+ */
+function tumblr3_tag_photoalt(): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['image'] ) ) {
+		return '';
+	}
+
+	return esc_attr( get_post_meta( $context['image']['image'], '_wp_attachment_image_alt', true ) );
+}
+add_shortcode( 'tag_photoalt', 'tumblr3_tag_photoalt' );
+
+/**
+ * Renders the post image width if one was found.
+ *
+ * @return string
+ */
+function tumblr3_tag_photowidth(): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['data'], $context['image']['data']['width'] ) ) {
+		return '';
+	}
+
+	return (string) $context['image']['data']['width'];
+}
+add_shortcode( 'tag_photowidth', 'tumblr3_tag_photowidth' );
+add_shortcode( 'tag_photowidth-highres', 'tumblr3_tag_photowidth' );
+
+/**
+ * Renders the post image height if one was found.
+ *
+ * @return string
+ */
+function tumblr3_tag_photoheight(): string {
+	$context = tumblr3_get_parse_context();
+
+	if ( ! isset( $context['image']['data'], $context['image']['data']['height'] ) ) {
+		return '';
+	}
+
+	return (string) $context['image']['data']['height'];
+}
+add_shortcode( 'tag_photoheight', 'tumblr3_tag_photoheight' );
+add_shortcode( 'tag_photoheight-highres', 'tumblr3_tag_photoheight' );
+
+/**
+ * Renders the post video player.
+ *
+ * @return string
+ */
+function tumblr3_tag_video(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is a video post and has a player.
+	if ( isset( $context['video'], $context['video']['player'] ) ) {
+		return $context['video']['player'];
+	}
+
+	return '';
+}
+add_shortcode( 'tag_video', 'tumblr3_tag_video' );
+add_shortcode( 'tag_videoembed', 'tumblr3_tag_video' );
+
+/**
+ * Renders the post video thumbnail URL.
+ *
+ * @return string
+ */
+function tumblr3_tag_videothumbnailurl(): string {
+	$context = tumblr3_get_parse_context();
+
+	// Test if the current context is a video post and has a player.
+	if ( isset( $context['video'], $context['video']['thumbnail'] ) ) {
+		return $context['video']['thumbnail'];
+	}
+
+	return '';
+}
+add_shortcode( 'tag_videothumbnailurl', 'tumblr3_tag_videothumbnailurl' );
+
+/**
+ * The link post type title (This is also the link URL).
+ *
+ * @return string
+ */
+function tumblr3_tag_name(): string {
+	return get_the_title( get_the_ID() );
+}
+add_shortcode( 'tag_name', 'tumblr3_tag_title' );
+
+/**
+ * Renders the link post host url.
+ *
+ * @return string
+ */
+function tumblr3_tag_host(): string {
+	$url = wp_http_validate_url( get_the_title() );
+
+	// If this wasn't a valid URL, return an empty string.
+	if ( false === $url ) {
+		return '';
+	}
+
+	$parsed_url = wp_parse_url( $url );
+
+	// Return the host of the URL.
+	return $parsed_url['host'];
+}
+add_shortcode( 'tag_host', 'tumblr3_tag_host' );
 
 /**
  * Returns the day of the month without leading zeros.
