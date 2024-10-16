@@ -1,6 +1,12 @@
 // NPF video block styles
 
-.tmblr-full > video {
+.tmblr-full>video {
 	height: 100%;
 	width: 100%;
+}
+
+video,
+audio,
+img {
+	max-width: 100%;
 }

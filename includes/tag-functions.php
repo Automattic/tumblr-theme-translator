@@ -1076,7 +1076,7 @@ function tumblr3_tag_caption(): string {
 	$context = tumblr3_get_parse_context();
 	$format  = get_post_format();
 
-	if ( ! isset( $context[ $format ] ) ) {
+	if ( ! isset( $context[ $format ], $context[ $format ]['caption'] ) ) {
 		return '';
 	}
 

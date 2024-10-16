@@ -880,8 +880,33 @@ function tumblr3_block_audio( $atts, $content = '' ): string {
 		if ( 'core/audio' === $block['blockName'] ) {
 			$media_id = isset( $block['attrs']['id'] ) ? $block['attrs']['id'] : 0;
 
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
-			$player = apply_filters( 'the_content', serialize_block( $block ) );
+			$processor = new Chrysalis\T3\Processor( $block['innerHTML'] );
+
+			// Set bookmarks to extract HTML positions.
+			while ( $processor->next_tag(
+				array(
+					'tag_name'    => 'AUDIO',
+					'tag_closers' => 'visit',
+				)
+			) ) {
+				// Check if we're in a closer or opener and handle accordingly.
+				if ( $processor->is_tag_closer() ) {
+					$processor->set_bookmark( 'AUDIO-CLOSE' );
+				} else {
+					$processor->add_class( 'tumblr_audio_player' );
+					$processor->set_bookmark( 'AUDIO-OPEN' );
+				}
+			}
+
+			// Get the processor bookmarks.
+			$offset_open  = $processor->get_bookmark( 'AUDIO-OPEN' );
+			$offset_close = $processor->get_bookmark( 'AUDIO-CLOSE' );
+
+			// Extract the player from the quote block.
+			if ( is_a( $offset_open, 'WP_HTML_Span' ) && is_a( $offset_close, 'WP_HTML_Span' ) ) {
+				$player = substr( $processor->get_updated_html(), $offset_open->start, $offset_close->start + $offset_close->length - $offset_open->start );
+			}
+
 			break;
 		}
 	}
@@ -1033,14 +1058,31 @@ function tumblr3_block_video( $atts, $content = '' ): string {
 
 		// Stop on the first video block.
 		if ( 'core/video' === $block['blockName'] ) {
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
-			$player = apply_filters( 'the_content', serialize_block( $block ) );
+			$processor = new Chrysalis\T3\Processor( $block['innerHTML'] );
 
-			// Extract the video poster from the video block.
-			$processor = new Chrysalis\T3\Processor( $player );
-			while ( $processor->next_tag( 'VIDEO' ) ) {
-				$thumbnail = $processor->get_attribute( 'poster' );
-				break;
+			// Set bookmarks to extract HTML positions.
+			while ( $processor->next_tag(
+				array(
+					'tag_name'    => 'VIDEO',
+					'tag_closers' => 'visit',
+				)
+			) ) {
+				// Check if we're in a closer or opener and handle accordingly.
+				if ( $processor->is_tag_closer() ) {
+					$processor->set_bookmark( 'VIDEO-CLOSE' );
+				} else {
+					$processor->set_bookmark( 'VIDEO-OPEN' );
+					$thumbnail = $processor->get_attribute( 'poster' );
+				}
+			}
+
+			// Get the processor bookmarks.
+			$offset_open  = $processor->get_bookmark( 'VIDEO-OPEN' );
+			$offset_close = $processor->get_bookmark( 'VIDEO-CLOSE' );
+
+			// Extract the player from the quote block.
+			if ( is_a( $offset_open, 'WP_HTML_Span' ) && is_a( $offset_close, 'WP_HTML_Span' ) ) {
+				$player = substr( $block['innerHTML'], $offset_open->start, $offset_close->start + $offset_close->length - $offset_open->start );
 			}
 
 			break;
@@ -1048,8 +1090,8 @@ function tumblr3_block_video( $atts, $content = '' ): string {
 
 		// No video block found, check for an embed block instead.
 		if ( 'core/embed' === $block['blockName'] ) {
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
-			$player = apply_filters( 'the_content', serialize_block( $block ) );
+			$player = wp_oembed_get( $block['attrs']['url'] );
+
 			break;
 		}
 	}

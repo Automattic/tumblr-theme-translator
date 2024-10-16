@@ -174,4 +174,7 @@ return array(
 	'block:HasRelatedTags'            => array(),
 	'block:RelatedTags'               => array(),
 	'block:Twitter'                   => array(),
+	'block:LivePhoto'                 => array(),
+	'block:NoFollowing'               => array(),
+	'block:Blogs'                     => array(),
 );

@@ -125,14 +125,14 @@ function tumblr3_theme_parse( $content ): string {
 			/**
 			 * Convert "If" theme option boolean blocks into a custom shortcode.
 			 */
-			if ( str_starts_with( ltrim( strtolower( $raw_tag ), '/' ), 'block:if' ) ) {
+			if ( str_starts_with( ltrim( $raw_tag, '/' ), 'block:if' ) ) {
 				$normalized_attr = str_replace(
 					array(
 						' ',
 						'block:if',
 					),
 					'',
-					strtolower( $raw_tag )
+					$raw_tag
 				);
 
 				return ( str_starts_with( $raw_tag, '/' ) ) ? '[/block_if_theme_option]' : '[block_if_theme_option name="' . $normalized_attr . '"]';
@@ -210,7 +210,7 @@ function tumblr3_theme_parse( $content ): string {
 				$shortcode         = 'tag_' . strtolower( $trim_tag );
 				$attributes        = array_filter( array( $attr, $applied_modifier ? "modifier=\"$applied_modifier\"" : '' ) );
 				$attributes_string = implode( ' ', $attributes );
-				return "[{$shortcode} {$attributes_string}]";
+				return ( ! empty( $attributes_string ) ) ? "[{$shortcode} {$attributes_string}]" : "[{$shortcode}]";
 			}
 
 			// Verify the lang tag against our array of known tags.
@@ -227,7 +227,9 @@ function tumblr3_theme_parse( $content ): string {
 		$content
 	);
 
-	return $content;
+	// At this point, we can clean out anything that's unsupported.
+	$pattern = get_shortcode_regex( array_merge( TUMBLR3_MISSING_BLOCKS, TUMBLR3_MISSING_TAGS ) );
+	return preg_replace_callback( "/$pattern/", '__return_empty_string', $content );
 }
 
 /**
@@ -275,4 +277,3 @@ require TUMBLR3_PATH . 'includes/assets.php';
 // Include tag and block hydration functions.
 require TUMBLR3_PATH . 'includes/block-functions.php';
 require TUMBLR3_PATH . 'includes/tag-functions.php';
-require TUMBLR3_PATH . 'includes/missing-functions.php';
