@@ -82,6 +82,23 @@ function tumblr3_set_parse_context( $key, $value ): void {
 }
 
 /**
+ * Normalizes a theme option name.
+ *
+ * @param string $name The name to normalize.
+ *
+ * @return string The normalized name.
+ */
+function tumblr3_normalize_option_name( $name ): string {
+	return strtolower(
+		str_replace(
+			array( ' ', ':' ),
+			array( '', '_' ),
+			$name
+		)
+	);
+}
+
+/**
  * The main parser in the plugin.
  * This turns a Tumblr .HTML template into something parseable by WordPress.
  * Currently that's [shortcode] syntax, this could change in the future if needed.
@@ -156,8 +173,8 @@ function tumblr3_theme_parse( $content ): string {
 			 */
 			foreach ( $options as $option ) {
 				if ( str_starts_with( $raw_tag, $option ) ) {
-					$option_name = strtolower( str_replace( ' ', '', substr( $raw_tag, strlen( $option ) ) ) );
-					$theme_mod   = get_theme_mod( $option_name );
+					// Normalize the option name.
+					$theme_mod = get_theme_mod( tumblr3_normalize_option_name( $raw_tag ) );
 
 					return $theme_mod ? $theme_mod : $captured_tag;
 				}

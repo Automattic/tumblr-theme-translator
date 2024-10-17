@@ -5,11 +5,11 @@ namespace Chrysalis\T3;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Undocumented class
+ * This is a custom processor that extends the default WP_HTML_Tag_Processor.
  */
 class Processor extends \WP_HTML_Tag_Processor {
 	/**
-	 * Undocumented function
+	 * A function to pull bookmark start and end points in a string.
 	 *
 	 * @param string $name The name of the bookmark.
 	 *

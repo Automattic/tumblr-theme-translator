@@ -113,6 +113,7 @@ return array(
 	'block_haslikedposts',
 	'block_likedposts',
 	'block_likespage',
+	'block_reblog',
 	'block_reblogs',
 	'block_rebloggedfrom',
 	'block_isoriginalentry',
@@ -135,4 +136,7 @@ return array(
 	'block_nuopticablogcardsdisabled',
 	'block_supplylogging',
 	'block_actions',
+	'block_livephoto',
+	'block_blogs',
+	'block_nofollowing',
 );

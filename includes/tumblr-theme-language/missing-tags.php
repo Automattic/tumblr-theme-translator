@@ -50,4 +50,6 @@ return array(
 	'tag_postnotesurl',
 	'tag_mobileappheaders',
 	'tag_positions',
+	'tag_livephotourl',
+	'tag_livephotostillimagetime',
 );

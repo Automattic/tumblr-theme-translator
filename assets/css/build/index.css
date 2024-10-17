@@ -137,15 +137,17 @@ div.npf-link-block .bottom .site-name {
   text-transform: uppercase;
 }
 
+video,
+audio,
+img,
+.wp-caption,
+iframe {
+  max-width: 100%;
+}
+
 .tmblr-full > video {
   height: 100%;
   width: 100%;
-}
-
-video,
-audio,
-img {
-  max-width: 100%;
 }
 
 body div.npf_row,
