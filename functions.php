@@ -116,7 +116,7 @@ function tumblr3_theme_parse( $content ): string {
 
 	// Capture each Tumblr Tag in the page and verify it against our arrays.
 	$content = preg_replace_callback(
-		'/\{([^\s}][^}]*)\}/',
+		'/\{([^\s}][^(}]*)\}/',
 		function ( $matches ) use ( $tags, $blocks, $lang, $options, $modifiers ) {
 			$captured_tag = $matches[0];
 			$raw_tag      = strtolower( $matches[1] );

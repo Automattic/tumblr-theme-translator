@@ -125,6 +125,7 @@ return array(
 	'block:NextDayPage'               => array(),
 	'block:TagPage'                   => array(),
 	'block:SearchPage'                => array(),
+	'block:SearchResults'             => array(),
 	'block:NoSearchResults'           => array(),
 	'block:HideFromSearchEnabled'     => array(),
 	'block:HasFeaturedTags'           => array(),
