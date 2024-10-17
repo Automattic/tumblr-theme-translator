@@ -33,6 +33,20 @@ function tumblr3_enqueue_scripts(): void {
 add_action( 'wp_enqueue_scripts', 'tumblr3_enqueue_scripts' );
 
 /**
+ * Adds a random endpoint to match Tumblr's behavior.
+ *
+ * @return void
+ */
+function tumblr3_random_endpoint_rewrite(): void {
+	add_rewrite_rule(
+		'^random/?$',
+		'index.php?random=1',
+		'top'
+	);
+}
+add_action( 'init', 'tumblr3_random_endpoint_rewrite' );
+
+/**
  * Add a new query variable for Tumblr search.
  *
  * @param array $vars Registered query variables.
@@ -41,6 +55,7 @@ add_action( 'wp_enqueue_scripts', 'tumblr3_enqueue_scripts' );
  */
 function tumblr3_add_tumblr_search_var( $vars ): array {
 	$vars[] = 'q';
+	$vars[] = 'random';
 	return $vars;
 }
 add_filter( 'query_vars', 'tumblr3_add_tumblr_search_var' );
@@ -51,15 +66,28 @@ add_filter( 'query_vars', 'tumblr3_add_tumblr_search_var' );
  * @param WP_Query $query The main query.
  * @return void
  */
-function tumblr3_redirect_tumblr_search( $query ): void {
-	// Check if it's the main query and not in the admin area
-	if ( $query->is_main_query() && ! is_admin() ) {
+function tumblr3_redirect_tumblr_search(): void {
+	if ( get_query_var( 'random' ) ) {
+		$rand_post = get_posts(
+			array(
+				'posts_per_page' => 1,
+				'orderby'        => 'rand',
+				'post_type'      => 'post',
+				'fields'         => 'ids',
+				'post__not_in'   => array( get_the_ID() ),
+			)
+		);
 
-		// If 'q' is set, redirect to the core search page.
-		if ( isset( $query->query_vars['q'] ) ) {
-			wp_safe_redirect( home_url( '/?s=' . $query->query_vars['q'] ) );
+		if ( ! empty( $rand_post ) ) {
+			wp_safe_redirect( get_permalink( $rand_post[0] ) );
 			exit;
 		}
 	}
+
+	// If 'q' is set, redirect to the core search page.
+	if ( get_query_var( 'q' ) ) {
+		wp_safe_redirect( home_url( '/?s=' . get_query_var( 'q' ) ) );
+		exit;
+	}
 }
-add_action( 'pre_get_posts', 'tumblr3_redirect_tumblr_search' );
+add_action( 'template_redirect', 'tumblr3_redirect_tumblr_search' );
