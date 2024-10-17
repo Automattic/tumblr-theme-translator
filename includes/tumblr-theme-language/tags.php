@@ -349,4 +349,7 @@ return array(
 	'NewPostStyles'           => array(),
 	'TwitterUsername'         => array(),
 	'PostBlogName'            => array(),
+	'LivePhotoURL'            => array(),
+	'LivePhotoStillImageTime' => array(),
+	'ShareString'             => array(),
 );

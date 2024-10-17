@@ -82,6 +82,23 @@ function tumblr3_set_parse_context( $key, $value ): void {
 }
 
 /**
+ * Normalizes a theme option name.
+ *
+ * @param string $name The name to normalize.
+ *
+ * @return string The normalized name.
+ */
+function tumblr3_normalize_option_name( $name ): string {
+	return strtolower(
+		str_replace(
+			array( ' ', ':' ),
+			array( '', '_' ),
+			$name
+		)
+	);
+}
+
+/**
  * The main parser in the plugin.
  * This turns a Tumblr .HTML template into something parseable by WordPress.
  * Currently that's [shortcode] syntax, this could change in the future if needed.
@@ -109,14 +126,14 @@ function tumblr3_theme_parse( $content ): string {
 			/**
 			 * Convert "IfNot" theme option boolean blocks into a custom shortcode.
 			 */
-			if ( str_starts_with( ltrim( strtolower( $raw_tag ), '/' ), 'block:ifnot' ) ) {
+			if ( str_starts_with( ltrim( $raw_tag, '/' ), 'block:ifnot' ) ) {
 				$normalized_attr = str_replace(
 					array(
 						' ',
 						'block:ifnot',
 					),
 					'',
-					strtolower( $raw_tag )
+					$raw_tag
 				);
 
 				return ( str_starts_with( $raw_tag, '/' ) ) ? '[/block_ifnot_theme_option]' : '[block_ifnot_theme_option name="' . $normalized_attr . '"]';
@@ -125,14 +142,14 @@ function tumblr3_theme_parse( $content ): string {
 			/**
 			 * Convert "If" theme option boolean blocks into a custom shortcode.
 			 */
-			if ( str_starts_with( ltrim( strtolower( $raw_tag ), '/' ), 'block:if' ) ) {
+			if ( str_starts_with( ltrim( $raw_tag, '/' ), 'block:if' ) ) {
 				$normalized_attr = str_replace(
 					array(
 						' ',
 						'block:if',
 					),
 					'',
-					strtolower( $raw_tag )
+					$raw_tag
 				);
 
 				return ( str_starts_with( $raw_tag, '/' ) ) ? '[/block_if_theme_option]' : '[block_if_theme_option name="' . $normalized_attr . '"]';
@@ -153,13 +170,11 @@ function tumblr3_theme_parse( $content ): string {
 
 			/**
 			 * Handle theme options (dynamic tags).
-			 *
-			 * @todo This system doesn't account for modifiers at the front of tags. This might not be a problem however.
 			 */
 			foreach ( $options as $option ) {
 				if ( str_starts_with( $raw_tag, $option ) ) {
-					$option_name = strtolower( str_replace( ' ', '', substr( $raw_tag, strlen( $option ) ) ) );
-					$theme_mod   = get_theme_mod( $option_name );
+					// Normalize the option name.
+					$theme_mod = get_theme_mod( tumblr3_normalize_option_name( $raw_tag ) );
 
 					return $theme_mod ? $theme_mod : $captured_tag;
 				}
@@ -171,7 +186,7 @@ function tumblr3_theme_parse( $content ): string {
 				$block_parts = explode( ' ', trim( $raw_tag ) );
 
 				if ( in_array( ltrim( $block_parts[0], '/' ), $blocks, true ) ) {
-					return '[' . str_replace( 'block:', 'block_', strtolower( $raw_tag ) ) . ']';
+					return '[' . str_replace( 'block:', 'block_', $raw_tag ) . ']';
 				}
 
 				// False positive.
@@ -207,10 +222,10 @@ function tumblr3_theme_parse( $content ): string {
 
 			// Verify the tag against our array of known tags.
 			if ( in_array( ltrim( $trim_tag, '/' ), $tags, true ) ) {
-				$shortcode         = 'tag_' . strtolower( $trim_tag );
+				$shortcode         = 'tag_' . $trim_tag;
 				$attributes        = array_filter( array( $attr, $applied_modifier ? "modifier=\"$applied_modifier\"" : '' ) );
 				$attributes_string = implode( ' ', $attributes );
-				return "[{$shortcode} {$attributes_string}]";
+				return ( ! empty( $attributes_string ) ) ? "[{$shortcode} {$attributes_string}]" : "[{$shortcode}]";
 			}
 
 			// Verify the lang tag against our array of known tags.
@@ -227,7 +242,9 @@ function tumblr3_theme_parse( $content ): string {
 		$content
 	);
 
-	return $content;
+	// At this point, we can clean out anything that's unsupported, replace with an empty string.
+	$pattern = get_shortcode_regex( array_merge( TUMBLR3_MISSING_BLOCKS, TUMBLR3_MISSING_TAGS ) );
+	return preg_replace_callback( "/$pattern/", '__return_empty_string', $content );
 }
 
 /**
@@ -269,10 +286,9 @@ function tumblr3_handle_modifiers( $output, $tag, $attr ) {
 }
 add_filter( 'do_shortcode_tag', 'tumblr3_handle_modifiers', 10, 3 );
 
-// Currently unused, will likely be used in future development before the final release.
+// Enqueue the plugin's assets.
 require TUMBLR3_PATH . 'includes/assets.php';
 
 // Include tag and block hydration functions.
 require TUMBLR3_PATH . 'includes/block-functions.php';
 require TUMBLR3_PATH . 'includes/tag-functions.php';
-require TUMBLR3_PATH . 'includes/missing-functions.php';

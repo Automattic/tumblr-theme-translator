@@ -67,6 +67,8 @@ return array(
 	'block:Even'                      => array(),
 	'block:More'                      => array(),
 	'block:PinnedPostLabel'           => array(),
+	'block:Reblog'                    => array(),
+	'block:RebloggedFromReblog'       => array(),
 	'block:NotReblog'                 => array(),
 	'block:RebloggedFrom'             => array(),
 	'block:Reblogs'                   => array(),
@@ -174,4 +176,7 @@ return array(
 	'block:HasRelatedTags'            => array(),
 	'block:RelatedTags'               => array(),
 	'block:Twitter'                   => array(),
+	'block:LivePhoto'                 => array(),
+	'block:NoFollowing'               => array(),
+	'block:Blogs'                     => array(),
 );

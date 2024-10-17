@@ -23,16 +23,6 @@ class Plugin {
 	public ?Hooks $hooks = null;
 
 	/**
-	 * The theme component.
-	 *
-	 * @since   1.0.0
-	 * @version 1.0.0
-	 *
-	 * @var     Hooks|null
-	 */
-	public ?Theme $theme = null;
-
-	/**
 	 * The customizer component.
 	 *
 	 * @since   1.0.0
@@ -105,9 +95,6 @@ class Plugin {
 	protected function initialize(): void {
 		$this->hooks = new Hooks();
 		$this->hooks->initialize();
-
-		$this->theme = new Theme();
-		$this->theme->initialize();
 
 		$this->customizer = new Customizer();
 		$this->customizer->initialize();

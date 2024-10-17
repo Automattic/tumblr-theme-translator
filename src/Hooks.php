@@ -20,16 +20,5 @@ final class Hooks {
 	 *
 	 * @return  void
 	 */
-	public function initialize(): void {
-		add_filter( 'template_include', array( $this, 'redirect_frontend_templates' ) );
-	}
-
-	/**
-	 * Redirects the template to the plugin's front-end template.
-	 *
-	 * @return string Updated template path.
-	 */
-	public function redirect_frontend_templates(): string {
-		return TUMBLR3_PATH . 'view/front-end.php';
-	}
+	public function initialize(): void {}
 }

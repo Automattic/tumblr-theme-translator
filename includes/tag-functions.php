@@ -321,6 +321,7 @@ function tumblr3_tag_excerpt(): string {
 	return wp_strip_all_tags( apply_filters( 'the_content', get_the_content() ) );
 }
 add_shortcode( 'tag_excerpt', 'tumblr3_tag_excerpt' );
+add_shortcode( 'tag_sharestring', 'tumblr3_tag_excerpt' );
 
 /**
  * The blog description, or subtitle.
@@ -753,7 +754,7 @@ add_shortcode( 'tag_tagurlchrono', 'tumblr3_tag_tagurl' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_notecount(): string {
-	return get_comment_number();
+	return get_comments_number();
 }
 add_shortcode( 'tag_notecount', 'tumblr3_tag_notecount' );
 
@@ -772,8 +773,7 @@ add_shortcode( 'tag_notecountwithlabel', 'tumblr3_tag_notecountwithlabel' );
 /**
  * The post comments.
  *
- * @todo Comments template should be in the theme.
- * We need to match the output of tumblr post notes for styling consistency.
+ * @todo We need to match the output of tumblr post notes for styling consistency.
  *
  * @param array $atts The attributes of the shortcode.
  *
@@ -1076,7 +1076,7 @@ function tumblr3_tag_caption(): string {
 	$context = tumblr3_get_parse_context();
 	$format  = get_post_format();
 
-	if ( ! isset( $context[ $format ] ) ) {
+	if ( ! isset( $context[ $format ], $context[ $format ]['caption'] ) ) {
 		return '';
 	}
 

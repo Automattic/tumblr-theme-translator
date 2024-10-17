@@ -317,7 +317,7 @@ class Customizer {
 				$label = ltrim( $name, 'color:' );
 
 				// Option names need to be lowercase and without spaces.
-				$name = str_replace( ' ', '', strtolower( $label ) );
+				$name = tumblr3_normalize_option_name( $name );
 
 				$wp_customize->add_setting(
 					$name,
@@ -356,7 +356,7 @@ class Customizer {
 				$label = ltrim( $name, 'font:' );
 
 				// Option names need to be lowercase and without spaces.
-				$name = str_replace( ' ', '', strtolower( $label ) );
+				$name = tumblr3_normalize_option_name( $name );
 
 				$wp_customize->add_setting(
 					$name,
@@ -393,7 +393,7 @@ class Customizer {
 				$label     = ltrim( $name, 'if:' );
 
 				// Option names need to be lowercase and without spaces.
-				$name = str_replace( ' ', '', strtolower( $label ) );
+				$name = tumblr3_normalize_option_name( $name );
 
 				$wp_customize->add_setting(
 					$name,
@@ -425,7 +425,7 @@ class Customizer {
 				$label = ltrim( $name, 'text:' );
 
 				// Option names need to be lowercase and without spaces.
-				$name = str_replace( ' ', '', strtolower( $label ) );
+				$name = tumblr3_normalize_option_name( $name );
 
 				$wp_customize->add_setting(
 					$name,
@@ -462,7 +462,7 @@ class Customizer {
 				$label = ltrim( $name, 'image:' );
 
 				// Option names need to be lowercase and without spaces.
-				$name = str_replace( ' ', '', strtolower( $label ) );
+				$name = tumblr3_normalize_option_name( $name );
 
 				$wp_customize->add_setting(
 					$name,
@@ -478,7 +478,7 @@ class Customizer {
 						$wp_customize,
 						$name,
 						array(
-							'label'    => $name,
+							'label'    => $label,
 							'section'  => 'tumblr3_image',
 							'settings' => $name,
 							'priority' => 10,
@@ -512,7 +512,7 @@ class Customizer {
 			$default = ( isset( $options[0], $options[0]['content'] ) ) ? $options[0]['content'] : '';
 
 			// Option names need to be lowercase and without spaces.
-			$name = str_replace( ' ', '', strtolower( $label ) );
+			$name = tumblr3_normalize_option_name( $name );
 
 			$wp_customize->add_setting(
 				$name,
