@@ -753,7 +753,7 @@ add_shortcode( 'tag_tagurlchrono', 'tumblr3_tag_tagurl' );
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_notecount(): string {
-	return get_comment_number();
+	return get_comments_number();
 }
 add_shortcode( 'tag_notecount', 'tumblr3_tag_notecount' );
 
