@@ -179,4 +179,5 @@ return array(
 	'block:LivePhoto'                 => array(),
 	'block:NoFollowing'               => array(),
 	'block:Blogs'                     => array(),
+	'block:Permalink'                 => array(),
 );

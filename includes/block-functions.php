@@ -460,6 +460,7 @@ function tumblr3_block_permalinkpage( $atts, $content = '' ): string {
 	return ( is_page() || is_single() ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_permalinkpage', 'tumblr3_block_permalinkpage' );
+add_shortcode( 'block_permalink', 'tumblr3_block_permalinkpage' );
 
 /**
  * Boolean check for if we're on the home page.
