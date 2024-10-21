@@ -352,4 +352,6 @@ return array(
 	'LivePhotoURL'            => array(),
 	'LivePhotoStillImageTime' => array(),
 	'ShareString'             => array(),
+	'AudioPlayerWhite'        => array(),
+	'AudioPlayerBlack'        => array(),
 );

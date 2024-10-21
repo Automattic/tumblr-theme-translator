@@ -125,6 +125,7 @@ return array(
 	'block:NextDayPage'               => array(),
 	'block:TagPage'                   => array(),
 	'block:SearchPage'                => array(),
+	'block:SearchResults'             => array(),
 	'block:NoSearchResults'           => array(),
 	'block:HideFromSearchEnabled'     => array(),
 	'block:HasFeaturedTags'           => array(),
@@ -179,4 +180,5 @@ return array(
 	'block:LivePhoto'                 => array(),
 	'block:NoFollowing'               => array(),
 	'block:Blogs'                     => array(),
+	'block:Permalink'                 => array(),
 );

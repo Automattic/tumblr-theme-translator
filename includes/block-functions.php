@@ -423,6 +423,21 @@ function tumblr3_block_nosearchresults( $atts, $content = '' ): string {
 add_shortcode( 'block_nosearchresults', 'tumblr3_block_nosearchresults' );
 
 /**
+ * Render content if there are search results.
+ *
+ * @param array  $atts    The attributes of the shortcode.
+ * @param string $content The content of the shortcode.
+ *
+ * @return string
+ */
+function tumblr3_block_searchresults( $atts, $content = '' ): string {
+	global $wp_query;
+
+	return ( is_search() && $wp_query->found_posts > 0 ) ? tumblr3_do_shortcode( $content ) : '';
+}
+add_shortcode( 'block_searchresults', 'tumblr3_block_searchresults' );
+
+/**
  * Render content if this site is not currently public.
  *
  * @param array  $atts    The attributes of the shortcode.
@@ -460,6 +475,7 @@ function tumblr3_block_permalinkpage( $atts, $content = '' ): string {
 	return ( is_page() || is_single() ) ? tumblr3_do_shortcode( $content ) : '';
 }
 add_shortcode( 'block_permalinkpage', 'tumblr3_block_permalinkpage' );
+add_shortcode( 'block_permalink', 'tumblr3_block_permalinkpage' );
 
 /**
  * Boolean check for if we're on the home page.

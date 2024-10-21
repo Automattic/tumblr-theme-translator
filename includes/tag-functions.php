@@ -924,6 +924,8 @@ function tumblr3_tag_audioplayer(): string {
 }
 add_shortcode( 'tag_audioplayer', 'tumblr3_tag_audioplayer' );
 add_shortcode( 'tag_audioembed', 'tumblr3_tag_audioplayer' );
+add_shortcode( 'tag_audioplayerblack', 'tumblr3_tag_audioplayer' );
+add_shortcode( 'tag_audioplayerwhite', 'tumblr3_tag_audioplayer' );
 
 /**
  * Album art URL, uses the featured image if available.

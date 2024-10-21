@@ -116,11 +116,11 @@ function tumblr3_theme_parse( $content ): string {
 
 	// Capture each Tumblr Tag in the page and verify it against our arrays.
 	$content = preg_replace_callback(
-		'/\{(.*?)\}/',
+		'/\{([^\s}][^(}]*)\}/',
 		function ( $matches ) use ( $tags, $blocks, $lang, $options, $modifiers ) {
 			$captured_tag = $matches[0];
 			$raw_tag      = strtolower( $matches[1] );
-			$trim_tag     = strtolower( explode( ' ', $matches[1] )[0] );
+			$trim_tag     = strtolower( explode( ' ', $raw_tag )[0] );
 			$attr         = '';
 
 			/**
@@ -162,8 +162,8 @@ function tumblr3_theme_parse( $content ): string {
 			foreach ( $modifiers as $modifier ) {
 				if ( str_starts_with( $raw_tag, $modifier ) ) {
 					$applied_modifier = strtolower( $modifier );
-					$raw_tag          = strtolower( substr( $raw_tag, strlen( $modifier ) ) );
-					$trim_tag         = strtolower( substr( $trim_tag, strlen( $modifier ) ) );
+					$raw_tag          = substr( $raw_tag, strlen( $modifier ) );
+					$trim_tag         = substr( $trim_tag, strlen( $modifier ) );
 					break;
 				}
 			}
