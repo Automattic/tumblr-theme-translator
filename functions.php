@@ -29,34 +29,6 @@ function tumblr3_get_plugin_slug(): string {
 }
 
 /**
- * We need a custom do_shortcode implementation because do_shortcodes_in_html_tags()
- * is run before running reguular shortcodes, which means that things like link hrefs
- * get populated before they even have context.
- *
- * @todo nested tags of the same type aren't rendering properly.
- *
- * @param string $content The content to parse.
- *
- * @return string The parsed content.
- */
-function tumblr3_do_shortcode( $content ): string {
-	global $shortcode_tags;
-	static $pattern = null;
-
-	// Avoid generating this multiple times.
-	if ( null === $pattern ) {
-		$pattern = get_shortcode_regex( array_keys( $shortcode_tags ) );
-	}
-
-	$content = preg_replace_callback( "/$pattern/", 'do_shortcode_tag', $content );
-
-	// Always restore square braces so we don't break things like <!--[if IE ]>.
-	$content = unescape_invalid_shortcodes( $content );
-
-	return $content;
-}
-
-/**
  * Gets the current parse context.
  * Used for informing data tags of their context.
  * Also used for storing data to pass between tags.
@@ -64,8 +36,8 @@ function tumblr3_do_shortcode( $content ): string {
  * @return array|null|string The current parse context.
  */
 function tumblr3_get_parse_context() {
-	global $tumblr3_parse_context;
-	return $tumblr3_parse_context;
+	$plugin = tumblr3_get_plugin_instance();
+	return $plugin->parser->get_parse_context();
 }
 
 /**
@@ -77,8 +49,8 @@ function tumblr3_get_parse_context() {
  * @return void
  */
 function tumblr3_set_parse_context( $key, $value ): void {
-	global $tumblr3_parse_context;
-	$tumblr3_parse_context = array( $key => $value );
+	$plugin = tumblr3_get_plugin_instance();
+	$plugin->parser->set_parse_context( $key, $value );
 }
 
 /**
@@ -91,8 +63,8 @@ function tumblr3_set_parse_context( $key, $value ): void {
 function tumblr3_normalize_option_name( $name ): string {
 	return strtolower(
 		str_replace(
-			array( ' ', ':' ),
-			array( '', '_' ),
+			array( ' ', ':', '{', '}' ),
+			array( '', '_', '', '' ),
 			$name
 		)
 	);

@@ -33,6 +33,16 @@ class Plugin {
 	public ?Customizer $customizer = null;
 
 	/**
+	 * The parser component.
+	 *
+	 * @since   1.0.0
+	 * @version 1.0.0
+	 *
+	 * @var     Parser|null
+	 */
+	public ?Parser $parser = null;
+
+	/**
 	 * Plugin constructor.
 	 *
 	 * @since   1.0.0
@@ -98,6 +108,9 @@ class Plugin {
 
 		$this->customizer = new Customizer();
 		$this->customizer->initialize();
+
+		$this->parser = new Parser();
+		$this->parser->initialize();
 	}
 
 	/**

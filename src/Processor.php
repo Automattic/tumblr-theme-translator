@@ -16,7 +16,7 @@ class Processor extends \WP_HTML_Tag_Processor {
 	 * @return WP_HTML_Span|null The bookmark or null if it doesn't exist.
 	 */
 	public function get_bookmark( $name ) {
-		if ( ! array_key_exists( $name, $this->bookmarks ) ) {
+		if ( ! \array_key_exists( $name, $this->bookmarks ) ) {
 			return null;
 		}
 

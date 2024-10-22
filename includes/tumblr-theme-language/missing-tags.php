@@ -46,7 +46,6 @@ return array(
 	'tag_sourceurl',
 	'tag_sourcetitle',
 	'tag_posttypographystyles',
-	'tag_newpoststyles',
 	'tag_postnotesurl',
 	'tag_mobileappheaders',
 	'tag_positions',
