@@ -1007,7 +1007,7 @@ function tumblr3_tag_externalaudiourl(): string {
 
 	// Test if the current context is an audio post and has a player.
 	if ( isset( $context['audio'], $context['audio']['player'] ) ) {
-		$processor = new Chrysalis\T3\Processor( $context['audio']['player'] );
+		$processor = new CupcakeLabs\T3\Processor( $context['audio']['player'] );
 
 		while ( $processor->next_tag( 'AUDIO' ) ) {
 			$src = $processor->get_attribute( 'SRC' );

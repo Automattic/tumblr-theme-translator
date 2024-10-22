@@ -761,7 +761,7 @@ function tumblr3_block_quote( $atts, $content = '' ): string {
 
 		// Stop on the first quote block.
 		if ( 'core/quote' === $block['blockName'] ) {
-			$processor = new Chrysalis\T3\Processor( $block['innerHTML'] );
+			$processor = new CupcakeLabs\T3\Processor( $block['innerHTML'] );
 
 			// Set bookmarks to extract HTML positions.
 			while ( $processor->next_tag(
@@ -896,7 +896,7 @@ function tumblr3_block_audio( $atts, $content = '' ): string {
 		if ( 'core/audio' === $block['blockName'] ) {
 			$media_id = isset( $block['attrs']['id'] ) ? $block['attrs']['id'] : 0;
 
-			$processor = new Chrysalis\T3\Processor( $block['innerHTML'] );
+			$processor = new CupcakeLabs\T3\Processor( $block['innerHTML'] );
 
 			// Set bookmarks to extract HTML positions.
 			while ( $processor->next_tag(
@@ -1074,7 +1074,7 @@ function tumblr3_block_video( $atts, $content = '' ): string {
 
 		// Stop on the first video block.
 		if ( 'core/video' === $block['blockName'] ) {
-			$processor = new Chrysalis\T3\Processor( $block['innerHTML'] );
+			$processor = new CupcakeLabs\T3\Processor( $block['innerHTML'] );
 
 			// Set bookmarks to extract HTML positions.
 			while ( $processor->next_tag(
