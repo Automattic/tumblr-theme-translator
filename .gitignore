@@ -384,3 +384,4 @@ $RECYCLE.BIN/
 
 .phpunit.result.cache
 view/*.html
+wp-content

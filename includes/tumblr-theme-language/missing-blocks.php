@@ -116,6 +116,7 @@ return array(
 	'block_reblog',
 	'block_reblogs',
 	'block_rebloggedfrom',
+	'block_rebloggedfromreblog',
 	'block_isoriginalentry',
 	'block_isactive',
 	'block_isdeactivated',

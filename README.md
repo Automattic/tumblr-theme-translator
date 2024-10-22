@@ -1,69 +1,148 @@
-# Team 51 Plugin Scaffold
+# WP Post Queue
 
-Welcome to the Team 51 Plugin Scaffold, a standardized starting point for creating new WordPress plugins for Team 51. This repository contains the necessary files and structure to ensure a consistent approach when developing new plugins.
+This plugin is designed to help you manage and schedule your blog posts efficiently. It allows you to configure the number of posts to publish per day, set start and end times for publishing, and pause or resume the queue as needed.
 
-## Getting Started
+Unlike scheduled posts, queued posts are not published at user specific time, but rather based on the queue settings.
 
-To begin, run the command `team51 create-repository --repo-type=plugin`
+This allows for maintaining a steady flow of content, such as regularly publishing blog posts or social media content, without needing to manually schedule each post.
 
-If you don't want to create a repository for your plugin, another option is to clone or download this repository. Rename the folder and the main PHP file with your desired plugin name. Be sure to follow the naming convention: plugin-name for the folder and plugin-name.php for the main PHP file.
+## Features
 
-## Configuration
+- **Automatic Scheduling**: Automatically publish queued posts a specified number of times per day.
+- **Time Configuration**: Set start and end times for publishing posts.
+- **Queue Management**: Pause and resume the queue with ease.
+- **Shuffle Queue**: Randomize the order of posts in the queue.
 
-You'll need to update the following fields in the main PHP file's header:
+## Installation
 
-- Plugin Name: The name of your plugin
-- Plugin URI: The URL of the plugin's repository
-- Description: A brief description of the plugin's functionality.
+### From ZIP
 
-## Folder Structure
+1. Download the plugin and upload it to your WordPress site's `wp-content/plugins` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Navigate to the settings panel to configure your post queue settings.
 
-This scaffold has the following folder structure:
+### From GitHub
 
-```
-plugin-name/
-├── assets/
-│   ├── css/
-│   │   ├── build/
-│   │   └── src/
-│   ├── js/
-│   │   ├── build/
-│   │   └── src/
-│   └── images/
-├── blocks/
-│   ├── build/
-│   └── src/
-├── includes/
-├── languages/
-├── models/
-├── src/
-│   ├ ...
-│   └── Integrations/
-├── templates/
-│   ├ ...
-│   └── admin/
-└── plugin-name.php
-```
+1. Clone the repository in your WordPress site's `wp-content/plugins` directory.
+2. Run `npm install` to install the dependencies.
+3. Run `npm run build` to build the plugin.
+4. Activate the plugin through the 'Plugins' menu in WordPress.
+5. Navigate to the settings panel to configure your post queue settings.
 
-- assets: A folder to store all static assets such as styles, scripts, and images.
-- blocks: A folder for storing Gutenberg block files, if the plugin uses custom blocks.
-- includes: Contains any PHP files with additional functionality for the plugin. Mostly useful for helper functions.
-- languages: Contains the translation files for your plugin.
-- models: Contains PHP classes or data models that represent the plugin's data structures. As an example, think of WooCommerce's `WC_Order` class.
-- src: A folder for organizing the plugin's main PHP classes or code components, such as integrations with other plugins or services. These classes should be organized into subfolders following the [PSR-4](https://www.php-fig.org/psr/psr-4/) convention. `Composer` will handle the autoloading for these classes.
-- templates: Contains any PHP template files used for rendering HTML output. Admin templates should generally be in their own folder separated from front-end templates.
-- plugin-name.php: The main PHP file containing the plugin header and bootstraping functionality.
+## Usage
+
+- Access the settings panel from the WordPress admin dashboard by going to Posts > Queue.
+- Configure the number of posts to publish per day and set the start and end times.
+- Use the "Pause Queue" button to temporarily stop the queue.
+- Use the "Resume Queue" button to restart the queue.
+- Click "Shuffle Queue" to randomize the order of posts.
+- Add new posts to the queue by selecting "Queued" under the post status and visibility dropdown in the editor.
 
 ## Development
 
-Develop your plugin by adding the necessary functionality by creating new files within the includes folder. Remember to enqueue your styles and scripts within the assets folder.
+### Prerequisites
 
-Follow the WordPress Coding Standards for PHP, CSS, and JavaScript when writing your code. You can read more about linting and formatting your code in the [Team51 Project Scaffold](https://github.com/a8cteam51/team51-project-scaffold#code-style--quality).
+- Node.js and npm
+- WordPress development environment, such as [Studio](https://developer.wordpress.com/studio/).
 
-## Documentation
+### Building the Plugin
 
-As you develop your plugin, update the README.md file with detailed information about your plugin's features, usage, installation, and any other pertinent information.
+Run the following commands to build the plugin:
 
-## Testing
+```bash
+npm install
+npm run build
+```
 
-If your plugin is WooCommerce specific, it should be tested with the Storefront theme and latest default theme. If it's a general plugin, it should be tested with the latest default theme as well as Twenty Twenty-One (a non-FSE theme).
+### Running in Development Mode
+
+To start the development server, use:
+
+```bash
+npm run start
+```
+
+### Creating a Plugin ZIP
+
+To create a plugin ZIP file, use:
+
+```bash
+npm run plugin-zip
+```
+
+### Running Tests
+
+If neccessary, a Docker setup is available for the WordPress tests, since they require MySQL, unlike Studio which uses SQLite.
+
+After installing and starting Docker, run the following command to start the containers:
+```bash
+docker-compose up -d
+```
+
+To run the tests, follow these steps:
+
+1. **Install the WordPress Test Suite**: You need to install the WordPress test suite. You can do this by running the following command in your terminal:
+
+    ```bash
+    bash bin/install-wp-tests.sh <db_name> <db_user> <db_pass> <db_host> <wp_version>
+    ```
+
+    Replace `<db_name>`, `<db_user>`, `<db_pass>`, `<db_host>`, and `<wp_version>` with your database name, database user, database password, database host, and WordPress version, respectively. If you've used the defaults it will be something like:
+
+	```bash
+	bash bin/install-wp-tests.sh wordpress_test wp_test password 127.0.0.1:3306
+	```
+
+2. **Run the Tests**: Once the test suite is installed, you can run the tests using:
+
+    ```bash
+    vendor/bin/phpunit 
+    ```
+
+3. **Troubleshooting**: If you encounter any issues, ensure that your database credentials are correct and that the database is accessible. Also, verify that the WordPress version specified is available.
+
+### Linting & Code Standards
+
+This project uses a combination of ESLint, Stylelint, and PHP_CodeSniffer to enforce WordPress code standards.
+
+#### JavaScript
+
+To lint JavaScript files, we use ESLint. You can run the linter with the following command:
+
+```bash
+npm run lint:scripts
+```
+
+To automatically fix some of the issues, you can use:
+
+```bash
+npm run lint:fix:scripts
+```
+
+#### CSS
+
+To lint CSS files, we use Stylelint. You can run the linter with the following command:
+
+```bash
+npm run lint:styles
+```
+
+To automatically fix some of the issues, you can use:
+
+```bash
+npm run lint:fix:styles
+```
+
+#### PHP
+
+For PHP files, we use PHP_CodeSniffer. You can run the linter with the following command:
+
+```bash
+composer run lint:php
+```
+
+To automatically fix some of the issues, you can use:
+
+```bash
+composer run format:php
+```
