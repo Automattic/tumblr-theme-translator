@@ -79,6 +79,12 @@ After installing and starting Docker, run the following command to start the con
 docker-compose up -d
 ```
 
+Add this to your shell config (.bashrc, .zshrc):
+
+```bash
+export WP_TESTS_DIR="/tmp/wordpress-tests-lib"
+```
+
 To run the tests, follow these steps:
 
 1. **Install the WordPress Test Suite**: You need to install the WordPress test suite. You can do this by running the following command in your terminal:
