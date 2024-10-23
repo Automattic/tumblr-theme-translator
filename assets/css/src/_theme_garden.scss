@@ -14,13 +14,14 @@ $yellow: #f0e794;
 $green: #b9ebc8;
 $violet: #d4caf7;
 
-.themes {
+.tumblr-themes {
 	display: flex;
 	flex-wrap: wrap;
 	padding: 20px;
+	width: calc(100% - 40px);
 }
 
-article {
+.tumblr-theme {
 	width: 95%;
 	color: $outerBorder;
 	font-family: monospace;
@@ -45,7 +46,7 @@ article {
 }
 
 @media screen and (min-width: 1501px) {
-	article {
+	.tumblr-theme  {
 		width: calc(25% - $themeMarginRight);
 		margin-right: $themeMarginRight;
 
@@ -56,7 +57,7 @@ article {
 }
 
 @media screen and (min-width: 1201px) and (max-width: 1501px) {
-	article {
+	.tumblr-theme  {
 		width: calc(33% - $themeMarginRight);
 		margin-right: $themeMarginRight;
 
@@ -67,7 +68,7 @@ article {
 }
 
 @media screen and (min-width: 680px) and (max-width: 1200px) {
-	article {
+	.tumblr-theme  {
 		width: calc(50% - $themeMarginRight);
 		margin-right: $themeMarginRight;
 
@@ -77,7 +78,7 @@ article {
 	}
 }
 
-.tabs {
+.tumblr-theme-header {
 	display: flex;
 	align-items: flex-start;
 	overflow: hidden;
@@ -87,7 +88,7 @@ article {
 	height: 26px;
 }
 
-.tabs .tab {
+.tumblr-theme-title-wrapper {
 	flex: initial;
 	display: block;
 	cursor: pointer;
@@ -96,7 +97,7 @@ article {
 	padding: 4px 4px 0 4px;
 }
 
-.body {
+.tumblr-theme-content {
 	background-color: $bg;
 	padding: 10px;
 	box-shadow:
@@ -113,13 +114,13 @@ article {
 		4px 0 0 0 $outerBorder;
 }
 
-.thumbnail {
+.tumblr-theme-thumbnail {
 	width: calc(100% - 4px);
 	border: 2px solid $innerBorder;
 	border-radius: 4px;
 }
 
-.tabs .tab span {
+.tumblr-theme-title {
 	display: block;
 	position: relative;
 	background-color: $bg;
@@ -158,7 +159,7 @@ article {
 		20px 16px 0 $outerBorder
 }
 
-.buttons {
+.tumblr-theme-buttons {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
@@ -168,7 +169,7 @@ article {
 	width: 100%;
 }
 
-.buttons li {
+.tumblr-theme-buttons li {
 	flex: none;
 	display: block;
 	overflow: hidden;
@@ -178,7 +179,7 @@ article {
 }
 
 
-.buttons li a {
+.tumblr-theme-buttons li a {
 	display: block;
 	overflow: hidden;
 	padding: 0 12px;

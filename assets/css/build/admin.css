@@ -1,57 +1,58 @@
-.themes {
+.tumblr-themes {
   display: flex;
   flex-wrap: wrap;
   padding: 20px;
+  width: calc(100% - 40px);
 }
 
-article {
+.tumblr-theme {
   width: 95%;
   color: #49a2c4;
   font-family: monospace;
   margin-bottom: 40px;
   filter: drop-shadow(8px 8px 0 #f8c7c3);
 }
-article:nth-child(5n+2) {
+.tumblr-theme:nth-child(5n+2) {
   filter: drop-shadow(8px 8px 0 #f8d8bf);
 }
-article:nth-child(5n+3) {
+.tumblr-theme:nth-child(5n+3) {
   filter: drop-shadow(8px 8px 0 #f0e794);
 }
-article:nth-child(5n+4) {
+.tumblr-theme:nth-child(5n+4) {
   filter: drop-shadow(8px 8px 0 #b9ebc8);
 }
-article:nth-child(5n+5) {
+.tumblr-theme:nth-child(5n+5) {
   filter: drop-shadow(8px 8px 0 #d4caf7);
 }
 
 @media screen and (min-width: 1501px) {
-  article {
+  .tumblr-theme {
     width: calc(25% - 40px);
     margin-right: 40px;
   }
-  article:nth-child(4n) {
+  .tumblr-theme:nth-child(4n) {
     margin-right: 0;
   }
 }
 @media screen and (min-width: 1201px) and (max-width: 1501px) {
-  article {
+  .tumblr-theme {
     width: calc(33% - 40px);
     margin-right: 40px;
   }
-  article:nth-child(3n) {
+  .tumblr-theme:nth-child(3n) {
     margin-right: 0;
   }
 }
 @media screen and (min-width: 680px) and (max-width: 1200px) {
-  article {
+  .tumblr-theme {
     width: calc(50% - 40px);
     margin-right: 40px;
   }
-  article:nth-child(2n) {
+  .tumblr-theme:nth-child(2n) {
     margin-right: 0;
   }
 }
-.tabs {
+.tumblr-theme-header {
   display: flex;
   align-items: flex-start;
   overflow: hidden;
@@ -61,7 +62,7 @@ article:nth-child(5n+5) {
   height: 26px;
 }
 
-.tabs .tab {
+.tumblr-theme-title-wrapper {
   flex: initial;
   display: block;
   cursor: pointer;
@@ -70,19 +71,19 @@ article:nth-child(5n+5) {
   padding: 4px 4px 0 4px;
 }
 
-.body {
+.tumblr-theme-content {
   background-color: #eeeeef;
   padding: 10px;
   box-shadow: -2px -2px 0 0 #eeeeef, 0 -2px 0 0 #eeeeef, -2px 0 0 0 #eeeeef, 0 2px 0 0 #eeeeef, 2px 0 0 0 #eeeeef, 0 0 0 2px #49a2c4, -4px -4px 0 0 #49a2c4, 0 -4px 0 0 #49a2c4, -4px 0 0 0 #49a2c4, 0 4px 0 0 #49a2c4, 4px 0 0 0 #49a2c4;
 }
 
-.thumbnail {
+.tumblr-theme-thumbnail {
   width: calc(100% - 4px);
   border: 2px solid #8eb2c0;
   border-radius: 4px;
 }
 
-.tabs .tab span {
+.tumblr-theme-title {
   display: block;
   position: relative;
   background-color: #eeeeef;
@@ -95,7 +96,7 @@ article:nth-child(5n+5) {
   box-shadow: -2px 4px 0 #eeeeef, 0 -2px 0 #eeeeef, -2px 0 0 #eeeeef, 2px 0 0 #eeeeef, 4px 2px 0 #eeeeef, 6px 4px 0 #eeeeef, 8px 6px 0 #eeeeef, 10px 8px 0 #eeeeef, 12px 10px 0 #eeeeef, 14px 12px 0 #eeeeef, 16px 14px 0 #eeeeef, 18px 16px 0 #eeeeef, 20px 18px 0 #eeeeef, -4px 0 0 #49a2c4, 0 -4px 0 #49a2c4, -2px -2px 0 #49a2c4, 2px -2px 0 #49a2c4, 4px 0 0 #49a2c4, 6px 2px 0 #49a2c4, 8px 4px 0 #49a2c4, 10px 6px 0 #49a2c4, 12px 8px 0 #49a2c4, 14px 10px 0 #49a2c4, 16px 12px 0 #49a2c4, 18px 14px 0 #49a2c4, 20px 16px 0 #49a2c4;
 }
 
-.buttons {
+.tumblr-theme-buttons {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -105,7 +106,7 @@ article:nth-child(5n+5) {
   width: 100%;
 }
 
-.buttons li {
+.tumblr-theme-buttons li {
   flex: none;
   display: block;
   overflow: hidden;
@@ -114,7 +115,7 @@ article:nth-child(5n+5) {
   border-radius: 4px;
 }
 
-.buttons li a {
+.tumblr-theme-buttons li a {
   display: block;
   overflow: hidden;
   padding: 0 12px;

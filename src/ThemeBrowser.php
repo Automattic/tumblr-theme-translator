@@ -39,31 +39,28 @@ class ThemeBrowser {
 		$response = wp_remote_get(self::THEME_GARDEN_ENDPOINT);
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 		$themes = $body['response']['themes'] ?? [];
-		?>
-		<div class="themes">
-			<?php $this->renderThemeList($themes); ?>
-		</div>
-		<?php
+		$this->renderThemeList($themes);
 	}
 
 	public function renderThemeList($themes): void {
 		if (empty($themes)) {
 			return;
-		}
-
-		foreach ($themes as $theme) : ?>
-			<article>
-				<div class='tabs'>
-					<div class='tab'><span><?php echo $theme['title'] ?></span></div>
-				</div>
-				<div class='body'>
-					<img class="thumbnail" src="<?php echo $theme['thumbnail'] ?>" />
-					<ul class="buttons">
+		} ?>
+		<div class="tumblr-themes">
+			<?php foreach ($themes as $theme) : ?>
+			<article class="tumblr-theme">
+				<header class='tumblr-theme-header'>
+					<div class='tumblr-theme-title-wrapper'><span class="tumblr-theme-title"><?php echo $theme['title'] ?></span></div>
+				</header>
+				<div class='tumblr-theme-content'>
+					<img class="tumblr-theme-thumbnail" src="<?php echo $theme['thumbnail'] ?>" />
+					<ul class="tumblr-theme-buttons">
 						<li><a href="#">Preview</a></li>
 						<li><a href="#">Activate</a></li>
 					</ul>
 				</div>
 			</article>
-		<?php endforeach;
+			<?php endforeach; ?>
+		</div> <?php
 	}
 }
