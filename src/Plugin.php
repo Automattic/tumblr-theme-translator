@@ -109,8 +109,10 @@ class Plugin {
 		$this->customizer = new Customizer();
 		$this->customizer->initialize();
 
-		$this->theme_browser = new ThemeBrowser();
-		$this->theme_browser->initialize();
+		if(is_admin()) {
+			$this->theme_browser = new ThemeBrowser();
+			$this->theme_browser->initialize();
+		}
 	}
 
 	/**

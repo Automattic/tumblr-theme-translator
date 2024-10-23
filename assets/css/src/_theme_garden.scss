@@ -1,0 +1,194 @@
+$bg: #eeeeef;
+$outerBorder: #49a2c4;
+$innerBorder: #8eb2c0;
+$button: #49a2c4;
+$text: #b7b7b7;
+
+$themeMarginBottom: 40px;
+$themeMarginRight: 40px;
+
+$numColors:5;
+$red: #f8c7c3;
+$orange: #f8d8bf;
+$yellow: #f0e794;
+$green: #b9ebc8;
+$violet: #d4caf7;
+
+.themes {
+	display: flex;
+	flex-wrap: wrap;
+	padding: 20px;
+}
+
+article {
+	width: 95%;
+	color: $outerBorder;
+	font-family: monospace;
+	margin-bottom: $themeMarginBottom;
+	filter: drop-shadow(8px 8px 0 $red);
+
+	&:nth-child(5n + 2) {
+		filter: drop-shadow(8px 8px 0 $orange);
+	}
+
+	&:nth-child(5n + 3) {
+		filter: drop-shadow(8px 8px 0 $yellow);
+	}
+
+	&:nth-child(5n + 4) {
+		filter: drop-shadow(8px 8px 0 $green);
+	}
+
+	&:nth-child(5n + 5) {
+		filter: drop-shadow(8px 8px 0 $violet);
+	}
+}
+
+@media screen and (min-width: 1501px) {
+	article {
+		width: calc(25% - $themeMarginRight);
+		margin-right: $themeMarginRight;
+
+		&:nth-child(4n) {
+			margin-right: 0;
+		}
+	}
+}
+
+@media screen and (min-width: 1201px) and (max-width: 1501px) {
+	article {
+		width: calc(33% - $themeMarginRight);
+		margin-right: $themeMarginRight;
+
+		&:nth-child(3n) {
+			margin-right: 0;
+		}
+	}
+}
+
+@media screen and (min-width: 680px) and (max-width: 1200px) {
+	article {
+		width: calc(50% - $themeMarginRight);
+		margin-right: $themeMarginRight;
+
+		&:nth-child(2n) {
+			margin-right: 0;
+		}
+	}
+}
+
+.tabs {
+	display: flex;
+	align-items: flex-start;
+	overflow: hidden;
+	position: relative;
+	margin-left: -8px;
+	width: calc(100% + 8px);
+	height: 26px;
+}
+
+.tabs .tab {
+	flex: initial;
+	display: block;
+	cursor: pointer;
+	position: relative;
+	margin-left: 4px;
+	padding: 4px 4px 0 4px;
+}
+
+.body {
+	background-color: $bg;
+	padding: 10px;
+	box-shadow:
+		-2px -2px 0 0 $bg,
+		0 -2px 0 0 $bg,
+		-2px 0 0 0 $bg,
+		0 2px 0 0 $bg,
+		2px 0 0 0 $bg,
+		0 0 0 2px $outerBorder,
+		-4px -4px 0 0 $outerBorder,
+		0 -4px 0 0 $outerBorder,
+		-4px 0 0 0 $outerBorder,
+		0 4px 0 0 $outerBorder,
+		4px 0 0 0 $outerBorder;
+}
+
+.thumbnail {
+	width: calc(100% - 4px);
+	border: 2px solid $innerBorder;
+	border-radius: 4px;
+}
+
+.tabs .tab span {
+	display: block;
+	position: relative;
+	background-color: $bg;
+	padding: 3px 12px 0 10px  ;
+	height: 18px;
+	line-height: 18px;
+	font-family: monospace;
+	font-size: 1em;
+	font-weight: bold;
+	box-shadow:
+		-2px 4px 0 $bg,
+		0 -2px 0 $bg,
+		-2px 0 0 $bg,
+		2px 0 0 $bg,
+		4px 2px 0 $bg,
+		6px 4px 0 $bg,
+		8px 6px 0 $bg,
+		10px 8px 0 $bg,
+		12px 10px 0 $bg,
+		14px 12px 0 $bg,
+		16px 14px 0 $bg,
+		18px 16px 0 $bg,
+		20px 18px 0 $bg,
+		-4px 0 0 $outerBorder,
+		0 -4px 0 $outerBorder,
+		-2px -2px 0 $outerBorder,
+		2px -2px 0 $outerBorder,
+		4px 0 0 $outerBorder,
+		6px 2px 0 $outerBorder,
+		8px 4px 0 $outerBorder,
+		10px 6px 0 $outerBorder,
+		12px 8px 0 $outerBorder,
+		14px 10px 0 $outerBorder,
+		16px 12px 0 $outerBorder,
+		18px 14px 0 $outerBorder,
+		20px 16px 0 $outerBorder
+}
+
+.buttons {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	position: relative;
+	margin: 10px 0  0;
+	padding: 0;
+	width: 100%;
+}
+
+.buttons li {
+	flex: none;
+	display: block;
+	overflow: hidden;
+	position: relative;
+	margin-left: 10px;
+	border-radius: 4px;
+}
+
+
+.buttons li a {
+	display: block;
+	overflow: hidden;
+	padding: 0 12px;
+	line-height: 24px;
+	font-size: 1em;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	text-decoration: none;
+	border-radius: inherit;
+	color: #FFF;
+	background: $button;
+	border: 1px solid $outerBorder;
+}
