@@ -33,6 +33,16 @@ class Plugin {
 	public ?Customizer $customizer = null;
 
 	/**
+	 * The theme browser component.
+	 *
+	 * @since   1.0.0
+	 * @version 1.0.0
+	 *
+	 * @var     ThemeBrowser|null
+	 */
+	public ?ThemeBrowser $theme_browser = null;
+
+	/**
 	 * Plugin constructor.
 	 *
 	 * @since   1.0.0
@@ -98,6 +108,9 @@ class Plugin {
 
 		$this->customizer = new Customizer();
 		$this->customizer->initialize();
+
+		$this->theme_browser = new ThemeBrowser();
+		$this->theme_browser->initialize();
 	}
 
 	/**
