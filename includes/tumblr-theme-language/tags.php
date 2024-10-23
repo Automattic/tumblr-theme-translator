@@ -27,7 +27,7 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_customcss',
 		),
 		'PostTitle'               => array(
-			'fn' => 'tumblr3_tag_posttitle',
+			'fn' => 'tumblr3_tag_title',
 		),
 		'PostSummary'             => array(
 			'fn' => 'tumblr3_tag_postsummary',
@@ -72,10 +72,10 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_totalpages',
 		),
 		'SubmitLabel'             => array(
-			'fn' => 'tumblr3_tag_submitlabel',
+			'fn' => '__return_empty_string',
 		),
 		'AskLabel'                => array(
-			'fn' => 'tumblr3_tag_asklabel',
+			'fn' => '__return_empty_string',
 		),
 		'PageNumber'              => array(
 			'fn' => 'tumblr3_tag_pagenumber',
@@ -96,16 +96,16 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_posttype',
 		),
 		'Permalink'               => array(
-			'fn' => 'tumblr3_tag_permalink',
+			'fn' => 'tumblr3_tag_url',
 		),
 		'RelativePermalink'       => array(
-			'fn' => 'tumblr3_tag_relativepermalink',
+			'fn' => 'tumblr3_tag_url',
 		),
 		'ShortURL'                => array(
-			'fn' => 'tumblr3_tag_shorturl',
+			'fn' => 'tumblr3_tag_url',
 		),
 		'EmbedUrl'                => array(
-			'fn' => 'tumblr3_tag_embedurl',
+			'fn' => 'tumblr3_tag_url',
 		),
 		'PostID'                  => array(
 			'fn' => 'tumblr3_tag_postid',
@@ -114,7 +114,7 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_tagsasclasses',
 		),
 		'PostNotesURL'            => array(
-			'fn' => 'tumblr3_tag_postnotesurl',
+			'fn' => '__return_empty_string',
 		),
 		'NPF'                     => array(
 			'fn' => 'tumblr3_tag_npf',
@@ -123,31 +123,31 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_pinnedpostlabel',
 		),
 		'ReblogParentName'        => array(
-			'fn' => 'tumblr3_tag_reblogparentname',
+			'fn' => '__return_empty_string',
 		),
 		'ReblogParentTitle'       => array(
-			'fn' => 'tumblr3_tag_reblogparenttitle',
+			'fn' => '__return_empty_string',
 		),
 		'ReblogParentURL'         => array(
-			'fn' => 'tumblr3_tag_reblogparenturl',
+			'fn' => '__return_empty_string',
 		),
 		'ReblogParentPortraitURL' => array(
-			'fn' => 'tumblr3_tag_reblogparentportraiturl',
+			'fn' => '__return_empty_string',
 		),
 		'ReblogRootName'          => array(
-			'fn' => 'tumblr3_tag_reblogrootname',
+			'fn' => '__return_empty_string',
 		),
 		'ReblogRootTitle'         => array(
-			'fn' => 'tumblr3_tag_reblogroottitle',
+			'fn' => '__return_empty_string',
 		),
 		'ReblogRootURL'           => array(
-			'fn' => 'tumblr3_tag_reblogrooturl',
+			'fn' => '__return_empty_string',
 		),
 		'ReblogRootPortraitURL'   => array(
-			'fn' => 'tumblr3_tag_reblogrootportraiturl',
+			'fn' => '__return_empty_string',
 		),
 		'Username'                => array(
-			'fn' => 'tumblr3_tag_username',
+			'fn' => '__return_empty_string',
 		),
 		'Body'                    => array(
 			'fn' => 'tumblr3_tag_body',
@@ -177,16 +177,16 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_photoheight',
 		),
 		'PhotoURL-75sq'           => array(
-			'fn' => 'tumblr3_tag_photourl_75sq',
+			'fn' => 'tumblr3_tag_photourl',
 		),
 		'PhotoURL-HighRes'        => array(
-			'fn' => 'tumblr3_tag_photourl_highres',
+			'fn' => 'tumblr3_tag_photourl',
 		),
 		'PhotoWidth-HighRes'      => array(
-			'fn' => 'tumblr3_tag_photowidth_highres',
+			'fn' => 'tumblr3_tag_photowidth',
 		),
 		'PhotoHeight-HighRes'     => array(
-			'fn' => 'tumblr3_tag_photoheight_highres',
+			'fn' => 'tumblr3_tag_photoheight',
 		),
 		'Camera'                  => array(
 			'fn' => 'tumblr3_tag_camera',
@@ -201,13 +201,13 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_focallength',
 		),
 		'PhotoURL-Panorama'       => array(
-			'fn' => 'tumblr3_tag_photourl_panorama',
+			'fn' => '__return_empty_string',
 		),
 		'PhotoWidth-Panorama'     => array(
-			'fn' => 'tumblr3_tag_photowidth_panorama',
+			'fn' => '__return_empty_string',
 		),
 		'PhotoHeight-Panorama'    => array(
-			'fn' => 'tumblr3_tag_photoheight_panorama',
+			'fn' => '__return_empty_string',
 		),
 		'Photoset'                => array(
 			'fn' => 'tumblr3_tag_photoset',
@@ -240,40 +240,40 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_thumbnail',
 		),
 		'Thumbnail-HighRes'       => array(
-			'fn' => 'tumblr3_tag_thumbnail_highres',
+			'fn' => 'tumblr3_tag_thumbnail',
 		),
 		'Author'                  => array(
-			'fn' => 'tumblr3_tag_author',
+			'fn' => '__return_empty_string',
 		),
 		'Excerpt'                 => array(
 			'fn' => 'tumblr3_tag_excerpt',
 		),
 		'Line'                    => array(
-			'fn' => 'tumblr3_tag_line',
+			'fn' => '__return_empty_string',
 		),
 		'UserNumber'              => array(
-			'fn' => 'tumblr3_tag_usernumber',
+			'fn' => '__return_empty_string',
 		),
 		'Alt'                     => array(
-			'fn' => 'tumblr3_tag_alt',
+			'fn' => '__return_empty_string',
 		),
 		'AudioEmbed'              => array(
-			'fn' => 'tumblr3_tag_audioembed',
+			'fn' => 'tumblr3_tag_audioplayer',
 		),
 		'AudioPlayer'             => array(
 			'fn' => 'tumblr3_tag_audioplayer',
 		),
 		'RawAudioURL'             => array(
-			'fn' => 'tumblr3_tag_rawaudiourl',
+			'fn' => 'tumblr3_tag_externalaudiourl',
 		),
 		'PlayCount'               => array(
-			'fn' => 'tumblr3_tag_playcount',
+			'fn' => '__return_empty_string',
 		),
 		'FormattedPlayCount'      => array(
-			'fn' => 'tumblr3_tag_formattedplaycount',
+			'fn' => '__return_empty_string',
 		),
 		'PlayCountWithLabel'      => array(
-			'fn' => 'tumblr3_tag_playcountwithlabel',
+			'fn' => '__return_empty_string',
 		),
 		'ExternalAudioURL'        => array(
 			'fn' => 'tumblr3_tag_externalaudiourl',
@@ -294,31 +294,31 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_video',
 		),
 		'VideoEmbed'              => array(
-			'fn' => 'tumblr3_tag_videoembed',
+			'fn' => 'tumblr3_tag_video',
 		),
 		'VideoThumbnailURL'       => array(
 			'fn' => 'tumblr3_tag_videothumbnailurl',
 		),
 		'Question'                => array(
-			'fn' => 'tumblr3_tag_question',
+			'fn' => '__return_empty_string',
 		),
 		'Answer'                  => array(
-			'fn' => 'tumblr3_tag_answer',
+			'fn' => '__return_empty_string',
 		),
 		'Asker'                   => array(
-			'fn' => 'tumblr3_tag_asker',
+			'fn' => '__return_empty_string',
 		),
 		'AskerPortraitURL'        => array(
-			'fn' => 'tumblr3_tag_askerportraiturl',
+			'fn' => '__return_empty_string',
 		),
 		'Answerer'                => array(
-			'fn' => 'tumblr3_tag_answerer',
+			'fn' => '__return_empty_string',
 		),
 		'AnswererPortraitURL'     => array(
-			'fn' => 'tumblr3_tag_answererportraiturl',
+			'fn' => '__return_empty_string',
 		),
 		'Replies'                 => array(
-			'fn' => 'tumblr3_tag_replies',
+			'fn' => '__return_empty_string',
 		),
 		'DayOfMonth'              => array(
 			'fn' => 'tumblr3_tag_dayofmonth',
@@ -398,6 +398,12 @@ return apply_filters(
 		'PostNotes'               => array(
 			'fn' => 'tumblr3_tag_postnotes',
 		),
+		'PostNotes-16'            => array(
+			'fn' => 'tumblr3_tag_postnotes',
+		),
+		'PostNotes-64'            => array(
+			'fn' => 'tumblr3_tag_postnotes',
+		),
 		'NoteCount'               => array(
 			'fn' => 'tumblr3_tag_notecount',
 		),
@@ -414,37 +420,37 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_tagurl',
 		),
 		'TagURLChrono'            => array(
-			'fn' => 'tumblr3_tag_tagurlchrono',
+			'fn' => 'tumblr3_tag_tagurl',
 		),
 		'SourceURL'               => array(
-			'fn' => 'tumblr3_tag_sourceurl',
+			'fn' => '__return_empty_string',
 		),
 		'BlackLogoURL'            => array(
-			'fn' => 'tumblr3_tag_blacklogourl',
+			'fn' => '__return_empty_string',
 		),
 		'LogoWidth'               => array(
-			'fn' => 'tumblr3_tag_logowidth',
+			'fn' => '__return_empty_string',
 		),
 		'LogoHeight'              => array(
-			'fn' => 'tumblr3_tag_logoheight',
+			'fn' => '__return_empty_string',
 		),
 		'SourceTitle'             => array(
-			'fn' => 'tumblr3_tag_sourcetitle',
+			'fn' => '__return_empty_string',
 		),
 		'Submitter'               => array(
-			'fn' => 'tumblr3_tag_submitter',
+			'fn' => '__return_empty_string',
 		),
 		'SubmitterURL'            => array(
-			'fn' => 'tumblr3_tag_submitterurl',
+			'fn' => '__return_empty_string',
 		),
 		'SubmitterPortraitURL'    => array(
-			'fn' => 'tumblr3_tag_submitterportraiturl',
+			'fn' => '__return_empty_string',
 		),
 		'GroupMemberName'         => array(
 			'fn' => 'tumblr3_tag_groupmembername',
 		),
 		'GroupMemberTitle'        => array(
-			'fn' => 'tumblr3_tag_groupmembertitle',
+			'fn' => 'tumblr3_tag_postauthortitle',
 		),
 		'GroupMemberURL'          => array(
 			'fn' => 'tumblr3_tag_groupmemberurl',
@@ -465,10 +471,10 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_postauthorportraiturl',
 		),
 		'PreviousDayPage'         => array(
-			'fn' => 'tumblr3_tag_previousdaypage',
+			'fn' => '__return_empty_string',
 		),
 		'NextDayPage'             => array(
-			'fn' => 'tumblr3_tag_nextdaypage',
+			'fn' => '__return_empty_string',
 		),
 		'SearchQuery'             => array(
 			'fn' => 'tumblr3_tag_searchquery',
@@ -480,49 +486,49 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_searchresultcount',
 		),
 		'FollowedName'            => array(
-			'fn' => 'tumblr3_tag_followedname',
+			'fn' => '__return_empty_string',
 		),
 		'FollowedTitle'           => array(
-			'fn' => 'tumblr3_tag_followedtitle',
+			'fn' => '__return_empty_string',
 		),
 		'FollowedURL'             => array(
-			'fn' => 'tumblr3_tag_followedurl',
+			'fn' => '__return_empty_string',
 		),
 		'FollowedPortraitURL'     => array(
-			'fn' => 'tumblr3_tag_followedportraiturl',
+			'fn' => '__return_empty_string',
 		),
 		'Likes'                   => array(
-			'fn' => 'tumblr3_tag_likes',
+			'fn' => '__return_empty_string',
 		),
 		'LikeButton'              => array(
-			'fn' => 'tumblr3_tag_likebutton',
+			'fn' => '__return_empty_string',
 		),
 		'ReblogButton'            => array(
-			'fn' => 'tumblr3_tag_reblogbutton',
+			'fn' => '__return_empty_string',
 		),
 		'MobileAppHeaders'        => array(
-			'fn' => 'tumblr3_tag_mobileappheaders',
+			'fn' => '__return_empty_string',
 		),
 		'PostTypographyStyles'    => array(
-			'fn' => 'tumblr3_tag_posttypographystyles',
+			'fn' => '__return_empty_string',
 		),
 		'CurrentState'            => array(
 			'fn' => 'tumblr3_tag_currentstate',
 		),
 		'ExternalState'           => array(
-			'fn' => 'tumblr3_tag_externalstate',
+			'fn' => 'tumblr3_tag_currentstate',
 		),
 		'ReblogURL'               => array(
-			'fn' => 'tumblr3_tag_reblogurl',
+			'fn' => '__return_empty_string',
 		),
 		'Positions'               => array(
-			'fn' => 'tumblr3_tag_positions',
+			'fn' => '__return_empty_string',
 		),
 		'TweetSummary'            => array(
 			'fn' => 'tumblr3_tag_tweetsummary',
 		),
 		'MailSummary'             => array(
-			'fn' => 'tumblr3_tag_mailsummary',
+			'fn' => 'tumblr3_tag_tweetsummary',
 		),
 		'NewPostStyles'           => array(
 			'fn' => '__return_empty_string',
@@ -531,22 +537,22 @@ return apply_filters(
 			'fn' => 'tumblr3_tag_twitterusername',
 		),
 		'PostBlogName'            => array(
-			'fn' => 'tumblr3_tag_postblogname',
+			'fn' => 'tumblr3_tag_postauthortitle',
 		),
 		'LivePhotoURL'            => array(
-			'fn' => 'tumblr3_tag_livephotourl',
+			'fn' => '__return_empty_string',
 		),
 		'LivePhotoStillImageTime' => array(
-			'fn' => 'tumblr3_tag_livephotostillimagetime',
+			'fn' => '__return_empty_string',
 		),
 		'ShareString'             => array(
-			'fn' => 'tumblr3_tag_sharestring',
+			'fn' => 'tumblr3_tag_excerpt',
 		),
 		'AudioPlayerWhite'        => array(
-			'fn' => 'tumblr3_tag_audioplayerwhite',
+			'fn' => 'tumblr3_tag_audioplayer',
 		),
 		'AudioPlayerBlack'        => array(
-			'fn' => 'tumblr3_tag_audioplayerblack',
+			'fn' => 'tumblr3_tag_audioplayer',
 		),
 	)
 );

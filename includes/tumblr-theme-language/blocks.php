@@ -1,4 +1,91 @@
 <?php
+/**
+ * WordPress does not support playcount tracking for attached audio files.
+ * This would need to be implemented as a custom meta field on the attachment.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#audio-posts
+ */
+
+/**
+ * WordPress doesn't support a panorama post format out of the box.
+ * Could this be safely mapped to the Image post format?
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#panorama-posts
+ */
+
+/**
+ * WordPress doesn't have a following system for noting other blogs you follow.
+ * Previously we had the "links" CPT that was used for making blogrolls.
+ * Perhaps we could bring that back?
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#following
+ */
+
+/**
+ * WordPress doesn't have a highligted posts system.
+ * Perhaps we could just use the sticky posts system?
+ * This seems to exist purely to fulfill a widget in Optica and loads Photo posts only.
+ *
+ * @see https://github.tumblr.net/Tumblr/tumblr/blob/5e69aae5fd71f2a151078abf11a4d146d3aa6bd7/app/controllers/tumblelog.php#L4778
+ */
+
+/**
+ * WordPress does not have a related tags system.
+ * On Tumblr this appears to be handled by Redis.
+ *
+ * @see https://github.tumblr.net/Tumblr/tumblr/blob/12a34ac17d5a80eaec05b486f670fc80214d083d/app/controllers/tumblelog/utils/ThemeItemHelper.php#L551
+ */
+
+/**
+ * WordPress does not have a featured tags system.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#featured-tags
+ */
+
+/**
+ * WordPress does not have a related posts system by default.
+ * Jetpack has a related posts module, perhaps we could integrate with that?
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#related-posts
+ */
+
+/**
+ * WordPress does not have a native submission system.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#submissions
+ */
+
+/**
+ * WordPress does not support question/answer systems.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#answer-posts
+ */
+
+/**
+ * WordPress does not support likes.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#likes
+ */
+
+/**
+ * WordPress does not support reblogs.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#reblogs
+ */
+
+/**
+ * WordPress doesn't have a day by day archive system,
+ * but date archives are available and traverse with the regular pagination block.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#day-pages
+ */
+
+/**
+ * WordPress does not support content sources.
+ *
+ * @see https://www.tumblr.com/docs/en/custom_themes#content-sources
+ */
+
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,7 +114,7 @@ return apply_filters(
 			'fn' => 'tumblr3_block_posttitle',
 		),
 		'block:PostSummary'               => array(
-			'fn' => 'tumblr3_block_postsummary',
+			'fn' => 'tumblr3_block_body',
 		),
 		'block:ShowTitle'                 => array(
 			'fn' => 'tumblr3_block_showtitle',
@@ -63,10 +150,10 @@ return apply_filters(
 			'fn' => 'tumblr3_block_nextpage',
 		),
 		'block:SubmissionsEnabled'        => array(
-			'fn' => 'tumblr3_block_submissionsenabled',
+			'fn' => '__return_empty_string',
 		),
 		'block:AskEnabled'                => array(
-			'fn' => 'tumblr3_block_askenabled',
+			'fn' => '__return_empty_string',
 		),
 		'block:JumpPagination'            => array(
 			'fn'     => 'tumblr3_block_jumppagination',
@@ -111,7 +198,7 @@ return apply_filters(
 			'fn' => 'tumblr3_block_photo',
 		),
 		'block:Panorama'                  => array(
-			'fn' => 'tumblr3_block_panorama',
+			'fn' => '__return_empty_string',
 		),
 		'block:Photoset'                  => array(
 			'fn' => 'tumblr3_block_photoset',
@@ -132,49 +219,49 @@ return apply_filters(
 			'fn' => 'tumblr3_block_video',
 		),
 		'block:Post1'                     => array(
-			'fn' => 'tumblr3_block_post1',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post2'                     => array(
-			'fn' => 'tumblr3_block_post2',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post3'                     => array(
-			'fn' => 'tumblr3_block_post3',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post4'                     => array(
-			'fn' => 'tumblr3_block_post4',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post5'                     => array(
-			'fn' => 'tumblr3_block_post5',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post6'                     => array(
-			'fn' => 'tumblr3_block_post6',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post7'                     => array(
-			'fn' => 'tumblr3_block_post7',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post8'                     => array(
-			'fn' => 'tumblr3_block_post8',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post9'                     => array(
-			'fn' => 'tumblr3_block_post9',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post10'                    => array(
-			'fn' => 'tumblr3_block_post10',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post11'                    => array(
-			'fn' => 'tumblr3_block_post11',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post12'                    => array(
-			'fn' => 'tumblr3_block_post12',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post13'                    => array(
-			'fn' => 'tumblr3_block_post13',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post14'                    => array(
-			'fn' => 'tumblr3_block_post14',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Post15'                    => array(
-			'fn' => 'tumblr3_block_post15',
+			'fn' => 'tumblr3_block_post_n',
 		),
 		'block:Odd'                       => array(
 			'fn' => 'tumblr3_block_odd',
@@ -189,34 +276,34 @@ return apply_filters(
 			'fn' => 'tumblr3_block_pinnedpostlabel',
 		),
 		'block:Reblog'                    => array(
-			'fn' => 'tumblr3_block_reblog',
+			'fn' => '__return_empty_string',
 		),
 		'block:RebloggedFromReblog'       => array(
-			'fn' => 'tumblr3_block_rebloggedfromreblog',
+			'fn' => '__return_empty_string',
 		),
 		'block:NotReblog'                 => array(
 			'fn' => 'tumblr3_block_notreblog',
 		),
 		'block:RebloggedFrom'             => array(
-			'fn' => 'tumblr3_block_rebloggedfrom',
+			'fn' => '__return_empty_string',
 		),
 		'block:Reblogs'                   => array(
-			'fn' => 'tumblr3_block_reblogs',
+			'fn' => '__return_empty_string',
 		),
 		'block:IsActive'                  => array(
-			'fn' => 'tumblr3_block_isactive',
+			'fn' => '__return_empty_string',
 		),
 		'block:IsDeactivated'             => array(
-			'fn' => 'tumblr3_block_isdeactivated',
+			'fn' => '__return_empty_string',
 		),
 		'block:HasPermalink'              => array(
-			'fn' => 'tumblr3_block_haspermalink',
+			'fn' => '__return_empty_string',
 		),
 		'block:HasAvatar'                 => array(
-			'fn' => 'tumblr3_block_hasavatar',
+			'fn' => '__return_empty_string',
 		),
 		'block:isOriginalEntry'           => array(
-			'fn' => 'tumblr3_block_isoriginalentry',
+			'fn' => '__return_empty_string',
 		),
 		'block:Title'                     => array(
 			'fn' => 'tumblr3_block_title',
@@ -252,7 +339,7 @@ return apply_filters(
 			'fn' => 'tumblr3_block_source',
 		),
 		'block:Host'                      => array(
-			'fn' => 'tumblr3_block_host',
+			'fn' => 'tumblr3_block_body',
 		),
 		'block:Thumbnail'                 => array(
 			'fn' => 'tumblr3_block_thumbnail',
@@ -261,25 +348,25 @@ return apply_filters(
 			'fn' => 'tumblr3_block_description',
 		),
 		'block:Author'                    => array(
-			'fn' => 'tumblr3_block_author',
+			'fn' => '__return_empty_string',
 		),
 		'block:Excerpt'                   => array(
-			'fn' => 'tumblr3_block_excerpt',
+			'fn' => 'tumblr3_block_body',
 		),
 		'block:Lines'                     => array(
-			'fn' => 'tumblr3_block_lines',
+			'fn' => '__return_empty_string',
 		),
 		'block:Label'                     => array(
-			'fn' => 'tumblr3_block_label',
+			'fn' => '__return_empty_string',
 		),
 		'block:AudioEmbed'                => array(
-			'fn' => 'tumblr3_block_audioembed',
+			'fn' => 'tumblr3_block_audioplayer',
 		),
 		'block:AudioPlayer'               => array(
 			'fn' => 'tumblr3_block_audioplayer',
 		),
 		'block:PlayCount'                 => array(
-			'fn' => 'tumblr3_block_playcount',
+			'fn' => '__return_empty_string',
 		),
 		'block:ExternalAudio'             => array(
 			'fn' => 'tumblr3_block_externalaudio',
@@ -300,19 +387,19 @@ return apply_filters(
 			'fn' => 'tumblr3_block_videothumbnail',
 		),
 		'block:VideoThumbnails'           => array(
-			'fn' => 'tumblr3_block_videothumbnails',
+			'fn' => 'tumblr3_block_videothumbnail',
 		),
 		'block:Answerer'                  => array(
-			'fn' => 'tumblr3_block_answerer',
+			'fn' => '__return_empty_string',
 		),
 		'block:Date'                      => array(
 			'fn' => 'tumblr3_block_body',
 		),
 		'block:NewDayDate'                => array(
-			'fn' => 'tumblr3_block_newdaydate',
+			'fn' => '__return_empty_string',
 		),
 		'block:SameDayDate'               => array(
-			'fn' => 'tumblr3_block_samedaydate',
+			'fn' => '__return_empty_string',
 		),
 		'block:PostNotes'                 => array(
 			'fn' => 'tumblr3_block_postnotes',
@@ -337,7 +424,7 @@ return apply_filters(
 			'fn' => '__return_empty_string',
 		),
 		'block:Submission'                => array(
-			'fn' => 'tumblr3_block_submission',
+			'fn' => '__return_empty_string',
 		),
 		'block:GroupMembers'              => array(
 			'fn'     => 'tumblr3_block_groupmembers',
@@ -350,13 +437,13 @@ return apply_filters(
 			'fn' => 'tumblr3_block_daypage',
 		),
 		'block:DayPagination'             => array(
-			'fn' => 'tumblr3_block_daypagination',
+			'fn' => '__return_empty_string',
 		),
 		'block:PreviousDayPage'           => array(
-			'fn' => 'tumblr3_block_previousdaypage',
+			'fn' => '__return_empty_string',
 		),
 		'block:NextDayPage'               => array(
-			'fn' => 'tumblr3_block_nextdaypage',
+			'fn' => '__return_empty_string',
 		),
 		'block:TagPage'                   => array(
 			'fn' => 'tumblr3_block_tagpage',
@@ -374,10 +461,10 @@ return apply_filters(
 			'fn' => 'tumblr3_block_hidefromsearchenabled',
 		),
 		'block:HasFeaturedTags'           => array(
-			'fn' => 'tumblr3_block_hasfeaturedtags',
+			'fn' => '__return_empty_string',
 		),
 		'block:FeaturedTags'              => array(
-			'fn' => 'tumblr3_block_featuredtags',
+			'fn' => '__return_empty_string',
 		),
 		'block:Following'                 => array(
 			'fn' => '__return_empty_string',
@@ -386,82 +473,82 @@ return apply_filters(
 			'fn' => '__return_empty_string',
 		),
 		'block:Likes'                     => array(
-			'fn' => 'tumblr3_block_likes',
+			'fn' => '__return_empty_string',
 		),
 		'block:NoLikes'                   => array(
-			'fn' => 'tumblr3_block_nolikes',
+			'fn' => '__return_empty_string',
 		),
 		'block:RelatedPosts'              => array(
-			'fn' => 'tumblr3_block_relatedposts',
+			'fn' => '__return_empty_string',
 		),
 		'block:AskPage'                   => array(
-			'fn' => 'tumblr3_block_askpage',
+			'fn' => '__return_empty_string',
 		),
 		'block:SubmitPage'                => array(
-			'fn' => 'tumblr3_block_submitpage',
+			'fn' => '__return_empty_string',
 		),
 		'block:LikesPage'                 => array(
-			'fn' => 'tumblr3_block_likespage',
+			'fn' => '__return_empty_string',
 		),
 		'block:FollowingPage'             => array(
-			'fn' => 'tumblr3_block_followingpage',
+			'fn' => '__return_empty_string',
 		),
 		'block:ShareFollowing'            => array(
-			'fn' => 'tumblr3_block_sharefollowing',
+			'fn' => '__return_empty_string',
 		),
 		'block:English'                   => array(
-			'fn' => 'tumblr3_block_english',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:German'                    => array(
-			'fn' => 'tumblr3_block_german',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:French'                    => array(
-			'fn' => 'tumblr3_block_french',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:Italian'                   => array(
-			'fn' => 'tumblr3_block_italian',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:Japanese'                  => array(
-			'fn' => 'tumblr3_block_japanese',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:Turkish'                   => array(
-			'fn' => 'tumblr3_block_turkish',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:Spanish'                   => array(
-			'fn' => 'tumblr3_block_spanish',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:Russian'                   => array(
-			'fn' => 'tumblr3_block_russian',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:Polish'                    => array(
-			'fn' => 'tumblr3_block_polish',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:PortuguesePT'              => array(
-			'fn' => 'tumblr3_block_portuguesept',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:PortugueseBR'              => array(
-			'fn' => 'tumblr3_block_portuguesebr',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:Dutch'                     => array(
-			'fn' => 'tumblr3_block_dutch',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:Korean'                    => array(
-			'fn' => 'tumblr3_block_korean',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:ChineseSimplified'         => array(
-			'fn' => 'tumblr3_block_chinesesimplified',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:ChineseTraditional'        => array(
-			'fn' => 'tumblr3_block_chinesetraditional',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:ChineseHK'                 => array(
-			'fn' => 'tumblr3_block_chinesehk',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:Indonesian'                => array(
-			'fn' => 'tumblr3_block_indonesian',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:Hindi'                     => array(
-			'fn' => 'tumblr3_block_hindi',
+			'fn' => 'tumblr3_block_language',
 		),
 		'block:StretchHeaderImage'        => array(
 			'fn' => 'tumblr3_block_stretchheaderimage',
@@ -470,58 +557,112 @@ return apply_filters(
 			'fn' => 'tumblr3_block_nostretchheaderimage',
 		),
 		'block:ShowAdsOnThisPage'         => array(
-			'fn' => 'tumblr3_block_showadsonthispage',
+			'fn' => '__return_empty_string',
 		),
 		'block:HasNoPermalink'            => array(
-			'fn' => 'tumblr3_block_hasnopermalink',
+			'fn' => '__return_empty_string',
 		),
 		'block:HasHighlightedPosts'       => array(
-			'fn' => 'tumblr3_block_hashighlightedposts',
+			'fn' => '__return_empty_string',
 		),
 		'block:HighlightedPosts'          => array(
-			'fn' => 'tumblr3_block_highlightedposts',
+			'fn' => '__return_empty_string',
 		),
 		'block:HasLikedPosts'             => array(
-			'fn' => 'tumblr3_block_haslikedposts',
+			'fn' => '__return_empty_string',
 		),
 		'block:LikedPosts'                => array(
-			'fn' => 'tumblr3_block_likedposts',
+			'fn' => '__return_empty_string',
 		),
 		'block:NewCta'                    => array(
-			'fn' => 'tumblr3_block_newcta',
+			'fn' => '__return_empty_string',
 		),
 		'block:Actions'                   => array(
-			'fn' => 'tumblr3_block_actions',
+			'fn' => '__return_empty_string',
 		),
 		'block:SupplyLogging'             => array(
-			'fn' => 'tumblr3_block_supplylogging',
+			'fn' => '__return_empty_string',
 		),
 		'block:NuOpticaBlogCardsEnabled'  => array(
-			'fn' => 'tumblr3_block_nuopticablogcardsenabled',
+			'fn' => '__return_empty_string',
 		),
 		'block:NuOpticaBlogCardsDisabled' => array(
-			'fn' => 'tumblr3_block_nuopticablogcardsdisabled',
+			'fn' => '__return_empty_string',
 		),
 		'block:HasRelatedTags'            => array(
-			'fn' => 'tumblr3_block_hasrelatedtags',
+			'fn' => '__return_empty_string',
 		),
 		'block:RelatedTags'               => array(
-			'fn' => 'tumblr3_block_relatedtags',
+			'fn' => '__return_empty_string',
 		),
 		'block:Twitter'                   => array(
 			'fn' => 'tumblr3_block_twitter',
 		),
 		'block:LivePhoto'                 => array(
-			'fn' => 'tumblr3_block_livephoto',
+			'fn' => '__return_empty_string',
 		),
 		'block:NoFollowing'               => array(
-			'fn' => 'tumblr3_block_nofollowing',
+			'fn' => '__return_empty_string',
 		),
 		'block:Blogs'                     => array(
-			'fn' => 'tumblr3_block_blogs',
+			'fn' => '__return_empty_string',
 		),
 		'block:Permalink'                 => array(
 			'fn' => 'tumblr3_block_permalinkpage',
+		),
+		'block:NotEnglish'                => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotGerman'                 => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotFrench'                 => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotItalian'                => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotJapanese'               => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotTurkish'                => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotSpanish'                => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotRussian'                => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotPolish'                 => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotPortuguesePT'           => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotPortugueseBR'           => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotDutch'                  => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotKorean'                 => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotChineseSimplified'      => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotChineseTraditional'     => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotChineseHK'              => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotIndonesian'             => array(
+			'fn' => 'tumblr3_block_language_not',
+		),
+		'block:NotHindi'                  => array(
+			'fn' => 'tumblr3_block_language_not',
 		),
 	)
 );

@@ -52,6 +52,8 @@ class Parser {
 	 */
 	private array $modifiers = array();
 
+	private array $matches = array();
+
 	/**
 	 * Initializes the Parser class.
 	 *
@@ -84,7 +86,9 @@ class Parser {
 	public function parse_fragment( string $html ): string {
 
 		// Find all tags in the theme.
-		$content_map = $this->find_tags( $html );
+		$args        = $this->find_tags( $html );
+		$html        = $args[1];
+		$content_map = $args[0];
 
 		// Verify the content map.
 		$content_map = $this->verify_option_tags( $content_map );
@@ -96,13 +100,13 @@ class Parser {
 		$content_map = $this->clean_unverified_tags( $content_map );
 
 		//echo '<pre>';
-		//print_r( $this->context );
 		//print_r( $content_map );
 		//echo '</pre>';
 
 		// Modify the theme HTML to be hydrated with WordPress tags.
 		return $this->perform_replacements( $html, $content_map );
 	}
+
 
 	/**
 	 * Set the current parse context.
@@ -130,7 +134,7 @@ class Parser {
 	 * @return bool True if the tag is a closer, false otherwise.
 	 */
 	private function is_closer( $tag ): bool {
-		return strpos( $tag, '/' ) === 0;
+		return stripos( $tag, '/' ) === 0;
 	}
 
 	/**
@@ -155,32 +159,60 @@ class Parser {
 	 * @return array The content map.
 	 */
 	private function find_tags( $html ): array {
-		$content_map = array();
+		$content_map   = array();
+		$block_openers = array();
 
-		// Find all tags in the theme.
-		preg_match_all( '/\{([^\s}][^(#}]*)\}/', $html, $matches );
+		$html = preg_replace_callback(
+			'/\{([^\s}][^(#;{}]*)\}/',
+			function ( $matches ) use ( &$content_map, &$block_openers ) {
+				// If we have matches, lowercase them and store them in the content map.
+				if ( isset( $matches[1] ) ) {
+					$match = strtolower( $matches[1] );
+					$fixed = false;
 
-		// If we have matches, lowercase them and store them in the content map.
-		if ( isset( $matches[1], $matches[1] ) ) {
-			$lowercase_matches = array_map( 'strtolower', $matches[1] );
+					// Remove any modifiers from the tag.
+					// @todo bring the modifer logic back in.
+					if ( false !== stripos( $match, '=' ) ) {
+						$match = explode( ' ', $match )[0];
+					}
 
-			foreach ( $lowercase_matches as $key => $match ) {
-				// Remove any modifiers from the tag.
-				// @todo bring the modifer logic back in.
-				$match = explode( ' ', $match )[0];
+					if ( 0 === stripos( $match, 'block:' ) ) {
+						if ( end( $block_openers ) === $match ) {
+							$fixed = true;
+							$match = '/' . $match;
+							array_pop( $block_openers );
+						} else {
+							$block_openers[] = $match;
+						}
+					}
 
-				$content_map[] = array(
-					'closer'       => $this->is_closer( $match ),
-					'tag'          => $this->is_closer( $match ) ? ltrim( $match, '/' ) : $match,
-					'original'     => $matches[0][ $key ],
-					'original_raw' => explode( ' ', trim( $matches[0][ $key ], '{}' ) )[0],
-					'verified'     => false,
-				);
-			}
-		}
+					if ( 0 === stripos( $match, '/block:' ) ) {
+						if ( end( $block_openers ) === substr( $match, 1 ) ) {
+							array_pop( $block_openers );
+						}
+					}
 
-		return $content_map;
+					// Fill out the content map.
+					$content_map[] = array(
+						'closer'       => $this->is_closer( $match ),
+						'tag'          => $this->is_closer( $match ) ? ltrim( $match, '/' ) : $match,
+						'original'     => $fixed ? '{/' . trim( $matches[0], '{}' ) . '}' : $matches[0],
+						'original_raw' => $fixed ? '/' . trim( $matches[0], '{}' ) : trim( $matches[0], '{}' ),
+						'verified'     => false,
+					);
+
+					return $fixed ? '{/' . trim( $matches[0], '{}' ) . '}' : $matches[0];
+				}
+			},
+			$html
+		);
+
+		return array(
+			$content_map,
+			$html,
+		);
 	}
+
 
 	/**
 	 * Verify the content map by checking for valid option tags.
@@ -197,7 +229,7 @@ class Parser {
 					continue;
 				}
 
-				if ( 0 === strpos( $content['tag'], $option_name ) ) {
+				if ( 0 === stripos( $content['tag'], $option_name ) ) {
 					$content_map[ $key ]['verified'] = ( 'block:if' === $option_name ) ? 'block' : 'option';
 					$content_map[ $key ]['tag']      = $this->rebuild_tag( $content, 'option' );
 				}
@@ -222,7 +254,7 @@ class Parser {
 			}
 
 			// Skip if the content doesn't have a lang tag.
-			if ( false === strpos( $content['tag'], 'lang:' ) ) {
+			if ( false === stripos( $content['tag'], 'lang:' ) ) {
 				continue;
 			}
 
@@ -265,6 +297,32 @@ class Parser {
 				// Store the block function for later use if this isn't a closer.
 				if ( ! $content['closer'] && isset( $block_values[ $index ]['fn'] ) ) {
 					$content_map[ $key ]['fn'] = $block_values[ $index ]['fn'];
+				}
+			}
+		}
+
+		// Balance each block opener with a closer.
+		foreach ( $content_map as $key => $content ) {
+			// Only check block openers.
+			if ( 'block' !== $content['verified'] || $content['closer'] ) {
+				continue;
+			}
+
+			// Find the next block of the same type.
+			foreach ( $content_map as $inner_key => $inner_content ) {
+				if ( $inner_key <= $key ) {
+					continue;
+				}
+
+				// Hell yeah, this is balanced.
+				if ( $content['tag'] === $inner_content['tag'] && $inner_content['closer'] ) {
+					break;
+				}
+
+				// Uh oh, there's imbalance here.
+				if ( $content['tag'] === $inner_content['tag'] && ! $inner_content['closer'] ) {
+					// @todo add logging here.
+					wp_die( 'Unbalanced block: ' . $inner_content['tag'] . ' at map position ' . $inner_key );
 				}
 			}
 		}
@@ -319,7 +377,7 @@ class Parser {
 			}
 		}
 
-		return $content_map;
+		return array_values( array_filter( $content_map ) );
 	}
 
 	/**
@@ -329,11 +387,8 @@ class Parser {
 	 * @return void
 	 */
 	private function perform_replacements( $html, $content_map ): string {
-		$skip_keys = array();
-
 		foreach ( $content_map as $key => $content ) {
-			// Skip if this key is flagged as parsed witihin a looper.
-			if ( in_array( $key, $skip_keys, true ) ) {
+			if ( ! isset( $content_map[ $key ] ) ) {
 				continue;
 			}
 
@@ -345,9 +400,10 @@ class Parser {
 					$args = $this->perform_block_replacement( $html, $content_map, $key );
 					$html = $args['html'];
 
-					if ( isset( $args['looper'] ) && $args['looper'] ) {
+					// If this is a looping block, or it has no HTML, skip the inner tags.
+					if ( ( isset( $args['looper'] ) && $args['looper'] ) || '' === $args['html'] ) {
 						for ( $i = $args['key_start']; $i <= $args['key_end']; $i++ ) {
-							$skip_keys[] = $i;
+							unset( $content_map[ $i ] );
 						}
 					}
 					break;
@@ -361,10 +417,6 @@ class Parser {
 
 			$content_map[ $key ]['parsed'] = true;
 		}
-
-		//echo '<pre>';
-		//print_r( $content_map );
-		//echo '</pre>';
 
 		return $html;
 	}
@@ -385,7 +437,7 @@ class Parser {
 		}
 
 		// Find the first instance of this original, unmodified tag in the theme HTML.
-		$tag_start_position = strpos( $html, $args['original'] );
+		$tag_start_position = stripos( $html, $args['original'] );
 
 		// If a start position can't be found, skip this tag.
 		if ( false === $tag_start_position ) {
@@ -393,7 +445,7 @@ class Parser {
 		}
 
 		// Get the hydrated content for this tag.
-		$tag_content = call_user_func( $args['fn'], $args['tag'] );
+		$tag_content = call_user_func( $args['fn'], array(), '', $args['tag'] );
 
 		// Replace the tag in the theme HTML with the hydrated content.
 		return substr_replace( $html, $tag_content, $tag_start_position, strlen( $args['original'] ) );
@@ -416,7 +468,7 @@ class Parser {
 			);
 		}
 
-		if ( 0 === strpos( $args['tag'], '{block:if' ) ) {
+		if ( 0 === stripos( $args['tag'], '{block:if' ) ) {
 			$args['fn'] = 'tumblr3_block_if';
 		}
 
@@ -432,7 +484,7 @@ class Parser {
 		}
 
 		// Find the first position of this block in the theme HTML.
-		$block_start_position = strpos( $html, $args['original'] );
+		$block_start_position = stripos( $html, $args['original'] );
 
 		// If a start position can't be found, skip this block.
 		if ( false === $block_start_position ) {
@@ -461,7 +513,8 @@ class Parser {
 				// If we found the correct closer, break the loop.
 				if ( $found_closer === $closer_count ) {
 					$closer_key         = $map_key;
-					$block_end_position = strpos( $html, $map_content['original'] ) + strlen( $map_content['original'] );
+					$block_end_length   = strlen( $map_content['original'] );
+					$block_end_position = stripos( $html, $map_content['original'] ) + $block_end_length;
 					break;
 				}
 			}
@@ -481,7 +534,7 @@ class Parser {
 			substr(
 				$html,
 				$block_start_position + strlen( $args['original'] ),
-				$block_end_position - ( $block_start_position + strlen( $args['original'] ) ) - ( strlen( $args['original'] ) + 1 )
+				$block_end_position - ( $block_start_position + strlen( $args['original'] ) ) - $block_end_length
 			),
 			$args['tag']
 		);
@@ -495,17 +548,20 @@ class Parser {
 		);
 	}
 
+
 	/**
-	 * Replace language tags in the theme HTML.
+	 * Undocumented function
 	 *
-	 * @param int $key The key in the content map to replace.
-	 * @return void
+	 * @param [type] $html
+	 * @param [type] $content_map
+	 * @param [type] $key
+	 * @return string
 	 */
 	private function perform_lang_replacement( $html, $content_map, $key ): string {
 		$args = $content_map[ $key ];
 
 		// Find the first instance of this original, unmodified tag in the theme HTML.
-		$tag_start_position = strpos( $html, $args['original'] );
+		$tag_start_position = stripos( $html, $args['original'] );
 
 		// If a start position can't be found, skip this tag.
 		if ( false === $tag_start_position ) {
@@ -531,7 +587,7 @@ class Parser {
 		$args = $content_map[ $key ];
 
 		// Find the first instance of this original, unmodified tag in the theme HTML.
-		$tag_start_position = strpos( $html, $args['original'] );
+		$tag_start_position = stripos( $html, $args['original'] );
 
 		// If a start position can't be found, skip this tag.
 		if ( false === $tag_start_position ) {

@@ -310,6 +310,11 @@ class Customizer {
 		while ( $processor->next_tag( 'META' ) ) {
 			$name = $processor->get_attribute( 'name' );
 
+			// Skip if there is no name attribute.
+			if ( null === $name ) {
+				continue;
+			}
+
 			/**
 			 * Color options.
 			 */
@@ -460,7 +465,7 @@ class Customizer {
 			 */
 			if ( str_starts_with( $name, 'image:' ) ) {
 				$image = $processor->get_attribute( 'content' );
-				$label = ltrim( $name, 'image:' );
+				$label = substr( $name, 6 );
 
 				// Option names need to be lowercase and without spaces.
 				$name = tumblr3_normalize_option_name( $name );
@@ -499,8 +504,6 @@ class Customizer {
 			 * Select options. These need to be processed after all other options.
 			 */
 			if ( str_starts_with( $name, 'select:' ) ) {
-				$name = ltrim( $name, 'select:' );
-
 				$select_options[ $name ][] = array(
 					'content' => $processor->get_attribute( 'content' ),
 					'title'   => $processor->get_attribute( 'title' ),
@@ -534,6 +537,11 @@ class Customizer {
 					'priority' => 10,
 				)
 			);
+
+			// If it doesn't exist, load the default value into the theme mod.
+			if ( ! get_theme_mod( $name ) ) {
+				set_theme_mod( $name, $default );
+			}
 		}
 	}
 }

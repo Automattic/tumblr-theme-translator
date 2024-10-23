@@ -11,7 +11,6 @@ function tumblr3_tag_target(): string {
 	return get_theme_mod( 'target_blank' ) ? 'target="_blank"' : '';
 }
 
-
 /**
  * Returns the NPF JSON string of the current post.
  *
@@ -23,7 +22,6 @@ function tumblr3_tag_npf(): string {
 	return '';
 }
 
-
 /**
  * The author name of the current post.
  *
@@ -32,7 +30,6 @@ function tumblr3_tag_npf(): string {
 function tumblr3_tag_postauthorname(): string {
 	return get_the_author();
 }
-
 
 /**
  * Returns the group member display name.
@@ -49,7 +46,6 @@ function tumblr3_tag_groupmembername(): string {
 	return '';
 }
 
-
 /**
  * The URL of the group members posts page.
  *
@@ -64,7 +60,6 @@ function tumblr3_tag_groupmemberurl(): string {
 
 	return '';
 }
-
 
 /**
  * Gets the group member portrait URL.
@@ -103,7 +98,6 @@ function tumblr3_tag_groupmemberportraiturl( $atts ): string {
 	return '';
 }
 
-
 /**
  * The blog title of the post author.
  *
@@ -124,7 +118,6 @@ function tumblr3_tag_postauthortitle(): string {
 function tumblr3_tag_postauthorurl(): string {
 	return esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) );
 }
-
 
 /**
  * The portrait URL of the post author.
@@ -164,7 +157,6 @@ function tumblr3_tag_postauthorportraiturl( $atts ): string {
 	return esc_url( $author_avatar );
 }
 
-
 /**
  * Outputs the twitter username theme option.
  *
@@ -173,7 +165,6 @@ function tumblr3_tag_postauthorportraiturl( $atts ): string {
 function tumblr3_tag_twitterusername(): string {
 	return esc_attr( get_theme_mod( 'twitter_username' ) );
 }
-
 
 /**
  * The current state of a page in nav.
@@ -184,8 +175,6 @@ function tumblr3_tag_twitterusername(): string {
 function tumblr3_tag_currentstate(): string {
 	return get_the_permalink() === home_url( add_query_arg( null, null ) ) ? 'current-page' : '';
 }
-
-
 
 /**
  * The display shape of your avatar ("circle" or "square").
@@ -198,7 +187,6 @@ function tumblr3_tag_avatarshape(): string {
 	return esc_html( get_theme_mod( 'avatar_shape', 'circle' ) );
 }
 
-
 /**
  * The background color of your blog.
  *
@@ -209,7 +197,6 @@ function tumblr3_tag_avatarshape(): string {
 function tumblr3_tag_backgroundcolor(): string {
 	return '#' . sanitize_hex_color_no_hash( get_theme_mod( 'background_color', '#fff' ) );
 }
-
 
 /**
  * The accent color of your blog.
@@ -222,7 +209,6 @@ function tumblr3_tag_accentcolor(): string {
 	return '#' . sanitize_hex_color_no_hash( get_theme_mod( 'accent_color', '#0073aa' ) );
 }
 
-
 /**
  * The title color of your blog.
  *
@@ -233,7 +219,6 @@ function tumblr3_tag_accentcolor(): string {
 function tumblr3_tag_titlecolor(): string {
 	return '#' . sanitize_hex_color_no_hash( get_theme_mod( 'header_textcolor', '#000' ) );
 }
-
 
 /**
  * Get the title font theme option.
@@ -246,7 +231,6 @@ function tumblr3_tag_titlefont(): string {
 	return esc_html( get_theme_mod( 'title_font', 'Arial' ) );
 }
 
-
 /**
  * The weight of your title font ("normal" or "bold").
  *
@@ -258,7 +242,6 @@ function tumblr3_tag_titlefontweight(): string {
 	return esc_html( get_theme_mod( 'title_font_weight', 'bold' ) );
 }
 
-
 /**
  * Get the header image theme option.
  *
@@ -269,7 +252,6 @@ function tumblr3_tag_titlefontweight(): string {
 function tumblr3_tag_headerimage(): string {
 	return get_theme_mod( 'header_image', 'remove-header' );
 }
-
 
 /**
  * Get either a post title, or the blog title.
@@ -285,7 +267,6 @@ function tumblr3_tag_title(): string {
 	return ( isset( $context['theme'] ) ) ? get_bloginfo( 'name' ) : get_the_title();
 }
 
-
 /**
  * The post content.
  *
@@ -297,7 +278,6 @@ function tumblr3_tag_body(): string {
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
 	return apply_filters( 'the_content', get_the_content() );
 }
-
 
 /**
  * The post content.
@@ -343,7 +323,6 @@ function tumblr3_tag_description(): string {
 	return wp_kses_post( get_bloginfo( 'description' ) );
 }
 
-
 /**
  * Attribute safe blog description.
  *
@@ -354,7 +333,6 @@ function tumblr3_tag_description(): string {
 function tumblr3_tag_metadescription(): string {
 	return esc_attr( get_bloginfo( 'description' ) );
 }
-
 
 /**
  * The homepage URL of the blog.
@@ -367,7 +345,6 @@ function tumblr3_tag_blogurl(): string {
 	return esc_url( home_url( '/' ) );
 }
 
-
 /**
  * The RSS feed URL of the blog.
  *
@@ -379,7 +356,6 @@ function tumblr3_tag_rss(): string {
 	return esc_url( get_feed_link() );
 }
 
-
 /**
  * The site favicon image URL.
  *
@@ -390,7 +366,6 @@ function tumblr3_tag_rss(): string {
 function tumblr3_tag_favicon(): string {
 	return esc_url( get_site_icon_url() );
 }
-
 
 /**
  * The portrait URL of the blog, uses the custom logo if set.
@@ -509,7 +484,7 @@ function tumblr3_tag_label(): string {
  *
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
-function tumblr3_tagsasclasses(): string {
+function tumblr3_tag_tagsasclasses(): string {
 	$tags = get_the_tags();
 
 	if ( ! $tags || is_wp_error( $tags ) ) {
@@ -524,7 +499,6 @@ function tumblr3_tagsasclasses(): string {
 	return implode( ' ', $classes );
 }
 
-
 /**
  * Label in post footer indicating this is a pinned post.
  *
@@ -535,7 +509,6 @@ function tumblr3_tagsasclasses(): string {
 function tumblr3_tag_pinnedpostlabel(): string {
 	return esc_html( 'Pinned Post' );
 }
-
 
 /**
  * Gets the previous post URL (single post pagination)
@@ -548,7 +521,6 @@ function tumblr3_tag_previouspost(): string {
 	return esc_url( get_permalink( get_adjacent_post( false, '', true ) ) );
 }
 
-
 /**
  * Gets the next post URL (single post pagination)
  *
@@ -559,7 +531,6 @@ function tumblr3_tag_previouspost(): string {
 function tumblr3_tag_nextpost(): string {
 	return esc_url( get_permalink( get_adjacent_post( false, '', false ) ) );
 }
-
 
 /**
  * Gets the previous posts page URL (pagination)
@@ -572,7 +543,6 @@ function tumblr3_tag_previouspage(): string|null {
 	return esc_url( get_next_posts_page_link() );
 }
 
-
 /**
  * Gets the next posts page URL (pagination)
  *
@@ -583,7 +553,6 @@ function tumblr3_tag_previouspage(): string|null {
 function tumblr3_tag_nextpage(): string|null {
 	return esc_url( get_previous_posts_page_link() );
 }
-
 
 /**
  * Gets the current page value (pagination)
@@ -596,7 +565,6 @@ function tumblr3_tag_currentpage(): string {
 	return get_query_var( 'paged' );
 }
 
-
 /**
  * The pagenumber tag inside jump pagination.
  *
@@ -606,7 +574,6 @@ function tumblr3_tag_pagenumber(): string {
 	$context = tumblr3_get_parse_context();
 	return isset( $context['jumppagination'] ) ? (string) $context['jumppagination'] : '';
 }
-
 
 /**
  * Gets the query total pages (pagination)
@@ -619,7 +586,6 @@ function tumblr3_tag_totalpages(): string {
 	global $wp_query;
 	return $wp_query->max_num_pages;
 }
-
 
 /**
  * Displays the span of years your blog has existed.
@@ -647,7 +613,6 @@ function tumblr3_tag_copyrightyears(): string {
 	return get_the_date( 'Y', $oldest_post[0] ) . '-' . gmdate( 'Y' );
 }
 
-
 /**
  * The numeric ID for a post.
  *
@@ -658,7 +623,6 @@ function tumblr3_tag_copyrightyears(): string {
 function tumblr3_tag_postid(): string {
 	return esc_attr( get_the_ID() );
 }
-
 
 /**
  * The name of the current legacy post type.
@@ -671,7 +635,6 @@ function tumblr3_tag_posttype(): string {
 	$format = get_post_format();
 	return ( $format ) ? $format : 'text';
 }
-
 
 /**
  * Current tag name in a loop.
@@ -691,7 +654,6 @@ function tumblr3_tag_tag(): string {
 	return $context['term']->name;
 }
 
-
 /**
  * Current tag name in a loop.
  *
@@ -709,7 +671,6 @@ function tumblr3_tag_urlsafetag(): string {
 
 	return rawurlencode( $context['term']->name );
 }
-
 
 /**
  * Current tag url in a loop.
@@ -729,8 +690,6 @@ function tumblr3_tag_tagurl(): string {
 	return get_term_link( $context['term'] );
 }
 
-
-
 /**
  * The total number of comments on a post.
  *
@@ -742,7 +701,6 @@ function tumblr3_tag_notecount(): string {
 	return get_comments_number();
 }
 
-
 /**
  * The total number of comments on a post in text form.
  *
@@ -753,7 +711,6 @@ function tumblr3_tag_notecount(): string {
 function tumblr3_tag_notecountwithlabel(): string {
 	return get_comments_number_text();
 }
-
 
 /**
  * The post comments.
@@ -786,7 +743,6 @@ function tumblr3_tag_postnotes( $atts ): string {
 	return $comments;
 }
 
-
 /**
  * The current search query.
  *
@@ -797,7 +753,6 @@ function tumblr3_tag_postnotes( $atts ): string {
 function tumblr3_tag_searchquery(): string {
 	return esc_html( get_search_query() );
 }
-
 
 /**
  * The current search query URL encoded.
@@ -810,7 +765,6 @@ function tumblr3_tag_urlsafesearchquery(): string {
 	return rawurlencode( get_search_query() );
 }
 
-
 /**
  * The found posts count of the search result.
  *
@@ -822,7 +776,6 @@ function tumblr3_tag_searchresultcount(): string {
 	global $wp_query;
 	return $wp_query->found_posts;
 }
-
 
 /**
  * Quote post content.
@@ -843,7 +796,6 @@ function tumblr3_tag_quote(): string {
 	return '';
 }
 
-
 /**
  * Quote post source.
  *
@@ -861,7 +813,6 @@ function tumblr3_tag_source(): string {
 
 	return '';
 }
-
 
 /**
  * Quote content length.
@@ -888,7 +839,6 @@ function tumblr3_tag_length(): string {
 	// Default to long.
 	return 'long';
 }
-
 
 /**
  * Audioplayer HTML.
@@ -930,7 +880,6 @@ function tumblr3_tag_albumarturl(): string {
 	return '';
 }
 
-
 /**
  * Renders the audio player track name.
  *
@@ -946,7 +895,6 @@ function tumblr3_tag_trackname(): string {
 
 	return '';
 }
-
 
 /**
  * Renders the audio player artist name.
@@ -964,7 +912,6 @@ function tumblr3_tag_artist(): string {
 	return '';
 }
 
-
 /**
  * Renders the audio player album name.
  *
@@ -980,7 +927,6 @@ function tumblr3_tag_album(): string {
 
 	return '';
 }
-
 
 /**
  * Renders the audio player media URL if it's external.
@@ -1006,8 +952,6 @@ function tumblr3_tag_externalaudiourl(): string {
 	return '';
 }
 
-
-
 /**
  * Renders the post gallery if one was found.
  *
@@ -1025,7 +969,6 @@ function tumblr3_tag_photoset(): string {
 	return apply_filters( 'the_content', $context['gallery']['gallery'] );
 }
 
-
 /**
  * Renders the post gallery layout if one was found.
  *
@@ -1034,7 +977,6 @@ function tumblr3_tag_photoset(): string {
 function tumblr3_tag_photosetlayout(): string {
 	return tumblr3_tag_photocount();
 }
-
 
 /**
  * Renders the post gallery photo count if one was found.
@@ -1052,8 +994,6 @@ function tumblr3_tag_photocount(): string {
 	return esc_html( $context['gallery']['photocount'] );
 }
 
-
-
 /**
  * Renders the post gallery caption if one was found.
  *
@@ -1070,7 +1010,6 @@ function tumblr3_tag_caption(): string {
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP core function.
 	return apply_filters( 'the_content', $context[ $format ]['caption'] );
 }
-
 
 /**
  * Renders the post image URL if one was found.
@@ -1103,9 +1042,6 @@ function tumblr3_tag_photourl( $atts, $content, $shortcode_name ): string {
 	return ( false === $src ) ? '' : esc_url( $src[0] );
 }
 
-
-
-
 /**
  * Renders the post image thumbnail URL if one was found.
  *
@@ -1117,14 +1053,12 @@ function tumblr3_tag_photourl( $atts, $content, $shortcode_name ): string {
  */
 function tumblr3_tag_thumbnail( $atts, $content, $shortcode_name ): string {
 	$sizes = array(
-		'tag_thumbnail'         => 'thumbnail',
-		'tag_thumbnail-highres' => 'full',
+		'{thumbnail}'         => 'thumbnail',
+		'{thumbnail-highres}' => 'full',
 	);
 
 	return get_the_post_thumbnail_url( get_the_id(), $sizes[ $shortcode_name ] );
 }
-
-
 
 /**
  * Renders the post image link URL if one was found.
@@ -1158,7 +1092,6 @@ function tumblr3_tag_linkurl(): string {
 	return '';
 }
 
-
 /**
  * Renders the post image link open tag conditionally.
  *
@@ -1171,7 +1104,6 @@ function tumblr3_tag_linkopentag(): string {
 	return ( isset( $context['image']['link'] ) && 'none' !== $context['image']['link'] ) ? '<a href="' . tumblr3_tag_linkurl() . '">' : '';
 }
 
-
 /**
  * Renders the post image link close tag conditionally.
  *
@@ -1182,7 +1114,6 @@ function tumblr3_tag_linkclosetag(): string {
 
 	return ( isset( $context['image']['link'] ) && 'none' !== $context['image']['link'] ) ? '</a>' : '';
 }
-
 
 /**
  * Renders the post image camera exif data if found.
@@ -1195,7 +1126,6 @@ function tumblr3_tag_camera(): string {
 	return isset( $context['image']['data']['image_meta']['camera'] ) ? esc_html( $context['image']['data']['image_meta']['camera'] ) : '';
 }
 
-
 /**
  * Renders the post image lens exif data if found.
  *
@@ -1206,7 +1136,6 @@ function tumblr3_tag_aperture(): string {
 
 	return isset( $context['image']['data']['image_meta']['aperture'] ) ? esc_html( $context['image']['data']['image_meta']['aperture'] ) : '';
 }
-
 
 /**
  * Renders the post image focal length exif data if found.
@@ -1219,7 +1148,6 @@ function tumblr3_tag_focallength(): string {
 	return isset( $context['image']['data']['image_meta']['focal_length'] ) ? esc_html( $context['image']['data']['image_meta']['focal_length'] ) : '';
 }
 
-
 /**
  * Renders the post image shutter speed exif data if found.
  *
@@ -1230,7 +1158,6 @@ function tumblr3_tag_exposure(): string {
 
 	return isset( $context['image']['data']['image_meta']['shutter_speed'] ) ? esc_html( $context['image']['data']['image_meta']['shutter_speed'] ) : '';
 }
-
 
 /**
  * Renders the post image alt text if one was found.
@@ -1247,7 +1174,6 @@ function tumblr3_tag_photoalt(): string {
 	return esc_attr( get_post_meta( $context['image']['image'], '_wp_attachment_image_alt', true ) );
 }
 
-
 /**
  * Renders the post image width if one was found.
  *
@@ -1263,8 +1189,6 @@ function tumblr3_tag_photowidth(): string {
 	return (string) $context['image']['data']['width'];
 }
 
-
-
 /**
  * Renders the post image height if one was found.
  *
@@ -1279,8 +1203,6 @@ function tumblr3_tag_photoheight(): string {
 
 	return (string) $context['image']['data']['height'];
 }
-
-
 
 /**
  * Renders the post video player.
@@ -1298,8 +1220,6 @@ function tumblr3_tag_video(): string {
 	return '';
 }
 
-
-
 /**
  * Renders the post video thumbnail URL.
  *
@@ -1316,7 +1236,6 @@ function tumblr3_tag_videothumbnailurl(): string {
 	return '';
 }
 
-
 /**
  * The link post type title (This is also the link URL).
  *
@@ -1325,7 +1244,6 @@ function tumblr3_tag_videothumbnailurl(): string {
 function tumblr3_tag_name(): string {
 	return get_the_title( get_the_ID() );
 }
-
 
 /**
  * Renders the link post host url.
@@ -1346,7 +1264,6 @@ function tumblr3_tag_host(): string {
 	return $parsed_url['host'];
 }
 
-
 /**
  * Returns the day of the month without leading zeros.
  *
@@ -1357,7 +1274,6 @@ function tumblr3_tag_host(): string {
 function tumblr3_tag_dayofmonth(): string {
 	return get_the_date( 'j' );
 }
-
 
 /**
  * Returns the day of the month with leading zeros.
@@ -1370,7 +1286,6 @@ function tumblr3_tag_dayofmonthwithzero(): string {
 	return get_the_date( 'd' );
 }
 
-
 /**
  * Returns the full name of the day of the week.
  *
@@ -1381,7 +1296,6 @@ function tumblr3_tag_dayofmonthwithzero(): string {
 function tumblr3_tag_dayofweek(): string {
 	return get_the_date( 'l' );
 }
-
 
 /**
  * Returns the abbreviated name of the day of the week.
@@ -1394,7 +1308,6 @@ function tumblr3_tag_shortdayofweek(): string {
 	return get_the_date( 'D' );
 }
 
-
 /**
  * Returns the day of the week as a number (1 for Monday, 7 for Sunday).
  *
@@ -1405,7 +1318,6 @@ function tumblr3_tag_shortdayofweek(): string {
 function tumblr3_tag_dayofweeknumber(): string {
 	return get_the_date( 'N' );
 }
-
 
 /**
  * Returns the English ordinal suffix for the day of the month.
@@ -1418,7 +1330,6 @@ function tumblr3_tag_dayofmonthsuffix(): string {
 	return get_the_date( 'S' );
 }
 
-
 /**
  * Returns the day of the year (1 to 365).
  *
@@ -1429,7 +1340,6 @@ function tumblr3_tag_dayofmonthsuffix(): string {
 function tumblr3_tag_dayofyear(): string {
 	return get_the_date( 'z' ) + 1; // Adding 1 because PHP date 'z' is zero-indexed
 }
-
 
 /**
  * Returns the week of the year (1 to 53).
@@ -1442,7 +1352,6 @@ function tumblr3_tag_weekofyear(): string {
 	return get_the_date( 'W' );
 }
 
-
 /**
  * Returns the full name of the current month.
  *
@@ -1453,7 +1362,6 @@ function tumblr3_tag_weekofyear(): string {
 function tumblr3_tag_month(): string {
 	return get_the_date( 'F' );
 }
-
 
 /**
  * Returns the abbreviated name of the current month.
@@ -1466,7 +1374,6 @@ function tumblr3_tag_shortmonth(): string {
 	return get_the_date( 'M' );
 }
 
-
 /**
  * Returns the numeric representation of the month without leading zeros.
  *
@@ -1477,7 +1384,6 @@ function tumblr3_tag_shortmonth(): string {
 function tumblr3_tag_monthnumber(): string {
 	return get_the_date( 'n' );
 }
-
 
 /**
  * Returns the numeric representation of the month with leading zeros.
@@ -1490,7 +1396,6 @@ function tumblr3_tag_monthnumberwithzero(): string {
 	return get_the_date( 'm' );
 }
 
-
 /**
  * Returns the full numeric representation of the year (e.g., 2024).
  *
@@ -1501,7 +1406,6 @@ function tumblr3_tag_monthnumberwithzero(): string {
 function tumblr3_tag_year(): string {
 	return get_the_date( 'Y' );
 }
-
 
 /**
  * Returns the last two digits of the year (e.g., 24 for 2024).
@@ -1514,7 +1418,6 @@ function tumblr3_tag_shortyear(): string {
 	return get_the_date( 'y' );
 }
 
-
 /**
  * Returns lowercase 'am' or 'pm' based on the time.
  *
@@ -1525,7 +1428,6 @@ function tumblr3_tag_shortyear(): string {
 function tumblr3_tag_ampm(): string {
 	return get_the_date( 'a' );
 }
-
 
 /**
  * Returns uppercase 'AM' or 'PM' based on the time.
@@ -1538,7 +1440,6 @@ function tumblr3_tag_capitalampm(): string {
 	return get_the_date( 'A' );
 }
 
-
 /**
  * Returns the hour in 12-hour format without leading zeros.
  *
@@ -1549,7 +1450,6 @@ function tumblr3_tag_capitalampm(): string {
 function tumblr3_tag_12hour(): string {
 	return get_the_date( 'g' );
 }
-
 
 /**
  * Returns the hour in 24-hour format without leading zeros.
@@ -1562,7 +1462,6 @@ function tumblr3_tag_24hour(): string {
 	return get_the_date( 'G' );
 }
 
-
 /**
  * Returns the hour in 12-hour format with leading zeros.
  *
@@ -1573,7 +1472,6 @@ function tumblr3_tag_24hour(): string {
 function tumblr3_tag_12hourwithzero(): string {
 	return get_the_date( 'h' );
 }
-
 
 /**
  * Returns the hour in 24-hour format with leading zeros.
@@ -1586,7 +1484,6 @@ function tumblr3_tag_24hourwithzero(): string {
 	return get_the_date( 'H' );
 }
 
-
 /**
  * Returns the minutes with leading zeros.
  *
@@ -1597,7 +1494,6 @@ function tumblr3_tag_24hourwithzero(): string {
 function tumblr3_tag_minutes(): string {
 	return get_the_date( 'i' );
 }
-
 
 /**
  * Returns the seconds with leading zeros.
@@ -1610,7 +1506,6 @@ function tumblr3_tag_seconds(): string {
 	return get_the_date( 's' );
 }
 
-
 /**
  * Returns the Swatch Internet Time (.beats).
  *
@@ -1619,10 +1514,9 @@ function tumblr3_tag_seconds(): string {
  * @see https://www.tumblr.com/docs/en/custom_themes#basic_variables
  */
 function tumblr3_tag_beats(): string {
-	$now = new DateTime( null, new DateTimeZone( 'UTC' ) );
+	$now = new DateTime( '', new DateTimeZone( 'UTC' ) );
 	return '@' . floor( ( $now->format( 'G' ) * 3600 + $now->format( 'i' ) * 60 + $now->format( 's' ) + 3600 ) / 86.4 );
 }
-
 
 /**
  * Returns the Unix timestamp of the post.
@@ -1634,7 +1528,6 @@ function tumblr3_tag_beats(): string {
 function tumblr3_tag_timestamp(): string {
 	return get_the_date( 'U' );
 }
-
 
 /**
  * Returns the time difference between the post date and now, in human-readable format.

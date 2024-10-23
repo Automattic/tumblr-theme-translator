@@ -172,7 +172,6 @@ function tumblr3_block_hidetitle( $atts, $content = '' ): string {
 	return display_header_text() ? '' : $content;
 }
 
-
 /**
  * Output content if we've chosen to show the site description.
  *
@@ -184,7 +183,6 @@ function tumblr3_block_hidetitle( $atts, $content = '' ): string {
 function tumblr3_block_showdescription( $atts, $content = '' ): string {
 	return display_header_text() ? $content : '';
 }
-
 
 /**
  * Output content if we've chosen to hide the site description.
@@ -358,7 +356,6 @@ function tumblr3_block_searchresults( $atts, $content = '' ): string {
 	return ( is_search() && $wp_query->found_posts > 0 ) ? $content : '';
 }
 
-
 /**
  * Render content if this site is not currently public.
  *
@@ -371,7 +368,6 @@ function tumblr3_block_hidefromsearchenabled( $atts, $content = '' ): string {
 	return ( '1' !== get_option( 'blog_public' ) ) ? $content : '';
 }
 
-
 /**
  * Boolean check for if we're on a taxonomy page.
  *
@@ -383,7 +379,6 @@ function tumblr3_block_hidefromsearchenabled( $atts, $content = '' ): string {
 function tumblr3_block_tagpage( $atts, $content = '' ): string {
 	return ( is_tag() || is_category() ) ? $content : '';
 }
-
 
 /**
  * Boolean check for if we're on a single post or page.
@@ -411,7 +406,6 @@ function tumblr3_block_indexpage( $atts, $content = '' ): string {
 	return is_home() ? $content : '';
 }
 
-
 /**
  * Boolean check for if we're on the "front page".
  * (This changes depending on settings chosen inside WordPress).
@@ -425,7 +419,6 @@ function tumblr3_block_homepage( $atts, $content = '' ): string {
 	return is_front_page() ? $content : '';
 }
 
-
 /**
  * Sets the global parse context so we know we're outputting a post title.
  *
@@ -435,13 +428,8 @@ function tumblr3_block_homepage( $atts, $content = '' ): string {
  * @return string
  */
 function tumblr3_block_title( $atts, $content = '' ): string {
-	tumblr3_set_parse_context( 'title', true );
-	$content = $content;
-	tumblr3_set_parse_context( 'theme', true );
-
 	return $content;
 }
-
 
 /**
  * If the current page is able to pagination, render the content.
@@ -454,7 +442,6 @@ function tumblr3_block_title( $atts, $content = '' ): string {
 function tumblr3_block_pagination( $atts, $content = '' ): string {
 	return ( get_next_posts_page_link() || get_previous_posts_page_link() ) ? $content : '';
 }
-
 
 /**
  * The Jump pagination block.
@@ -490,7 +477,6 @@ function tumblr3_block_jumppagination( $atts, $content = '' ): string {
 	return $output;
 }
 
-
 /**
  * The currentpage block inside jumppagination.
  * Renders only if the current page is equal to the context.
@@ -507,7 +493,6 @@ function tumblr3_block_currentpage( $atts, $content = '' ): string {
 
 	return ( isset( $context['jumppagination'] ) && $paged === $context['jumppagination'] ) ? $content : '';
 }
-
 
 /**
  * The jumppage block inside jumppagination.
@@ -526,7 +511,6 @@ function tumblr3_block_jumppage( $atts, $content = '' ): string {
 	return ( isset( $context['jumppagination'] ) && $paged !== $context['jumppagination'] ) ? $content : '';
 }
 
-
 /**
  * Boolean check for if we're on a single post or page.
  *
@@ -538,7 +522,6 @@ function tumblr3_block_jumppage( $atts, $content = '' ): string {
 function tumblr3_block_posttitle( $atts, $content = '' ): string {
 	return is_single() ? tumblr3_block_title( $content ) : '';
 }
-
 
 /**
  * Rendered if you have defined any custom pages.
@@ -560,7 +543,6 @@ function tumblr3_block_haspages( $atts, $content = '' ): string {
 	return ( ! empty( $pages_query ) ) ? $content : '';
 }
 
-
 /**
  * Rendered if you have "Show header image" enabled.
  *
@@ -574,7 +556,6 @@ function tumblr3_block_haspages( $atts, $content = '' ): string {
 function tumblr3_block_showheaderimage( $atts, $content = '' ): string {
 	return ( 'remove-header' !== get_theme_mod( 'header_image', 'remove-header' ) ) ? $content : '';
 }
-
 
 /**
  * Rendered if you have "Show header image" disabled.
@@ -590,7 +571,6 @@ function tumblr3_block_hideheaderimage( $atts, $content = '' ): string {
 	return ( 'remove-header' === get_theme_mod( 'header_image', 'remove-header' ) ) ? $content : '';
 }
 
-
 /**
  * If a post is not a reblog, render the content.
  *
@@ -605,7 +585,6 @@ function tumblr3_block_notreblog( $atts, $content = '' ): string {
 	return $content;
 }
 
-
 /**
  * Rendered if the post has tags.
  *
@@ -617,7 +596,6 @@ function tumblr3_block_notreblog( $atts, $content = '' ): string {
 function tumblr3_block_hastags( $atts, $content = '' ): string {
 	return ( has_tag() ) ? $content : '';
 }
-
 
 /**
  * Rendered if the post has comments or comments open.
@@ -640,9 +618,8 @@ function tumblr3_block_postnotes( $atts, $content = '' ): string {
  * @return string
  */
 function tumblr3_block_notecount( $atts, $content = '' ): string {
-	return ( get_comments_number() > 0 ) ? $content : '';
+	return ( comments_open() || get_comments_number() > 0 ) ? $content : '';
 }
-
 
 /**
  * Rendered for legacy Text posts and NPF posts.
@@ -655,7 +632,6 @@ function tumblr3_block_notecount( $atts, $content = '' ): string {
 function tumblr3_block_text( $atts, $content = '' ): string {
 	return ( false === get_post_format() ) ? $content : '';
 }
-
 
 /**
  * Rendered for legacy quote posts, or the WordPress quote post format.
@@ -741,7 +717,6 @@ function tumblr3_block_quote( $atts, $content = '' ): string {
 	return $content;
 }
 
-
 /**
  * Tests for a source in the quote post format.
  *
@@ -761,7 +736,6 @@ function tumblr3_block_source( $atts, $content = '' ): string {
 	// Return nothing if no source is found.
 	return '';
 }
-
 
 /**
  * Rendered for chat posts.
@@ -877,7 +851,6 @@ function tumblr3_block_audio( $atts, $content = '' ): string {
 	return $content;
 }
 
-
 /**
  * Rendered for audio posts with an audioplayer block.
  *
@@ -908,7 +881,6 @@ function tumblr3_block_externalaudio( $atts, $content = '' ): string {
 
 	return ( isset( $context['audio']['media_id'] ) && 0 === $context['audio']['media_id'] ) ? $content : '';
 }
-
 
 /**
  * Rendered for audio posts with a featured image set.
@@ -1157,7 +1129,6 @@ function tumblr3_block_highres( $atts, $content = '' ): string {
 	return ( isset( $context['image']['highres'] ) && true === $context['image']['highres'] ) ? $content : '';
 }
 
-
 /**
  * Rendered render content if the image has exif data.
  *
@@ -1399,7 +1370,6 @@ function tumblr3_block_caption( $atts, $content = '' ): string {
 	return $content;
 }
 
-
 /**
  * Rendered for legacy Text posts and NPF posts.
  *
@@ -1448,7 +1418,6 @@ function tumblr3_block_permalinkpagination( $atts, $content = '' ): string {
 	return is_single() ? $content : '';
 }
 
-
 /**
  * Check if there's a previous adjacent post.
  *
@@ -1485,7 +1454,6 @@ function tumblr3_block_pinnedpostlabel( $atts, $content = '' ): string {
 	return is_sticky() ? $content : '';
 }
 
-
 /**
  * Render content if the current language is equal to the specified language.
  *
@@ -1498,24 +1466,24 @@ function tumblr3_block_pinnedpostlabel( $atts, $content = '' ): string {
 function tumblr3_block_language( $atts, $content, $shortcode_name ): string {
 	// Map shortcodes to their respective locales
 	$language_map = array(
-		'block_english'            => 'en_US',
-		'block_german'             => 'de_DE',
-		'block_french'             => 'fr_FR',
-		'block_italian'            => 'it_IT',
-		'block_turkish'            => 'tr_TR',
-		'block_spanish'            => 'es_ES',
-		'block_russian'            => 'ru_RU',
-		'block_japanese'           => 'ja_JP',
-		'block_polish'             => 'pl_PL',
-		'block_portuguesept'       => 'pt_PT',
-		'block_portuguesebr'       => 'pt_BR',
-		'block_dutch'              => 'nl_NL',
-		'block_korean'             => 'ko_KR',
-		'block_chinesesimplified'  => 'zh_CN',
-		'block_chinesetraditional' => 'zh_TW',
-		'block_chinesehk'          => 'zh_HK',
-		'block_indonesian'         => 'id_ID',
-		'block_hindi'              => 'hi_IN',
+		'{block:english}'            => 'en_US',
+		'{block:german}'             => 'de_DE',
+		'{block:french}'             => 'fr_FR',
+		'{block:italian}'            => 'it_IT',
+		'{block:turkish}'            => 'tr_TR',
+		'{block:spanish}'            => 'es_ES',
+		'{block:russian}'            => 'ru_RU',
+		'{block:japanese}'           => 'ja_JP',
+		'{block:polish}'             => 'pl_PL',
+		'{block:portuguesept}'       => 'pt_PT',
+		'{block:portuguesebr}'       => 'pt_BR',
+		'{block:dutch}'              => 'nl_NL',
+		'{block:korean}'             => 'ko_KR',
+		'{block:chinesesimplified}'  => 'zh_CN',
+		'{block:chinesetraditional}' => 'zh_TW',
+		'{block:chinesehk}'          => 'zh_HK',
+		'{block:indonesian}'         => 'id_ID',
+		'{block:hindi}'              => 'hi_IN',
 	);
 
 	// Get the current locale
@@ -1523,6 +1491,40 @@ function tumblr3_block_language( $atts, $content, $shortcode_name ): string {
 
 	// Check if the shortcode name matches a defined language and compare it with the current locale
 	if ( isset( $language_map[ $shortcode_name ] ) && $language_map[ $shortcode_name ] === $current_locale ) {
+		return $content;
+	}
+
+	return '';
+}
+
+function tumblr3_block_language_not( $atts, $content, $shortcode_name ): string {
+	// Map shortcodes to their respective locales
+	$language_map = array(
+		'{block:notenglish}'            => 'en_US',
+		'{block:notgerman}'             => 'de_DE',
+		'{block:notfrench}'             => 'fr_FR',
+		'{block:notitalian}'            => 'it_IT',
+		'{block:notturkish}'            => 'tr_TR',
+		'{block:notspanish}'            => 'es_ES',
+		'{block:notrussian}'            => 'ru_RU',
+		'{block:notjapanese}'           => 'ja_JP',
+		'{block:notpolish}'             => 'pl_PL',
+		'{block:notportuguesept}'       => 'pt_PT',
+		'{block:notportuguesebr}'       => 'pt_BR',
+		'{block:notdutch}'              => 'nl_NL',
+		'{block:notkorean}'             => 'ko_KR',
+		'{block:notchinesesimplified}'  => 'zh_CN',
+		'{block:notchinesetraditional}' => 'zh_TW',
+		'{block:notchinesehk}'          => 'zh_HK',
+		'{block:notindonesian}'         => 'id_ID',
+		'{block:nothindi}'              => 'hi_IN',
+	);
+
+	// Get the current locale
+	$current_locale = get_locale();
+
+	// Check if the shortcode name matches a defined language and compare it with the current locale
+	if ( isset( $language_map[ $shortcode_name ] ) && $language_map[ $shortcode_name ] !== $current_locale ) {
 		return $content;
 	}
 
@@ -1542,7 +1544,7 @@ function tumblr3_block_post_n( $atts, $content, $shortcode_name ): string {
 	global $wp_query;
 
 	// Extract the post number from the shortcode name (assuming 'block_postN' where N is a number)
-	if ( preg_match( '/block_post(\d+)/', $shortcode_name, $matches ) ) {
+	if ( preg_match( '/{block:post(\d+)/', $shortcode_name, $matches ) ) {
 		$post_number = (int) $matches[1] - 1; // Subtract 1 because the index is 0-based
 
 		// Check if in the loop and if the current post is the post number N
