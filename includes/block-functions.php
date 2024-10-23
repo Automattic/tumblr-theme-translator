@@ -245,6 +245,8 @@ function tumblr3_block_posts( $atts, $content = '' ): string {
 		}
 	}
 
+	wp_reset_postdata();
+
 	tumblr3_set_parse_context( 'theme', true );
 
 	return $output;
@@ -428,6 +430,7 @@ function tumblr3_block_homepage( $atts, $content = '' ): string {
  * @return string
  */
 function tumblr3_block_title( $atts, $content = '' ): string {
+	tumblr3_set_parse_context( 'title', true );
 	return $content;
 }
 

@@ -33,9 +33,6 @@ class Customizer {
 	 * @return void
 	 */
 	public function remove_defaults( $wp_customize ): void {
-		// Remove the Menus section
-		// @todo Notice: Function WP_Customize_Manager::remove_panel was called incorrectly. Removing nav_menus manually will cause PHP warnings. Use the customize_loaded_components filter instead. Please see Debugging in WordPress for more information. (This message was added in version 4.5.0.) in /var/www/html/wp-includes/functions.php on line 6085
-		$wp_customize->remove_panel( 'nav_menus' );
 
 		// Remove the Homepage Settings section
 		$wp_customize->remove_section( 'static_front_page' );

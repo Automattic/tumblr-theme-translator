@@ -70,6 +70,23 @@ function tumblr3_normalize_option_name( $name ): string {
 	);
 }
 
+/**
+ * Removes the core 'Menus' panel from the Customizer.
+ * This has to happen early, before the Customizer is initialized.
+ *
+ * @param array $components Core Customizer components list.
+ *
+ * @return array (Maybe) modified components list.
+ */
+function tumblr3_remove_nav_menus_panel( $components ) {
+	$i = array_search( 'nav_menus', $components, true );
+	if ( false !== $i ) {
+		unset( $components[ $i ] );
+	}
+	return $components;
+}
+add_filter( 'customize_loaded_components', 'tumblr3_remove_nav_menus_panel' );
+
 // Enqueue the plugin's assets.
 require TUMBLR3_PATH . 'includes/assets.php';
 

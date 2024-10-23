@@ -161,31 +161,62 @@ class Parser {
 	private function find_tags( $html ): array {
 		$content_map   = array();
 		$block_openers = array();
+		$position      = 0;
 
 		$html = preg_replace_callback(
-			'/\{([^\s}][^(#;{}]*)\}/',
-			function ( $matches ) use ( &$content_map, &$block_openers ) {
+			'/\{([a-zA-Z0-9][a-zA-Z0-9\\-\/=" ]*|font\:[a-zA-Z0-9 ]+|text\:[a-zA-Z0-9 ]+|select\:[a-zA-Z0-9 ]+|image\:[a-zA-Z0-9 ]+|color\:[a-zA-Z0-9 ]+|RGBcolor\:[a-zA-Z0-9 ]+|lang\:[a-zA-Z0-9- ]+|[\/]?block\:[a-zA-Z0-9]+( [a-zA-Z0-9=" ]+)*)\}/i',
+			function ( $matches ) use ( &$content_map, &$block_openers, &$position ) {
+				$position++;
+
 				// If we have matches, lowercase them and store them in the content map.
 				if ( isset( $matches[1] ) ) {
 					$match = strtolower( $matches[1] );
 					$fixed = false;
+					$args  = array();
 
 					// Remove any modifiers from the tag.
 					// @todo bring the modifer logic back in.
 					if ( false !== stripos( $match, '=' ) ) {
+						$args  = explode( ' ', $match );
 						$match = explode( ' ', $match )[0];
 					}
 
+					// Test for modifiers at the beginning of the tag.
+					foreach ( $this->modifiers as $modifier ) {
+						if ( 0 === stripos( $match, $modifier ) ) {
+							// If we find a modifier, store it in the args array.
+							$args['modifier'] = $modifier;
+
+							// Remove the modifier from the tag.
+							$matches[0] = substr( $matches[0], strlen( $modifier ) + 1 );
+							$match      = substr( $match, strlen( $modifier ) );
+							break;
+						}
+					}
+
+					// Check if this is a block opener.
 					if ( 0 === stripos( $match, 'block:' ) ) {
+						// Uh oh, we've got two of the same openers in a row, attempt to fix.
 						if ( end( $block_openers ) === $match ) {
+
+							// Log the error.
+							error_log(
+								$match . ' is a duplicate block opener. Found at position ' . $position . PHP_EOL,
+								3,
+								TUMBLR3_PATH . 'parser.log'
+							);
+
 							$fixed = true;
 							$match = '/' . $match;
 							array_pop( $block_openers );
+
+							// Phew, this is a normal block opener.
 						} else {
 							$block_openers[] = $match;
 						}
 					}
 
+					// Check if this is a block closer, and test for openers.
 					if ( 0 === stripos( $match, '/block:' ) ) {
 						if ( end( $block_openers ) === substr( $match, 1 ) ) {
 							array_pop( $block_openers );
@@ -199,6 +230,7 @@ class Parser {
 						'original'     => $fixed ? '{/' . trim( $matches[0], '{}' ) . '}' : $matches[0],
 						'original_raw' => $fixed ? '/' . trim( $matches[0], '{}' ) : trim( $matches[0], '{}' ),
 						'verified'     => false,
+						'args'         => $args,
 					);
 
 					return $fixed ? '{/' . trim( $matches[0], '{}' ) . '}' : $matches[0];
@@ -297,32 +329,6 @@ class Parser {
 				// Store the block function for later use if this isn't a closer.
 				if ( ! $content['closer'] && isset( $block_values[ $index ]['fn'] ) ) {
 					$content_map[ $key ]['fn'] = $block_values[ $index ]['fn'];
-				}
-			}
-		}
-
-		// Balance each block opener with a closer.
-		foreach ( $content_map as $key => $content ) {
-			// Only check block openers.
-			if ( 'block' !== $content['verified'] || $content['closer'] ) {
-				continue;
-			}
-
-			// Find the next block of the same type.
-			foreach ( $content_map as $inner_key => $inner_content ) {
-				if ( $inner_key <= $key ) {
-					continue;
-				}
-
-				// Hell yeah, this is balanced.
-				if ( $content['tag'] === $inner_content['tag'] && $inner_content['closer'] ) {
-					break;
-				}
-
-				// Uh oh, there's imbalance here.
-				if ( $content['tag'] === $inner_content['tag'] && ! $inner_content['closer'] ) {
-					// @todo add logging here.
-					wp_die( 'Unbalanced block: ' . $inner_content['tag'] . ' at map position ' . $inner_key );
 				}
 			}
 		}
@@ -447,6 +453,33 @@ class Parser {
 		// Get the hydrated content for this tag.
 		$tag_content = call_user_func( $args['fn'], array(), '', $args['tag'] );
 
+		// Run the tag through the modifier function?
+		if ( isset( $args['args'], $args['args']['modifier'] ) ) {
+			switch ( strtolower( $args['args']['modifier'] ) ) {
+				case 'rgb':
+					// Convert hex to RGB
+					if ( preg_match( '/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i', $tag_content, $parts ) ) {
+						$r           = hexdec( $parts[1] );
+						$g           = hexdec( $parts[2] );
+						$b           = hexdec( $parts[3] );
+						$tag_content = "$r, $g, $b";
+					}
+					break;
+				case 'plaintext':
+					$tag_content = wp_strip_all_tags( $tag_content );
+					break;
+				case 'js':
+					$tag_content = wp_json_encode( $tag_content );
+					break;
+				case 'jsplaintext':
+					$tag_content = wp_json_encode( wp_strip_all_tags( $tag_content ) );
+					break;
+				case 'urlencoded':
+					$tag_content = rawurlencode( $tag_content );
+					break;
+			}
+		}
+
 		// Replace the tag in the theme HTML with the hydrated content.
 		return substr_replace( $html, $tag_content, $tag_start_position, strlen( $args['original'] ) );
 	}
@@ -472,9 +505,7 @@ class Parser {
 			$args['fn'] = 'tumblr3_block_if';
 		}
 
-		$closer_count = 1;
-		$found_closer = 0;
-		$closer_key   = 0;
+		$closer_key = 0;
 
 		// If there's no function for this block, skip it.
 		if ( ! function_exists( $args['fn'] ) ) {
@@ -500,23 +531,12 @@ class Parser {
 				continue;
 			}
 
-			// We found another opener of the same tag, now we need the nth closer.
-			if ( $map_content['tag'] === $args['tag'] && ! $map_content['closer'] ) {
-				++$closer_count;
-				continue;
-			}
-
 			// We found a closer of the same tag.
-			if ( $map_content['tag'] === $args['tag'] && $map_content['closer'] ) {
-				++$found_closer;
-
-				// If we found the correct closer, break the loop.
-				if ( $found_closer === $closer_count ) {
-					$closer_key         = $map_key;
-					$block_end_length   = strlen( $map_content['original'] );
-					$block_end_position = stripos( $html, $map_content['original'] ) + $block_end_length;
-					break;
-				}
+			if ( $map_content['tag'] === $args['tag'] ) {
+				$closer_key         = $map_key;
+				$block_end_length   = strlen( $map_content['original'] );
+				$block_end_position = stripos( $html, $map_content['original'] ) + $block_end_length;
+				break;
 			}
 		}
 
@@ -547,7 +567,6 @@ class Parser {
 			'key_end'   => $closer_key,
 		);
 	}
-
 
 	/**
 	 * Undocumented function
