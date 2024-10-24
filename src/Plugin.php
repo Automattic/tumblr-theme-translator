@@ -38,9 +38,9 @@ class Plugin {
 	 * @since   1.0.0
 	 * @version 1.0.0
 	 *
-	 * @var     ThemeBrowser|null
+	 * @var     ThemeGarden|null
 	 */
-	public ?ThemeBrowser $theme_browser = null;
+	public ?ThemeGarden $theme_browser = null;
 
 	/**
 	 * Plugin constructor.
@@ -110,8 +110,8 @@ class Plugin {
 		$this->customizer->initialize();
 
 		if(is_admin()) {
-			$this->theme_browser = new ThemeBrowser();
-			$this->theme_browser->initialize();
+			$this->theme_garden = new ThemeGarden();
+			$this->theme_garden->initialize();
 		}
 	}
 

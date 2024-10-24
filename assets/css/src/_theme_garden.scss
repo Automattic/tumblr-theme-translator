@@ -90,7 +90,14 @@ body.admin-color-sunrise {
 	}
 }
 
-@media screen and (min-width: 1301px) {
+@media screen and (min-width: 1601px) {
+	.tumblr-themes  {
+		grid-template-columns: 22% 22% 22% 22%;
+		justify-content: space-between;
+	}
+}
+
+@media screen and (min-width: 1301px) and (max-width: 1600px) {
 	.tumblr-themes  {
 		grid-template-columns: 30% 30% 30%;
 		justify-content: space-between;
@@ -217,4 +224,8 @@ body.admin-color-sunrise {
 	border-radius: inherit;
 	color: var(--t3-button-text);
 	background: var(--t3-primary);
+}
+
+#t3-categories {
+	margin: 10px;
 }

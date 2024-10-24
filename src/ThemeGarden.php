@@ -4,7 +4,7 @@ namespace CupcakeLabs\T3;
 
 defined( 'ABSPATH' ) || exit;
 
-class ThemeBrowser {
+class ThemeGarden {
 	const THEME_GARDEN_ENDPOINT = 'https://roccotrip.dca.tumblr.net/v2/theme_garden';
 	/**
 	 * Initializes the class.
@@ -53,12 +53,19 @@ class ThemeBrowser {
 		?>
 		<div class="wp-filter">
 			<div class="filter-count"><span class="count"><?php echo $theme_count; ?></span></div>
-			<ul class="filter-links">
-				<li><a class="current">Featured</a></li>
+			<label for="t3-categories">Categories</label>
+			<select id="t3-categories">
+				<option>Featured</option>
 				<?php foreach ($categories as $category) : ?>
-				<li><a><?php echo $category['name']; ?></a></li>
+					<option><?php echo $category['name']; ?></option>
 				<?php endforeach; ?>
-			</ul>
+			</select>
+			<form class="search-form">
+				<p class="search-box">
+					<label for="wp-filter-search-input">Search Themes</label>
+					<input type="search" aria-describedby="live-search-desc" id="wp-filter-search-input" class="wp-filter-search">
+				</p>
+			</form>
 		</div>
 		<?php
 	}
