@@ -24,7 +24,7 @@ body.admin-color-modern {
 
 body.admin-color-blue {
 	--t3-primary: #4796b3;
-	--t3-secondary: #74B6CE;
+	--t3-secondary: #74b6ce;
 	--t3-text: #096484;
 }
 
@@ -91,21 +91,24 @@ body.admin-color-sunrise {
 }
 
 @media screen and (min-width: 1601px) {
-	.tumblr-themes  {
+
+	.tumblr-themes {
 		grid-template-columns: 22% 22% 22% 22%;
 		justify-content: space-between;
 	}
 }
 
 @media screen and (min-width: 1301px) and (max-width: 1600px) {
-	.tumblr-themes  {
+
+	.tumblr-themes {
 		grid-template-columns: 30% 30% 30%;
 		justify-content: space-between;
 	}
 }
 
 @media screen and (min-width: 730px) and (max-width: 1300px) {
-	.tumblr-themes  {
+
+	.tumblr-themes {
 		grid-template-columns: 47% 47%;
 		justify-content: space-between;
 	}
@@ -157,12 +160,12 @@ body.admin-color-sunrise {
 	display: block;
 	position: relative;
 	background-color: var(--t3-background);
-	padding: 3px 12px 0 10px  ;
+	padding: 3px 12px 0 10px;
 	height: 18px;
 	line-height: 18px;
 	font-family: monospace;
 	font-size: 1em;
-	font-weight: bold;
+	font-weight: 700;
 	box-shadow:
 		-2px 4px 0 var(--t3-background),
 		0 -2px 0 var(--t3-background),
@@ -189,7 +192,7 @@ body.admin-color-sunrise {
 		14px 10px 0 var(--t3-text),
 		16px 12px 0 var(--t3-text),
 		18px 14px 0 var(--t3-text),
-		20px 16px 0 var(--t3-text)
+		20px 16px 0 var(--t3-text);
 }
 
 .tumblr-theme-buttons {
