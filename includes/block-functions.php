@@ -66,7 +66,7 @@ function tumblr3_block_groupmember( $atts, $content = '' ): string {
 		// Loop over each blog author.
 		foreach ( $authors as $author ) {
 			tumblr3_set_parse_context( 'groupmember', $author );
-			$output .= $plugin->parser->parse_fragment( $content );
+			$output .= $content;
 		}
 
 		tumblr3_set_parse_context( 'theme', true );
@@ -241,7 +241,7 @@ function tumblr3_block_posts( $atts, $content = '' ): string {
 		while ( have_posts() ) {
 			the_post();
 
-			$output .= $plugin->parser->parse_fragment( $content );
+			$output .= $content;
 		}
 	}
 
@@ -279,7 +279,7 @@ function tumblr3_block_tags( $atts, $content = '' ): string {
 
 	foreach ( $terms as $term ) {
 		tumblr3_set_parse_context( 'term', $term );
-		$output .= $plugin->parser->parse_fragment( $content );
+		$output .= $content;
 	}
 
 	tumblr3_set_parse_context( 'theme', true );
@@ -310,7 +310,7 @@ function tumblr3_block_pages( $atts, $content = '' ): string {
 	// Use the content inside this shortcode as a template for each post.
 	foreach ( $pages_query as $page_id ) {
 		tumblr3_set_parse_context( 'page', $page_id );
-		$output .= $plugin->parser->parse_fragment( $content );
+		$output .= $content;
 	}
 
 	tumblr3_set_parse_context( 'theme', true );
@@ -471,7 +471,7 @@ function tumblr3_block_jumppagination( $atts, $content = '' ): string {
 	if ( $atts['length'] > 0 ) {
 		for ( $i = 1; $i <= $atts['length']; $i++ ) {
 			tumblr3_set_parse_context( 'jumppagination', $i );
-			$output .= $plugin->parser->parse_fragment( $content );
+			$output .= $content;
 		}
 	}
 

@@ -22,21 +22,24 @@ class Parser {
 	 *
 	 * @var array
 	 */
-	private array $tags = array();
+	private array $tags      = array();
+	private array $tags_keys = array();
 
 	/**
 	 * The known Tumblr blocks.
 	 *
 	 * @var array
 	 */
-	private array $blocks = array();
+	private array $blocks      = array();
+	private array $blocks_keys = array();
 
 	/**
 	 * The known Tumblr language tags.
 	 *
 	 * @var array
 	 */
-	private array $lang = array();
+	private array $lang      = array();
+	private array $lang_keys = array();
 
 	/**
 	 * The known Tumblr options.
@@ -52,7 +55,11 @@ class Parser {
 	 */
 	private array $modifiers = array();
 
-	private array $matches = array();
+	private array $megatron = array();
+
+	private array $content_map = array();
+
+	private string $html;
 
 	/**
 	 * Initializes the Parser class.
@@ -70,43 +77,22 @@ class Parser {
 		$this->options   = require_once TUMBLR3_PATH . 'includes/tumblr-theme-language/options.php';
 		$this->modifiers = require_once TUMBLR3_PATH . 'includes/tumblr-theme-language/modifiers.php';
 
+		$this->tags_keys   = array_map( 'strtolower', array_keys( $this->tags ) );
+		$this->blocks_keys = array_map( 'strtolower', array_keys( $this->blocks ) );
+		$this->lang_keys   = array_map( 'strtolower', array_keys( $this->lang ) );
+
+		// Build the megatron for verification.
+		$this->megatron = array_merge(
+			$this->tags_keys,
+			$this->blocks_keys,
+			$this->lang_keys
+		);
+
 		$this->set_parse_context( 'theme', true );
 
 		// Hook this parser into the theme output.
-		add_filter( 'tumblr3_theme_output', array( $this, 'parse_fragment' ), 10 );
+		add_filter( 'tumblr3_theme_output', array( $this, 'parse_theme' ), 10 );
 	}
-
-	/**
-	 * Parse the main theme HTML.
-	 *
-	 * @param string $theme The theme HTML straight from Tumblr.
-	 *
-	 * @return string The modified theme HTML.
-	 */
-	public function parse_fragment( string $html ): string {
-
-		// Find all tags in the theme.
-		$args        = $this->find_tags( $html );
-		$html        = $args[1];
-		$content_map = $args[0];
-
-		// Verify the content map.
-		$content_map = $this->verify_option_tags( $content_map );
-		$content_map = $this->verify_lang_tags( $content_map );
-		$content_map = $this->verify_block_tags( $content_map );
-		$content_map = $this->verify_tag_tags( $content_map );
-
-		// Cleanup leftover unverified tags from REGEX.
-		$content_map = $this->clean_unverified_tags( $content_map );
-
-		//echo '<pre>';
-		//print_r( $content_map );
-		//echo '</pre>';
-
-		// Modify the theme HTML to be hydrated with WordPress tags.
-		return $this->perform_replacements( $html, $content_map );
-	}
-
 
 	/**
 	 * Set the current parse context.
@@ -126,497 +112,193 @@ class Parser {
 		return $this->context;
 	}
 
-	/**
-	 * Check if a tag is a closer.
-	 *
-	 * @param string $tag The tag to check.
-	 *
-	 * @return bool True if the tag is a closer, false otherwise.
-	 */
-	private function is_closer( $tag ): bool {
-		return stripos( $tag, '/' ) === 0;
+	private function debug_output( $output ) {
+		echo '<pre>';
+		print_r( $output );
+		echo '</pre>';
 	}
 
-	/**
-	 * Rebuild a tag with the correct syntax.
-	 *
-	 * @param array  $content The content to rebuild.
-	 * @param string $type    The type of tag to rebuild.
-	 *
-	 * @return string The rebuilt tag.
-	 */
-	private function rebuild_tag( $content, $type = 'tag' ): string {
-		if ( 'option' === $type ) {
-			$content['tag'] = str_replace( ' ', '', $content['tag'] );
+	private function normalize_tag( $tag ) {
+		return strtolower( str_replace( array( '{', '}', '/' ), '', $tag ) );
+	}
+
+	public function parse_theme( $html ) {
+		$this->html = $html;
+
+		// Build the content map.
+		$this->build_content_map();
+
+		// Iteratively parse the content map.
+		foreach ( $this->content_map as $chunk ) {
+			$this->html = ( is_array( $chunk ) ) ? $this->parse_block( $chunk ) : $this->parse_tag( $chunk, $this->html );
 		}
 
-		return '{' . $content['tag'] . '}';
+		return $this->html;
 	}
 
-	/**
-	 * Find all tags in the theme.
-	 *
-	 * @return array The content map.
-	 */
-	private function find_tags( $html ): array {
-		$content_map   = array();
-		$block_openers = array();
-		$position      = 0;
+	public function parse_block( $chunk ) {
+		// Get block tags.
+		$block_tag  = key( $chunk );
+		$block_name = $this->normalize_tag( $block_tag );
 
-		$html = preg_replace_callback(
-			'/\{([a-zA-Z0-9][a-zA-Z0-9\\-\/=" ]*|font\:[a-zA-Z0-9 ]+|text\:[a-zA-Z0-9 ]+|select\:[a-zA-Z0-9 ]+|image\:[a-zA-Z0-9 ]+|color\:[a-zA-Z0-9 ]+|RGBcolor\:[a-zA-Z0-9 ]+|lang\:[a-zA-Z0-9- ]+|[\/]?block\:[a-zA-Z0-9]+( [a-zA-Z0-9=" ]+)*)\}/i',
-			function ( $matches ) use ( &$content_map, &$block_openers, &$position ) {
-				$position++;
+		// Extract content HTML from inside the block.
+		preg_match( "/$block_tag(.*?)$block_tag/is", $this->html, $matches );
+		$original_content = $matches[0];
+		$content          = $matches[1];
 
-				// If we have matches, lowercase them and store them in the content map.
-				if ( isset( $matches[1] ) ) {
-					$match = strtolower( $matches[1] );
-					$fixed = false;
-					$args  = array();
+		// Process the block content.
+		$args      = array_values( $this->blocks );
+		$block_pos = array_search( $block_name, $this->blocks_keys, true );
+		$content   = call_user_func( $args[ $block_pos ]['fn'], array(), $content );
 
-					// Remove any modifiers from the tag.
-					// @todo bring the modifer logic back in.
-					if ( false !== stripos( $match, '=' ) ) {
-						$args  = explode( ' ', $match );
-						$match = explode( ' ', $match )[0];
-					}
+		foreach ( $chunk as $tag ) {
+			$content = ( is_array( $tag ) ) ? $this->parse_inner_block( $tag, $content ) : $this->parse_tag( $tag, $content );
+		}
 
-					// Test for modifiers at the beginning of the tag.
-					foreach ( $this->modifiers as $modifier ) {
-						if ( 0 === stripos( $match, $modifier ) ) {
-							// If we find a modifier, store it in the args array.
-							$args['modifier'] = $modifier;
-
-							// Remove the modifier from the tag.
-							$matches[0] = substr( $matches[0], strlen( $modifier ) + 1 );
-							$match      = substr( $match, strlen( $modifier ) );
-							break;
-						}
-					}
-
-					// Check if this is a block opener.
-					if ( 0 === stripos( $match, 'block:' ) ) {
-						// Uh oh, we've got two of the same openers in a row, attempt to fix.
-						if ( end( $block_openers ) === $match ) {
-
-							// Log the error.
-							error_log(
-								$match . ' is a duplicate block opener. Found at position ' . $position . PHP_EOL,
-								3,
-								TUMBLR3_PATH . 'parser.log'
-							);
-
-							$fixed = true;
-							$match = '/' . $match;
-							array_pop( $block_openers );
-
-							// Phew, this is a normal block opener.
-						} else {
-							$block_openers[] = $match;
-						}
-					}
-
-					// Check if this is a block closer, and test for openers.
-					if ( 0 === stripos( $match, '/block:' ) ) {
-						if ( end( $block_openers ) === substr( $match, 1 ) ) {
-							array_pop( $block_openers );
-						}
-					}
-
-					// Fill out the content map.
-					$content_map[] = array(
-						'closer'       => $this->is_closer( $match ),
-						'tag'          => $this->is_closer( $match ) ? ltrim( $match, '/' ) : $match,
-						'original'     => $fixed ? '{/' . trim( $matches[0], '{}' ) . '}' : $matches[0],
-						'original_raw' => $fixed ? '/' . trim( $matches[0], '{}' ) : trim( $matches[0], '{}' ),
-						'verified'     => false,
-						'args'         => $args,
-					);
-
-					return $fixed ? '{/' . trim( $matches[0], '{}' ) . '}' : $matches[0];
-				}
-			},
-			$html
-		);
-
-		return array(
-			$content_map,
-			$html,
-		);
+		return substr_replace( $this->html, $content, stripos( $this->html, $block_tag ), strlen( $original_content ) );
 	}
 
+	public function parse_inner_block( $chunk, $html ) {
+		return $html;
+	}
 
-	/**
-	 * Verify the content map by checking for valid option tags.
-	 *
-	 * @return void
-	 */
-	private function verify_option_tags( $content_map ): array {
-		// Loop through each option prefix.
-		foreach ( $this->options as $option_name ) {
-			// Loop through each content map item.
-			foreach ( $content_map as $key => $content ) {
-				// Skip if the content has already been verified.
-				if ( $content['verified'] ) {
-					continue;
-				}
+	public function parse_tag( $chunk, $html ) {
+		$tag = strtolower( trim( $chunk, '{}' ) );
 
-				if ( 0 === stripos( $content['tag'], $option_name ) ) {
-					$content_map[ $key ]['verified'] = ( 'block:if' === $option_name ) ? 'block' : 'option';
-					$content_map[ $key ]['tag']      = $this->rebuild_tag( $content, 'option' );
-				}
+		// What kind of tag is this?
+		// This is a lang tag.
+		if ( stripos( $tag, 'lang:' ) === 0 ) {
+			$args     = array_values( $this->lang );
+			$lang_pos = array_search( $tag, $this->lang_keys, true );
+			$content  = $args[ $lang_pos ];
+			$html_pos = stripos( $html, $chunk );
+			return substr_replace( $html, $content, $html_pos, strlen( $chunk ) );
+		}
+
+		// This is an option tag.
+		foreach ( $this->options as $option ) {
+			if ( stripos( $tag, $option ) === 0 ) {
+				$content  = get_theme_mod( tumblr3_normalize_option_name( $tag ) );
+				$html_pos = stripos( $html, $chunk );
+				return substr_replace( $html, $content, $html_pos, strlen( $chunk ) );
 			}
 		}
 
-		return $content_map;
-	}
-
-	/**
-	 * Verify the content map by checking for valid lang tags.
-	 *
-	 * @return void
-	 */
-	private function verify_lang_tags( $content_map ): array {
-		$lang_array = array_map( 'strtolower', array_keys( $this->lang ) );
-
-		foreach ( $content_map as $key => $content ) {
-			// Skip if the content has already been verified.
-			if ( $content['verified'] ) {
-				continue;
-			}
-
-			// Skip if the content doesn't have a lang tag.
-			if ( false === stripos( $content['tag'], 'lang:' ) ) {
-				continue;
-			}
-
-			$lang_tag = substr( $content['tag'], 5 );
-
-			if ( in_array( $lang_tag, $lang_array, true ) ) {
-				$content_map[ $key ]['verified'] = 'lang';
-				$content_map[ $key ]['tag']      = $this->rebuild_tag( $content );
+		// This is a tag with a modifier.
+		foreach ( $this->modifiers as $modifier ) {
+			if ( stripos( $tag, $modifier ) === 0 ) {
+				$tag = substr( $tag, strlen( $modifier ) ) . ' modifier="' . $modifier . '"';
+				$this->debug_output( $tag );
+				break;
 			}
 		}
 
-		return $content_map;
-	}
-
-	/**
-	 * Verify the content map by checking for valid block tags.
-	 *
-	 * @return void
-	 */
-	private function verify_block_tags( $content_map ): array {
-		$block_array  = array_map( 'strtolower', array_keys( $this->blocks ) );
-		$block_values = array_values( $this->blocks );
-
-		foreach ( $content_map as $key => $content ) {
-			// Skip if the content has already been verified.
-			if ( $content['verified'] ) {
-				continue;
-			}
-
-			if ( in_array( $content['tag'], $block_array, true ) ) {
-				// What function verified this block?
-				$content_map[ $key ]['verified'] = 'block';
-
-				// Where does the block live in our array?
-				$index = array_search( $content['tag'], $block_array, true );
-
-				// Rebuild the block with the correct syntax.
-				$content_map[ $key ]['tag'] = $this->rebuild_tag( $content, 'block' );
-
-				// Store the block function for later use if this isn't a closer.
-				if ( ! $content['closer'] && isset( $block_values[ $index ]['fn'] ) ) {
-					$content_map[ $key ]['fn'] = $block_values[ $index ]['fn'];
-				}
-			}
-		}
-
-		return $content_map;
-	}
-
-	/**
-	 * Verify the content map by checking for valid tag tags.
-	 *
-	 * @return void
-	 */
-	private function verify_tag_tags( $content_map ): array {
-		$tag_array  = array_map( 'strtolower', array_keys( $this->tags ) );
-		$tag_values = array_values( $this->tags );
-
-		foreach ( $content_map as $key => $content ) {
-			// Skip if the content has already been verified.
-			if ( $content['verified'] ) {
-				continue;
-			}
-
-			if ( in_array( $content['tag'], $tag_array, true ) ) {
-				// What function verified this tag?
-				$content_map[ $key ]['verified'] = 'tag';
-
-				// Where does the tag live in our array?
-				$index = array_search( $content['tag'], $tag_array, true );
-
-				// Rebuild the tag with the correct syntax.
-				$content_map[ $key ]['tag'] = $this->rebuild_tag( $content );
-
-				// Get the function name from a case-insensitive array.
-				if ( isset( $tag_values[ $index ]['fn'] ) ) {
-					$content_map[ $key ]['fn'] = $tag_values[ $index ]['fn'];
-				}
-			}
-		}
-
-		return $content_map;
-	}
-
-	/**
-	 * Clean up the content map by removing unverified tags.
-	 *
-	 * @return void
-	 */
-	private function clean_unverified_tags( $content_map ): array {
-		foreach ( $content_map as $key => $content ) {
-			if ( ! $content['verified'] ) {
-				unset( $content_map[ $key ] );
-			}
-		}
-
-		return array_values( array_filter( $content_map ) );
-	}
-
-	/**
-	 * Perform replacements on the theme HTML.
-	 * Runs through the content map and replaces tags with their WordPress data.
-	 *
-	 * @return void
-	 */
-	private function perform_replacements( $html, $content_map ): string {
-		foreach ( $content_map as $key => $content ) {
-			if ( ! isset( $content_map[ $key ] ) ) {
-				continue;
-			}
-
-			switch ( $content['verified'] ) {
-				case 'tag':
-					$html = $this->perform_tag_replacement( $html, $content_map, $key );
-					break;
-				case 'block':
-					$args = $this->perform_block_replacement( $html, $content_map, $key );
-					$html = $args['html'];
-
-					// If this is a looping block, or it has no HTML, skip the inner tags.
-					if ( ( isset( $args['looper'] ) && $args['looper'] ) || '' === $args['html'] ) {
-						for ( $i = $args['key_start']; $i <= $args['key_end']; $i++ ) {
-							unset( $content_map[ $i ] );
-						}
-					}
-					break;
-				case 'lang':
-					$html = $this->perform_lang_replacement( $html, $content_map, $key );
-					break;
-				case 'option':
-					$html = $this->perform_option_replacement( $html, $content_map, $key );
-					break;
-			}
-
-			$content_map[ $key ]['parsed'] = true;
+		// This is a regular tag.
+		$tag_pos = array_search( $tag, $this->tags_keys, true );
+		if ( $tag_pos ) {
+			$args     = array_values( $this->tags );
+			$content  = call_user_func( $args[ $tag_pos ]['fn'], array() );
+			$html_pos = stripos( $html, $chunk );
+			return substr_replace( $html, $content, $html_pos, strlen( $chunk ) );
 		}
 
 		return $html;
 	}
 
 	/**
-	 * Perform a tag replacement.
+	 * Turn the HTML document into a content map array.
 	 *
-	 * @param string $key The key in the content map to replace.
+	 * @param string $html
 	 *
 	 * @return void
 	 */
-	private function perform_tag_replacement( $html, $content_map, $key ): string {
-		$args = $content_map[ $key ];
+	private function build_content_map() {
+		$all_tags = array();
 
-		// There's no function for this tag, skip it.
-		if ( ! function_exists( $args['fn'] ) ) {
-			return $html;
-		}
+		$this->html = preg_replace_callback(
+			'/\{([a-zA-Z0-9][a-zA-Z0-9\\-\/=" ]*|font\:[a-zA-Z0-9 ]+|text\:[a-zA-Z0-9 ]+|select\:[a-zA-Z0-9 ]+|image\:[a-zA-Z0-9 ]+|color\:[a-zA-Z0-9 ]+|RGBcolor\:[a-zA-Z0-9 ]+|lang\:[a-zA-Z0-9- ]+|[\/]?block\:[a-zA-Z0-9]+( [a-zA-Z0-9=" ]+)*)\}/i',
+			function ( $matches ) use ( &$all_tags ) {
+				$matches[0] = strtolower( str_replace( '/', '', $matches[0] ) );
+				$all_tags[] = $matches[0];
+				return $matches[0];
+			},
+			$this->html
+		);
 
-		// Find the first instance of this original, unmodified tag in the theme HTML.
-		$tag_start_position = stripos( $html, $args['original'] );
+		// Catch any tags that fail verification.
+		$failures = array();
 
-		// If a start position can't be found, skip this tag.
-		if ( false === $tag_start_position ) {
-			return $html;
-		}
+		// Verify the tags that were found.
+		foreach ( $all_tags as $key => $tag ) {
+			// Normalize the tag string.
+			$tag      = $this->normalize_tag( $tag );
+			$verified = false;
 
-		// Get the hydrated content for this tag.
-		$tag_content = call_user_func( $args['fn'], array(), '', $args['tag'] );
-
-		// Run the tag through the modifier function?
-		if ( isset( $args['args'], $args['args']['modifier'] ) ) {
-			switch ( strtolower( $args['args']['modifier'] ) ) {
-				case 'rgb':
-					// Convert hex to RGB
-					if ( preg_match( '/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i', $tag_content, $parts ) ) {
-						$r           = hexdec( $parts[1] );
-						$g           = hexdec( $parts[2] );
-						$b           = hexdec( $parts[3] );
-						$tag_content = "$r, $g, $b";
-					}
+			// Does the tag start with a modifier?
+			foreach ( $this->modifiers as $modifier ) {
+				if ( strpos( $tag, $modifier ) === 0 ) {
+					// Assume this tag is good.
+					$verified = true;
 					break;
-				case 'plaintext':
-					$tag_content = wp_strip_all_tags( $tag_content );
-					break;
-				case 'js':
-					$tag_content = wp_json_encode( $tag_content );
-					break;
-				case 'jsplaintext':
-					$tag_content = wp_json_encode( wp_strip_all_tags( $tag_content ) );
-					break;
-				case 'urlencoded':
-					$tag_content = rawurlencode( $tag_content );
-					break;
+				}
 			}
-		}
 
-		// Replace the tag in the theme HTML with the hydrated content.
-		return substr_replace( $html, $tag_content, $tag_start_position, strlen( $args['original'] ) );
-	}
+			// Does this tag start with an option?
+			foreach ( $this->options as $option ) {
+				if ( strpos( $tag, $option ) === 0 ) {
+					// Assume this tag is good.
+					$verified = true;
+					break;
+				}
+			}
 
-	/**
-	 * Perform a block replacement.
-	 *
-	 * @param string $key The key in the content map to replace.
-	 *
-	 * @return void
-	 */
-	private function perform_block_replacement( $html, $content_map, $key ): array {
-		$args = $content_map[ $key ];
-
-		// If this block is a closer, skip it, it will be handled by the opener.
-		if ( $args['closer'] ) {
-			return array(
-				'html' => $html,
-			);
-		}
-
-		if ( 0 === stripos( $args['tag'], '{block:if' ) ) {
-			$args['fn'] = 'tumblr3_block_if';
-		}
-
-		$closer_key = 0;
-
-		// If there's no function for this block, skip it.
-		if ( ! function_exists( $args['fn'] ) ) {
-			return array(
-				'html' => $html,
-			);
-		}
-
-		// Find the first position of this block in the theme HTML.
-		$block_start_position = stripos( $html, $args['original'] );
-
-		// If a start position can't be found, skip this block.
-		if ( false === $block_start_position ) {
-			return array(
-				'html' => $html,
-			);
-		}
-
-		// Loop through the content map to find the closer for this block.
-		foreach ( $content_map as $map_key => $map_content ) {
-			// Skip if the map key is less than the current key, we don't parse backwards.
-			if ( $map_key <= $key ) {
+			// If the tag is not yet verfied, and not in the megatron, remove it.
+			if ( false === $verified && ! in_array( $tag, $this->megatron, true ) ) {
+				$failures[] = $tag;
+				unset( $all_tags[ $key ] );
 				continue;
 			}
+		}
 
-			// We found a closer of the same tag.
-			if ( $map_content['tag'] === $args['tag'] ) {
-				$closer_key         = $map_key;
-				$block_end_length   = strlen( $map_content['original'] );
-				$block_end_position = stripos( $html, $map_content['original'] ) + $block_end_length;
-				break;
+		// Re-index the array.
+		$flat_map = array_values( array_filter( $all_tags ) );
+
+		// Process the flat map into a content tree.
+		$index             = 0;
+		$count             = count( $flat_map );
+		$this->content_map = $this->process_blocks_recursively( $flat_map, $count, $index );
+	}
+
+	public function process_blocks_recursively( &$flat_map, &$count, &$index = 0, &$current_block = null ) {
+		$result = array();
+
+		while ( $index < $count ) {
+			// Get the current Tumblr tag.
+			$tag = $flat_map[ $index ];
+
+			// Normalize the tag string for comparison.
+			$normal = $this->normalize_tag( $tag );
+
+			// If we have a current block, and the current tag is the closing tag, return the result.
+			if ( $current_block && strpos( $normal, $current_block ) === 0 ) {
+				return $result;
 			}
+
+			// Determine if this is a block tag. Create a nested block by calling the function recursively.
+			if ( strpos( $normal, 'block:' ) === 0 ) {
+				++$index;
+
+				// Use the new normal tag to set the current block.
+				$nested_block = $this->process_blocks_recursively( $flat_map, $count, $index, $normal );
+				$result[]     = array( $tag => $nested_block );
+			} else {
+				// Add a normal tag to the result.
+				$result[] = $tag;
+			}
+
+			++$index;
 		}
 
-		// If a block end position can't be found, skip this block.
-		if ( ! isset( $block_end_position ) ) {
-			return array(
-				'html' => $html,
-			);
-		}
-
-		// Get the hydrated content for this block.
-		$block_content = call_user_func(
-			$args['fn'],
-			$args['tag'],
-			substr(
-				$html,
-				$block_start_position + strlen( $args['original'] ),
-				$block_end_position - ( $block_start_position + strlen( $args['original'] ) ) - $block_end_length
-			),
-			$args['tag']
-		);
-
-		// Replace the block in the theme HTML with the hydrated content.
-		return array(
-			'html'      => substr_replace( $html, $block_content, $block_start_position, $block_end_position - $block_start_position ),
-			'looper'    => isset( $this->blocks[ $args['original_raw'] ]['looper'] ),
-			'key_start' => $key,
-			'key_end'   => $closer_key,
-		);
-	}
-
-	/**
-	 * Undocumented function
-	 *
-	 * @param [type] $html
-	 * @param [type] $content_map
-	 * @param [type] $key
-	 * @return string
-	 */
-	private function perform_lang_replacement( $html, $content_map, $key ): string {
-		$args = $content_map[ $key ];
-
-		// Find the first instance of this original, unmodified tag in the theme HTML.
-		$tag_start_position = stripos( $html, $args['original'] );
-
-		// If a start position can't be found, skip this tag.
-		if ( false === $tag_start_position ) {
-			return $html;
-		}
-
-		// Get the hydrated content for this tag.
-		$tag_content = $this->lang[ substr( $args['original_raw'], 5 ) ];
-
-		// Replace the tag in the theme HTML with the hydrated content.
-		return substr_replace( $html, $tag_content, $tag_start_position, strlen( $args['original'] ) );
-	}
-
-	/**
-	 * Undocumented function
-	 *
-	 * @param [type] $html
-	 * @param [type] $content_map
-	 * @param [type] $key
-	 * @return string
-	 */
-	private function perform_option_replacement( $html, $content_map, $key ): string {
-		$args = $content_map[ $key ];
-
-		// Find the first instance of this original, unmodified tag in the theme HTML.
-		$tag_start_position = stripos( $html, $args['original'] );
-
-		// If a start position can't be found, skip this tag.
-		if ( false === $tag_start_position ) {
-			return $html;
-		}
-
-		// Get the hydrated content for this tag.
-		$tag_content = get_theme_mod( tumblr3_normalize_option_name( $args['tag'] ) );
-
-		// Replace the tag in the theme HTML with the hydrated content.
-		return substr_replace( $html, $tag_content, $tag_start_position, strlen( $args['original'] ) );
+		return $result;
 	}
 }

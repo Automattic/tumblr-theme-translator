@@ -3,9 +3,9 @@
 defined( 'ABSPATH' ) || exit;
 
 return array(
-	'Plaintext',
-	'JSPlaintext',
-	'JS',
-	'URLEncoded',
-	'RGB',
+	'plaintext',
+	'jsplaintext',
+	'js',
+	'urlencoded',
+	'rgb',
 );
