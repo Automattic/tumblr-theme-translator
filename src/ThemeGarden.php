@@ -30,7 +30,7 @@ class ThemeGarden {
 			__('Tumblr Themes', 'tumblr-theme-translator'),
 			__('Tumblr Themes', 'tumblr-theme-translator'),
 			'manage_options',
-			'tumblr-theme',
+			'tumblr-themes',
 			[$this, 'renderPage']
 		);
 	}
