@@ -38,8 +38,29 @@ class ThemeBrowser {
 	public function renderPage(): void {
 		$response = wp_remote_get(self::THEME_GARDEN_ENDPOINT);
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+		$categories = $body['response']['categories'] ?? [];
 		$themes = $body['response']['themes'] ?? [];
-		$this->renderThemeList($themes);
+		?>
+		<div class="wrap">
+			<h1 class="wp-heading-inline"><?php echo __( 'Tumblr Themes' ); ?></h1>
+			<?php $this->renderFilterBar($categories, count($themes)); ?>
+			<?php $this->renderThemeList($themes); ?>
+		</div>
+		<?php
+	}
+
+	public function renderFilterBar(array $categories, int $theme_count): void {
+		?>
+		<div class="wp-filter">
+			<div class="filter-count"><span class="count"><?php echo $theme_count; ?></span></div>
+			<ul class="filter-links">
+				<li><a class="current">Featured</a></li>
+				<?php foreach ($categories as $category) : ?>
+				<li><a><?php echo $category['name']; ?></a></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+		<?php
 	}
 
 	public function renderThemeList($themes): void {
