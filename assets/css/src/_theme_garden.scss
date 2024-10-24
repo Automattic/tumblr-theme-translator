@@ -6,7 +6,6 @@ $text: #b7b7b7;
 
 $themeMarginBottom: 5%;
 
-$numColors:5;
 $red: #f8c7c3;
 $orange: #f8d8bf;
 $yellow: #f0e794;
@@ -18,6 +17,11 @@ $violet: #d4caf7;
 	flex-wrap: wrap;
 	justify-content: space-between;
 	width: 97%;
+}
+
+.tumblr-themes::after {
+	content: "";
+	flex: auto;
 }
 
 .tumblr-theme {
