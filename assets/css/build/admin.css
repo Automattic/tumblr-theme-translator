@@ -1,15 +1,15 @@
 .tumblr-themes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 95%;
+  justify-content: center;
   width: 97%;
 }
 
 .tumblr-theme {
-  width: 95%;
+  width: 100%;
   color: #49a2c4;
+  margin-bottom: 40px;
   font-family: monospace;
-  margin-bottom: 5%;
   filter: drop-shadow(8px 8px 0 #f8c7c3);
 }
 .tumblr-theme:nth-child(5n+2) {
@@ -25,19 +25,16 @@
   filter: drop-shadow(8px 8px 0 #d4caf7);
 }
 
-@media screen and (min-width: 1501px) {
-  .tumblr-theme {
-    width: 22%;
+@media screen and (min-width: 1301px) {
+  .tumblr-themes {
+    grid-template-columns: 30% 30% 30%;
+    justify-content: space-between;
   }
 }
-@media screen and (min-width: 1201px) and (max-width: 1501px) {
-  .tumblr-theme {
-    width: 30%;
-  }
-}
-@media screen and (min-width: 680px) and (max-width: 1200px) {
-  .tumblr-theme {
-    width: 46%;
+@media screen and (min-width: 730px) and (max-width: 1300px) {
+  .tumblr-themes {
+    grid-template-columns: 47% 47%;
+    justify-content: space-between;
   }
 }
 .tumblr-theme-header {
