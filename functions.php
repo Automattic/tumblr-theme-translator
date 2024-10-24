@@ -89,7 +89,3 @@ add_filter( 'customize_loaded_components', 'tumblr3_remove_nav_menus_panel' );
 
 // Enqueue the plugin's assets.
 require TUMBLR3_PATH . 'includes/assets.php';
-
-// Include tag and block hydration functions.
-require TUMBLR3_PATH . 'includes/block-functions.php';
-require TUMBLR3_PATH . 'includes/tag-functions.php';
