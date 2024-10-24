@@ -62,7 +62,8 @@ body.admin-color-sunrise {
   display: grid;
   grid-template-columns: 95%;
   justify-content: center;
-  width: 100%;
+  width: 98%;
+  margin: 0 auto;
 }
 
 .tumblr-theme {
